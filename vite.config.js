@@ -5,7 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "http://localhost:5000"
+      "/api": {
+        target: "https://bagsclub-backend-new-4.onrender.com",
+        changeOrigin: true
+      }
     }
   }
 });
