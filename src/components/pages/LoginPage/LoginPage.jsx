@@ -15,6 +15,7 @@ import { navItems as landingNavItems } from "../../../data/landingPageData.js";
 import logo from "../../../assets/images/logo.png";
 import { getAuthSession, getDashboardPath, navigateTo, saveAuthSession } from "../../../utils/auth.js";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
 
 const countries = [
   "Afghanistan",
@@ -370,11 +371,36 @@ function LoginPanel() {
     setStatus("");
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(buildApiUrl("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
       });
+      const responsePreview = await response
+        .clone()
+        .text()
+        .then((value) => value.slice(0, 180))
+        .catch(() => "");
+      // #region debug-point A:login-response-shape
+      fetch("http://127.0.0.1:7777/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "vercel-login-json",
+          runId: "pre-fix",
+          hypothesisId: "A",
+          location: "LoginPage.jsx:373",
+          msg: "[DEBUG] Login response received",
+          data: {
+            requestUrl: response.url,
+            status: response.status,
+            contentType: response.headers.get("content-type") || "",
+            bodyPreview: responsePreview
+          },
+          ts: Date.now()
+        })
+      }).catch(() => {});
+      // #endregion
       const data = await response.json();
 
       if (!response.ok) {
@@ -390,6 +416,23 @@ function LoginPanel() {
         navigateTo(getDashboardPath(data.user.role));
       }, 800);
     } catch (error) {
+      // #region debug-point B:login-parse-error
+      fetch("http://127.0.0.1:7777/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "vercel-login-json",
+          runId: "pre-fix",
+          hypothesisId: "B",
+          location: "LoginPage.jsx:392",
+          msg: "[DEBUG] Login request failed",
+          data: {
+            errorMessage: error?.message || "Unknown login error"
+          },
+          ts: Date.now()
+        })
+      }).catch(() => {});
+      // #endregion
       setStatus(error.message || "Login failed.");
     } finally {
       setIsSubmitting(false);

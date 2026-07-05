@@ -1,8 +1,9 @@
 import axios from "axios";
+import { buildApiUrl } from "./apiBaseUrl.js";
 import { clearAuthSession, getAuthSession, navigateTo } from "../utils/auth.js";
 
 const apiClient = axios.create({
-  baseURL: "/api",
+  baseURL: buildApiUrl("/api"),
   headers: {
     "Content-Type": "application/json"
   }

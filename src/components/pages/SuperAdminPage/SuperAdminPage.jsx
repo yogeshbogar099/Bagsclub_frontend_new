@@ -16,6 +16,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { clearAuthSession, navigateTo } from "../../../utils/auth.js";
+import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
 import AssociateFooter from "../../associate/AssociateFooter.jsx";
 import SharedOrderRecordsTable from "../../shared-order/SharedOrderRecordsTable.jsx";
 import SharedOrderDetailsView from "../../shared-order/SharedOrderDetailsView.jsx";
@@ -1546,7 +1547,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       }));
 
       try {
-        const response = await fetch("/api/super-admin/stats", {
+        const response = await fetch(buildApiUrl("/api/super-admin/stats"), {
           headers: {
             Authorization: `Bearer ${session.token}`
           },
@@ -1642,7 +1643,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       }));
 
       try {
-        const response = await fetch(`${orderApiBasePath}?${orderQueryString}`, {
+        const response = await fetch(buildApiUrl(`${orderApiBasePath}?${orderQueryString}`), {
           headers: {
             Authorization: `Bearer ${session.token}`
           },
@@ -1708,7 +1709,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       }));
 
       try {
-        const response = await fetch(`/api/super-admin/admins?${adminQueryString}`, {
+        const response = await fetch(buildApiUrl(`/api/super-admin/admins?${adminQueryString}`), {
           headers: {
             Authorization: `Bearer ${session.token}`
           },
@@ -1771,7 +1772,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       }));
 
       try {
-        const response = await fetch(`/api/super-admin/associate-members?${associateQueryString}`, {
+        const response = await fetch(buildApiUrl(`/api/super-admin/associate-members?${associateQueryString}`), {
           headers: {
             Authorization: `Bearer ${session.token}`
           },
@@ -1799,7 +1800,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
     async function loadAdminOptions() {
       try {
-        const response = await fetch("/api/super-admin/admins/options", {
+        const response = await fetch(buildApiUrl("/api/super-admin/admins/options"), {
           headers: {
             Authorization: `Bearer ${session.token}`
           }
@@ -2093,7 +2094,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       const body = new FormData();
       body.append("file", file);
 
-      const response = await fetch(`/api/orders/${selectedOrderDetails.id}/design`, {
+      const response = await fetch(buildApiUrl(`/api/orders/${selectedOrderDetails.id}/design`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.token}`
@@ -2126,7 +2127,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
     setSelectedAdminDetails(null);
 
     try {
-      const response = await fetch(`/api/super-admin/admins/${adminId}`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/admins/${adminId}`), {
         headers: {
           Authorization: `Bearer ${session.token}`
         }
@@ -2146,7 +2147,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
   async function updateAdminRecord(adminId, endpoint, payload) {
     try {
-      const response = await fetch(`/api/super-admin/admins/${adminId}/${endpoint}`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/admins/${adminId}/${endpoint}`), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2178,7 +2179,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
     setSelectedAssociateAdminId("");
 
     try {
-      const response = await fetch(`/api/super-admin/associate-members/${associateMemberId}`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/associate-members/${associateMemberId}`), {
         headers: {
           Authorization: `Bearer ${session.token}`
         }
@@ -2199,7 +2200,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
   async function updateAssociateMemberRecord(associateMemberId, endpoint, payload) {
     try {
-      const response = await fetch(`/api/super-admin/associate-members/${associateMemberId}/${endpoint}`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/associate-members/${associateMemberId}/${endpoint}`), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2269,7 +2270,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
     setSelectedWalletDetails(null);
 
     try {
-      const response = await fetch(`/api/super-admin/wallet/requests/${requestId}`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/wallet/requests/${requestId}`), {
         headers: {
           Authorization: `Bearer ${session.token}`
         }
@@ -2289,7 +2290,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
   async function updateWalletRequestStatus(requestId, payload) {
     try {
-      const response = await fetch(`/api/super-admin/wallet/requests/${requestId}/status`, {
+      const response = await fetch(buildApiUrl(`/api/super-admin/wallet/requests/${requestId}/status`), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

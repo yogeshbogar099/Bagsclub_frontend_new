@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useAssociateModule } from "../../context/AssociateModuleContext.jsx";
+import { buildApiUrl } from "../../lib/apiBaseUrl.js";
 import { getAuthSession, saveAuthSession } from "../../utils/auth.js";
 import boxBagImage from "../../assets/images/BoxBag.png";
 import dCutImage from "../../assets/images/D_Cut.png";
@@ -238,7 +239,7 @@ export default function AssociateNonWovenBagOrderPage() {
     const body = new FormData();
     body.append("file", file);
 
-    fetch("/api/uploads/design", {
+    fetch(buildApiUrl("/api/uploads/design"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`

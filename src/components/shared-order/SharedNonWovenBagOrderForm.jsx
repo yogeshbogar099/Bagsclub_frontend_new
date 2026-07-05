@@ -15,6 +15,7 @@ import {
   X
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { buildApiUrl } from "../../lib/apiBaseUrl.js";
 import { getAuthSession, saveAuthSession } from "../../utils/auth.js";
 import { bagCatalog, bagColors, bagSizes, textColorOptions, textColorTypes } from "./sharedOrderData.js";
 
@@ -177,7 +178,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     const body = new FormData();
     body.append("file", file);
 
-    fetch("/api/uploads/design", {
+    fetch(buildApiUrl("/api/uploads/design"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`

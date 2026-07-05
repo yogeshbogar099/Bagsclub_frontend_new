@@ -22,6 +22,7 @@ import {
 import { navItems as landingNavItems } from "../../../data/landingPageData.js";
 import logo from "../../../assets/images/logo.png";
 import { navigateTo } from "../../../utils/auth.js";
+import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
 
 const countries = [
   "Afghanistan",
@@ -348,7 +349,7 @@ function RegisterForm() {
     setCaptchaLoading(true);
 
     try {
-      const response = await fetch("/api/auth/captcha");
+      const response = await fetch(buildApiUrl("/api/auth/captcha"));
       const data = await response.json();
 
       if (!response.ok) {
@@ -392,7 +393,7 @@ function RegisterForm() {
     setStatus("");
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(buildApiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)

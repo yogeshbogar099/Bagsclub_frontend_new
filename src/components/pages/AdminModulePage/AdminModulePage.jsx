@@ -39,6 +39,7 @@ import {
   filterGenericTableItems,
   filterOrderTableItems
 } from "../../shared-order/orderTableTools.js";
+import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
 import {
   getTableBodyRowClassName,
   tableActionButtonClassName,
@@ -323,7 +324,7 @@ function OrderDetailsModal({
         const body = new FormData();
         body.append("file", file);
 
-        const response = await fetch(`/api/orders/${order.id}/design`, {
+        const response = await fetch(buildApiUrl(`/api/orders/${order.id}/design`), {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`
