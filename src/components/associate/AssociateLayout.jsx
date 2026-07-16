@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/Bags_Club.png";
 import AssociateNavbar from "./AssociateNavbar.jsx";
 import AssociateFooter from "./AssociateFooter.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -36,10 +36,6 @@ export default function AssociateLayout() {
         <div className="container mx-auto flex items-start justify-between px-4 py-4">
           <div className="flex items-center gap-3">
             <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
-            <div className="flex flex-col justify-center">
-              <span className="text-lg font-extrabold tracking-wide text-blue-700 sm:text-xl md:text-2xl">BAGSCLUB</span>
-              <span className="text-xs font-medium text-slate-600 sm:text-sm">No.1 Bag Printing Service</span>
-            </div>
           </div>
 
           <div className="flex flex-col items-end space-y-1 text-sm text-gray-700">

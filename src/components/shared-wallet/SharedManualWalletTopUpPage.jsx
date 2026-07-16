@@ -32,14 +32,12 @@ export default function SharedManualWalletTopUpPage({ basePath }) {
 
         <div className="mx-auto mt-8 grid max-w-6xl gap-6 lg:grid-cols-[320px_1fr]">
           <section>
-            <h2 className="mb-3 text-[18px] font-bold text-[#343434] md:text-[21px]">Our Bank details:</h2>
+            <h2 className="mb-3 text-[18px] font-bold text-[#343434] md:text-[21px]">NEFT/RTGS/IMPS To Our Bank</h2>
             <div className="min-h-[250px] border border-[#dddddd] bg-[#f3f3f3] p-4 text-[15px] leading-8 text-[#555] md:text-[16px]">
-              <div className="font-bold text-[#3b3b3b]">NEFT/RTGS/IMPS To Our Bank</div>
-              <div>Bank Name - IDFC First Bank</div>
-              <div>Branch : C-Scheme, Jaipur, Rajasthan</div>
-              <div>Firm Name - PRINTERS CLUB OF INDIA LIMITED</div>
-              <div>IFSC CODE : IDFB0042127</div>
-              <div>A/C NO : 10062876334</div>
+              <div>Bank Name - HDFC Bank</div>
+              <div>Account Holder Name - Sandeep Satish Solunke</div>
+              <div>Account Number - 50200067380881</div>
+              <div>IFSC Code - HDFC0008134</div>
             </div>
           </section>
 

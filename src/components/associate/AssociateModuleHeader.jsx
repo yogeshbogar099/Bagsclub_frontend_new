@@ -1,5 +1,5 @@
 import { LogOut, RefreshCcw, Wallet } from "lucide-react";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/Bags_Club.png";
 import { clearAuthSession, navigateTo } from "../../utils/auth.js";
 
 export default function AssociateModuleHeader({ session, headerData, onRefresh }) {
@@ -15,12 +15,8 @@ export default function AssociateModuleHeader({ session, headerData, onRefresh }
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[280px_1fr_280px] md:items-center">
-        <div className="flex items-center justify-center gap-3 md:justify-start">
+        <div className="flex items-center justify-center md:justify-start">
           <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
-          <div className="flex flex-col justify-center">
-            <p className="text-lg font-extrabold tracking-wide text-blue-700 sm:text-xl md:text-2xl">BAGSCLUB</p>
-            <p className="text-xs font-medium text-slate-600 sm:text-sm">No.1 Bag Printing Service</p>
-          </div>
         </div>
 
         <div className="text-center">

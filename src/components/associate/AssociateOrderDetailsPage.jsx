@@ -163,10 +163,9 @@ export default function AssociateOrderDetailsPage() {
     return "Assignment Pending";
   }, [order?.assignedAdmin, order?.assignedAssociateMember]);
   const discountAmount = useMemo(() => {
-    const storedDiscount = Number(order?.pdfDiscountAmount || 0);
-    if (storedDiscount > 0) return storedDiscount;
-    return isPdfDesign ? 10 : 0;
-  }, [isPdfDesign, order?.pdfDiscountAmount]);
+    const storedDiscount = Number(order?.pdfDiscountAmount);
+    return Number.isFinite(storedDiscount) && storedDiscount > 0 ? storedDiscount : 0;
+  }, [order?.pdfDiscountAmount]);
   const totalAmount = useMemo(() => {
     const storedBaseAmount = Number(order?.basePayableAmount || 0);
     if (storedBaseAmount > 0) return storedBaseAmount;
@@ -180,7 +179,7 @@ export default function AssociateOrderDetailsPage() {
     if (totalAmount > 0) return Math.max(totalAmount - discountAmount, 0);
     return 0;
   }, [discountAmount, order?.walletDebitAmount, totalAmount]);
-  const validPdfDiscountLabel = useMemo(() => (isPdfDesign ? "₹10 Discount" : "₹0 Discount"), [isPdfDesign]);
+  const validPdfDiscountLabel = useMemo(() => `₹${formatCurrency(discountAmount)} Discount`, [discountAmount]);
   const invoiceNumber = useMemo(() => order?.invoiceNumber || "--", [order?.invoiceNumber]);
   const orderInfoRows = useMemo(
     () => [

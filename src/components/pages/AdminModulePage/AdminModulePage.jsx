@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { AdminModuleProvider, useAdminModule } from "../../../context/AdminModuleContext.jsx";
 import { AdminAddMoneyLandingView, AdminAutoWalletTopUpView, AdminManualWalletTopUpView } from "../../admin/AdminAddMoneyViews.jsx";
-import { AdminAddOrderLandingView, AdminNonWovenBagOrderView, AdminNonWovenBagSelectionView } from "../../admin/AdminAddOrderViews.jsx";
+import { AdminAddOrderLandingView, AdminBoxBagDesignOptionsView, AdminDCutBagDesignOptionsView, AdminLoopBagDesignOptionsView, AdminNonWovenBagOrderView, AdminNonWovenBagSelectionView } from "../../admin/AdminAddOrderViews.jsx";
 import AdminModuleLayout from "../../admin/AdminModuleLayout.jsx";
 import {
   ADMIN_ADD_MONEY_BASE_PATH,
@@ -587,6 +587,9 @@ function AdminModuleScreen({ session, pathname }) {
   const isWalletDetailsRoute = Boolean(walletDetailsId);
   const isAddOrderRoute = pathname === ADMIN_ADD_ORDER_BASE_PATH;
   const isNonWovenBagRoute = pathname === `${ADMIN_ADD_ORDER_BASE_PATH}/non-woven-bag`;
+  const isDCutDesignOptionsRoute = pathname === `${ADMIN_ADD_ORDER_BASE_PATH}/non-woven-bag/d-cut-bag/design-options`;
+  const isLoopDesignOptionsRoute = pathname === `${ADMIN_ADD_ORDER_BASE_PATH}/non-woven-bag/loop-bag/design-options`;
+  const isBoxDesignOptionsRoute = pathname === `${ADMIN_ADD_ORDER_BASE_PATH}/non-woven-bag/box-bag/design-options`;
   const isNonWovenBagOrderRoute = pathname.startsWith(`${ADMIN_ADD_ORDER_BASE_PATH}/non-woven-bag/`);
   const isAddMoneyRoute = pathname === ADMIN_ADD_MONEY_BASE_PATH;
   const isManualTopUpRoute = pathname === `${ADMIN_ADD_MONEY_BASE_PATH}/manual`;
@@ -1022,6 +1025,12 @@ function AdminModuleScreen({ session, pathname }) {
         <AdminAddOrderLandingView />
       ) : isNonWovenBagRoute ? (
         <AdminNonWovenBagSelectionView />
+      ) : isDCutDesignOptionsRoute ? (
+        <AdminDCutBagDesignOptionsView />
+      ) : isLoopDesignOptionsRoute ? (
+        <AdminLoopBagDesignOptionsView />
+      ) : isBoxDesignOptionsRoute ? (
+        <AdminBoxBagDesignOptionsView />
       ) : isNonWovenBagOrderRoute ? (
         <AdminNonWovenBagOrderView bagSlug={currentBagSlug} />
       ) : isAddMoneyRoute ? (

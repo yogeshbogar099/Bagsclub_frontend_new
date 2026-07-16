@@ -3,10 +3,13 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminModulePage from "./components/pages/AdminModulePage/AdminModulePage.jsx";
 import AssociateAddOrderPage from "./components/associate/AssociateAddOrderPage.jsx";
 import AssociateAutoWalletTopUpPage from "./components/associate/AssociateAutoWalletTopUpPage.jsx";
+import AssociateBoxBagDesignOptionsPage from "./components/associate/AssociateBoxBagDesignOptionsPage.jsx";
 import AssociateAddMoneyPage from "./components/associate/AssociateAddMoneyPage.jsx";
 import AssociateChangePasswordPage from "./components/associate/AssociateChangePasswordPage.jsx";
 import AssociateLayout from "./components/associate/AssociateLayout.jsx";
 import AssociateManualWalletTopUpPage from "./components/associate/AssociateManualWalletTopUpPage.jsx";
+import AssociateDCutBagDesignOptionsPage from "./components/associate/AssociateDCutBagDesignOptionsPage.jsx";
+import AssociateLoopBagDesignOptionsPage from "./components/associate/AssociateLoopBagDesignOptionsPage.jsx";
 import AssociateNonWovenBagPage from "./components/associate/AssociateNonWovenBagPage.jsx";
 import AssociateNonWovenBagOrderPage from "./components/associate/AssociateNonWovenBagOrderPage.jsx";
 import AssociateOrderDetailsPage from "./components/associate/AssociateOrderDetailsPage.jsx";
@@ -133,6 +136,9 @@ export default function App() {
         <Route path="book-order/details/:orderId" element={<AssociateOrderDetailsPage />} />
         <Route path="book-order/details/:orderId/production-log" element={<AssociateOrderProductionLogPage />} />
         <Route path="book-order/non-woven-bag" element={<AssociateNonWovenBagPage />} />
+        <Route path="book-order/non-woven-bag/d-cut-bag/design-options" element={<AssociateDCutBagDesignOptionsPage />} />
+        <Route path="book-order/non-woven-bag/loop-bag/design-options" element={<AssociateLoopBagDesignOptionsPage />} />
+        <Route path="book-order/non-woven-bag/box-bag/design-options" element={<AssociateBoxBagDesignOptionsPage />} />
         <Route path="book-order/non-woven-bag/:bagSlug" element={<AssociateNonWovenBagOrderPage />} />
         <Route path="*" element={<></>} />
       </Route>

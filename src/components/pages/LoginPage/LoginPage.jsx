@@ -12,7 +12,7 @@ import {
   Users
 } from "lucide-react";
 import { navItems as landingNavItems } from "../../../data/landingPageData.js";
-import logo from "../../../assets/images/logo.png";
+import logo from "../../../assets/images/Bags_Club.png";
 import { getAuthSession, getDashboardPath, navigateTo, saveAuthSession } from "../../../utils/auth.js";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
@@ -298,12 +298,8 @@ function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-8">
-        <a href="/" onClick={navigateHome} className="flex items-center gap-3">
+        <a href="/" onClick={navigateHome} className="flex items-center">
           <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
-          <div className="flex flex-col justify-center">
-            <div className="text-lg font-extrabold tracking-wide text-blue-700 sm:text-xl md:text-2xl">BAGSCLUB</div>
-            <div className="text-xs font-medium text-slate-600 sm:text-sm">No.1 Bag Printing Service</div>
-          </div>
         </a>
 
         <div className="flex items-center gap-3">
@@ -376,31 +372,6 @@ function LoginPanel() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
       });
-      const responsePreview = await response
-        .clone()
-        .text()
-        .then((value) => value.slice(0, 180))
-        .catch(() => "");
-      // #region debug-point A:login-response-shape
-      fetch("http://127.0.0.1:7777/event", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: "vercel-login-json",
-          runId: "pre-fix",
-          hypothesisId: "A",
-          location: "LoginPage.jsx:373",
-          msg: "[DEBUG] Login response received",
-          data: {
-            requestUrl: response.url,
-            status: response.status,
-            contentType: response.headers.get("content-type") || "",
-            bodyPreview: responsePreview
-          },
-          ts: Date.now()
-        })
-      }).catch(() => {});
-      // #endregion
       const data = await response.json();
 
       if (!response.ok) {
@@ -416,23 +387,6 @@ function LoginPanel() {
         navigateTo(getDashboardPath(data.user.role));
       }, 800);
     } catch (error) {
-      // #region debug-point B:login-parse-error
-      fetch("http://127.0.0.1:7777/event", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: "vercel-login-json",
-          runId: "pre-fix",
-          hypothesisId: "B",
-          location: "LoginPage.jsx:392",
-          msg: "[DEBUG] Login request failed",
-          data: {
-            errorMessage: error?.message || "Unknown login error"
-          },
-          ts: Date.now()
-        })
-      }).catch(() => {});
-      // #endregion
       setStatus(error.message || "Login failed.");
     } finally {
       setIsSubmitting(false);

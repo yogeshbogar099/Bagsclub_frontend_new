@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Carousal_three from "../../assets/images/Carousal_three.jpeg";
+import banner_2 from "../../assets/images/banner_2.jpeg";
 
 const OrderCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     { id: 1, image: Carousal_three },
-    { id: 2, image: Carousal_three }
+    { id: 2, image: banner_2 }
   ];
 
   useEffect(() => {

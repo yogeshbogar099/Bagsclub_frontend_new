@@ -7,12 +7,12 @@ export default function Hero() {
     {
       image: bg02,
       title: "Premium Bag Printing Solutions",
-      subtitle: "No.1 Bag Printing Service",
+      subtitle: "Professional Printing Service",
       description: "High-quality printing with professional finishing and reliable delivery."
     },
     {
       image: carousalOne,
-      title: "BAGSCLUB",
+      title: "Trusted by Businesses",
       subtitle: "Trusted by Businesses",
       description: "Create premium branded bags that make your business stand out."
     }

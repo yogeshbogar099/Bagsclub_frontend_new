@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { nonWovenBagCards } from "./sharedOrderData.js";
 
-export default function SharedNonWovenBagSelection({ basePath }) {
+export default function SharedNonWovenBagSelection({ basePath, useDCutDesignOptions = false, useLoopDesignOptions = false, useBoxDesignOptions = false }) {
   const navigate = useNavigate();
 
   return (
@@ -34,7 +34,22 @@ export default function SharedNonWovenBagSelection({ basePath }) {
                 key={card.id}
                 type="button"
                 className="group w-full max-w-[220px] text-center"
-                onClick={() => navigate(`${basePath}/non-woven-bag/${card.slug}`)}
+                onClick={() => {
+                  if (useDCutDesignOptions && card.slug === "d-cut-bag") {
+                    navigate(`${basePath}/non-woven-bag/d-cut-bag/design-options`);
+                    return;
+                  }
+                  if (useLoopDesignOptions && card.slug === "loop-bag") {
+                    navigate(`${basePath}/non-woven-bag/loop-bag/design-options`);
+                    return;
+                  }
+                  if (useBoxDesignOptions && card.slug === "box-bag") {
+                    navigate(`${basePath}/non-woven-bag/box-bag/design-options`);
+                    return;
+                  }
+
+                  navigate(`${basePath}/non-woven-bag/${card.slug}`);
+                }}
               >
                 <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
                   <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />

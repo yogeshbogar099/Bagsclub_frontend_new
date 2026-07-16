@@ -45,7 +45,22 @@ export default function AssociateNonWovenBagPage() {
                 key={card.id}
                 type="button"
                 className="group w-full max-w-[220px] text-center"
-                onClick={() => navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`)}
+                onClick={() => {
+                  if (card.slug === "d-cut-bag") {
+                    navigate("/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag/design-options");
+                    return;
+                  }
+                  if (card.slug === "loop-bag") {
+                    navigate("/dashboard/associate-member/book-order/non-woven-bag/loop-bag/design-options");
+                    return;
+                  }
+                  if (card.slug === "box-bag") {
+                    navigate("/dashboard/associate-member/book-order/non-woven-bag/box-bag/design-options");
+                    return;
+                  }
+
+                  navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`);
+                }}
               >
                 <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
                   <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />

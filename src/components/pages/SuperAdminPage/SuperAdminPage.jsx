@@ -49,8 +49,8 @@ import {
   tableShellClassName
 } from "../../shared-table/tableStyles.js";
 import { SuperAdminAddMoneyLandingView, SuperAdminAutoWalletTopUpView, SuperAdminManualWalletTopUpView } from "../../super-admin/SuperAdminAddMoneyViews.jsx";
-import { SuperAdminAddOrderLandingView, SuperAdminNonWovenBagOrderView, SuperAdminNonWovenBagSelectionView } from "../../super-admin/SuperAdminAddOrderViews.jsx";
-import logo from "../../../assets/images/logo.png";
+import { SuperAdminAddOrderLandingView, SuperAdminBoxBagDesignOptionsView, SuperAdminDCutBagDesignOptionsView, SuperAdminLoopBagDesignOptionsView, SuperAdminNonWovenBagOrderView, SuperAdminNonWovenBagSelectionView } from "../../super-admin/SuperAdminAddOrderViews.jsx";
+import logo from "../../../assets/images/Bags_Club.png";
 
 const primaryNavItems = [
   {
@@ -1032,7 +1032,14 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
   const isAllOrdersRoute = currentRoute.path === "/dashboard/super-admin/order-management/all-orders";
   const isAddOrderRoute = currentRoute.path === "/dashboard/super-admin/order-management/add-order";
   const isAddOrderNonWovenRoute = currentRoute.path === "/dashboard/super-admin/order-management/add-order/non-woven-bag";
-  const isAddOrderNonWovenFormRoute = currentRoute.path.startsWith("/dashboard/super-admin/order-management/add-order/non-woven-bag/");
+  const isAddOrderDCutDesignOptionsRoute = currentRoute.path === "/dashboard/super-admin/order-management/add-order/non-woven-bag/d-cut-bag/design-options";
+  const isAddOrderLoopDesignOptionsRoute = currentRoute.path === "/dashboard/super-admin/order-management/add-order/non-woven-bag/loop-bag/design-options";
+  const isAddOrderBoxDesignOptionsRoute = currentRoute.path === "/dashboard/super-admin/order-management/add-order/non-woven-bag/box-bag/design-options";
+  const isAddOrderNonWovenFormRoute =
+    currentRoute.path.startsWith("/dashboard/super-admin/order-management/add-order/non-woven-bag/") &&
+    !isAddOrderDCutDesignOptionsRoute &&
+    !isAddOrderLoopDesignOptionsRoute &&
+    !isAddOrderBoxDesignOptionsRoute;
   const isAddMoneyRoute = currentRoute.path === "/dashboard/super-admin/wallet-management/add-money";
   const isManualTopUpRoute = currentRoute.path === "/dashboard/super-admin/wallet-management/add-money/manual";
   const isAutoTopUpRoute = currentRoute.path === "/dashboard/super-admin/wallet-management/add-money/manual/auto";
@@ -2490,18 +2497,12 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[320px_1fr_280px] md:items-center">
           <div className="flex justify-center md:justify-start">
-            <div id="ctl00_imgLogo" className="flex items-center gap-3">
+            <div id="ctl00_imgLogo" className="flex items-center">
               <img
                 src={logo}
                 alt="BAGSCLUB"
                 className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20"
               />
-              <div className="flex flex-col justify-center">
-                <div className="text-lg font-extrabold tracking-wide text-blue-700 sm:text-xl md:text-2xl">
-                  BAGSCLUB
-                </div>
-                <div className="text-xs font-medium text-slate-600 sm:text-sm">No.1 Bag Printing Service</div>
-              </div>
             </div>
           </div>
 
@@ -2753,6 +2754,51 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
             </div>
           </section>
           <SuperAdminNonWovenBagSelectionView />
+        </main>
+      ) : isAddOrderDCutDesignOptionsRoute ? (
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-5">
+          <section className="rounded border border-slate-300 border-l-4 border-l-[#a71a00] bg-white px-4 py-4 shadow-sm">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                  <LayoutDashboard className="text-[#a71a00]" size={24} />
+                  {currentRoute.label}
+                </h1>
+                <p className="mt-1 text-xs text-slate-500">{currentRoute.description}</p>
+              </div>
+            </div>
+          </section>
+          <SuperAdminDCutBagDesignOptionsView />
+        </main>
+      ) : isAddOrderLoopDesignOptionsRoute ? (
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-5">
+          <section className="rounded border border-slate-300 border-l-4 border-l-[#a71a00] bg-white px-4 py-4 shadow-sm">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                  <LayoutDashboard className="text-[#a71a00]" size={24} />
+                  {currentRoute.label}
+                </h1>
+                <p className="mt-1 text-xs text-slate-500">{currentRoute.description}</p>
+              </div>
+            </div>
+          </section>
+          <SuperAdminLoopBagDesignOptionsView />
+        </main>
+      ) : isAddOrderBoxDesignOptionsRoute ? (
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-5">
+          <section className="rounded border border-slate-300 border-l-4 border-l-[#a71a00] bg-white px-4 py-4 shadow-sm">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h1 className="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                  <LayoutDashboard className="text-[#a71a00]" size={24} />
+                  {currentRoute.label}
+                </h1>
+                <p className="mt-1 text-xs text-slate-500">{currentRoute.description}</p>
+              </div>
+            </div>
+          </section>
+          <SuperAdminBoxBagDesignOptionsView />
         </main>
       ) : isAddOrderNonWovenFormRoute ? (
         <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-5">

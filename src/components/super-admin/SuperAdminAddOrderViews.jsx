@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../lib/apiClient.js";
 import SharedAddOrderLanding from "../shared-order/SharedAddOrderLanding.jsx";
+import SharedBoxBagDesignOptions from "../shared-order/SharedBoxBagDesignOptions.jsx";
+import SharedDCutBagDesignOptions from "../shared-order/SharedDCutBagDesignOptions.jsx";
+import SharedLoopBagDesignOptions from "../shared-order/SharedLoopBagDesignOptions.jsx";
 import SharedNonWovenBagOrderForm from "../shared-order/SharedNonWovenBagOrderForm.jsx";
 import SharedNonWovenBagSelection from "../shared-order/SharedNonWovenBagSelection.jsx";
 
@@ -25,7 +28,19 @@ export function SuperAdminAddOrderLandingView() {
 }
 
 export function SuperAdminNonWovenBagSelectionView() {
-  return <SharedNonWovenBagSelection basePath={SUPER_ADMIN_ADD_ORDER_BASE_PATH} />;
+  return <SharedNonWovenBagSelection basePath={SUPER_ADMIN_ADD_ORDER_BASE_PATH} useDCutDesignOptions useLoopDesignOptions useBoxDesignOptions />;
+}
+
+export function SuperAdminDCutBagDesignOptionsView() {
+  return <SharedDCutBagDesignOptions basePath={SUPER_ADMIN_ADD_ORDER_BASE_PATH} />;
+}
+
+export function SuperAdminLoopBagDesignOptionsView() {
+  return <SharedLoopBagDesignOptions basePath={SUPER_ADMIN_ADD_ORDER_BASE_PATH} />;
+}
+
+export function SuperAdminBoxBagDesignOptionsView() {
+  return <SharedBoxBagDesignOptions basePath={SUPER_ADMIN_ADD_ORDER_BASE_PATH} />;
 }
 
 export function SuperAdminNonWovenBagOrderView({ bagSlug }) {

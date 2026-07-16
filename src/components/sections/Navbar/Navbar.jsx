@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { navItems } from "../../../data/landingPageData.js";
-import logo from "../../../assets/images/logo.png";
+import logo from "../../../assets/images/Bags_Club.png";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { navigateTo } from "../../../utils/auth.js";
 
@@ -45,7 +45,7 @@ export default function Navbar() {
           isScrolled ? "py-2" : "py-3 sm:py-4"
         ].join(" ")}
       >
-        <a href="#" className="flex items-center gap-3">
+        <a href="#" className="flex items-center">
           <img
             src={logo}
             alt="BAGSCLUB"
@@ -54,24 +54,6 @@ export default function Navbar() {
               isScrolled ? "h-14 sm:h-16 md:h-20" : "h-16 sm:h-20 md:h-24"
             ].join(" ")}
           />
-          <div className="flex flex-col justify-center">
-            <div
-              className={[
-                "text-lg font-extrabold tracking-wide transition-colors duration-300 sm:text-xl md:text-2xl",
-                isScrolled ? "text-blue-700" : "text-white"
-              ].join(" ")}
-            >
-              BAGSCLUB
-            </div>
-            <div
-              className={[
-                "text-xs font-medium transition-colors duration-300 sm:text-sm",
-                isScrolled ? "text-slate-600" : "text-white/80"
-              ].join(" ")}
-            >
-              No.1 Bag Printing Service
-            </div>
-          </div>
         </a>
 
         <div className="flex items-center gap-3">
