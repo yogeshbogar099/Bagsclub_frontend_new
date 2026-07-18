@@ -44,7 +44,7 @@ export default function SharedManualWalletTopUpPage({ basePath }) {
           <section>
             <div className="min-h-[250px] border border-[#ececec] bg-[#f3f3f3] p-4">
               <div className="text-[18px] font-bold text-[#3d3d3d] md:text-[21px]">
-                For Paying VIA QR Code click{" "}
+                For Paying via QR Code, click{" "}
                 <button
                   type="button"
                   onClick={() => navigate(`${basePath}/manual/auto`)}
@@ -52,6 +52,7 @@ export default function SharedManualWalletTopUpPage({ basePath }) {
                 >
                   here
                 </button>
+                .
               </div>
             </div>
           </section>

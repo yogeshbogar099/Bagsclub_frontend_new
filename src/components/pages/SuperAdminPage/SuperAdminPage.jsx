@@ -2501,7 +2501,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
               <img
                 src={logo}
                 alt="BAGSCLUB"
-                className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20"
+                className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16"
               />
             </div>
           </div>

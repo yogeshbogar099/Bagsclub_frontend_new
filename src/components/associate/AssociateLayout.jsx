@@ -35,7 +35,7 @@ export default function AssociateLayout() {
       <header className="w-full bg-white">
         <div className="container mx-auto flex items-start justify-between px-4 py-4">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
+            <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
           </div>
 
           <div className="flex flex-col items-end space-y-1 text-sm text-gray-700">

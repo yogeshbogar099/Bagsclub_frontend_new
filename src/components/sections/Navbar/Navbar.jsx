@@ -51,7 +51,7 @@ export default function Navbar() {
             alt="BAGSCLUB"
             className={[
               "block w-auto shrink-0 object-contain transition-all duration-300",
-              isScrolled ? "h-14 sm:h-16 md:h-20" : "h-16 sm:h-20 md:h-24"
+              isScrolled ? "h-10 sm:h-12 md:h-14" : "h-12 sm:h-14 md:h-16"
             ].join(" ")}
           />
         </a>

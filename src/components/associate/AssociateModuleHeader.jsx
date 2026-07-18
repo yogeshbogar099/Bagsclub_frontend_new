@@ -16,7 +16,7 @@ export default function AssociateModuleHeader({ session, headerData, onRefresh }
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[280px_1fr_280px] md:items-center">
         <div className="flex items-center justify-center md:justify-start">
-          <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
+          <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
         </div>
 
         <div className="text-center">

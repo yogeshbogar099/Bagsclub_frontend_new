@@ -299,7 +299,7 @@ function Header() {
     <header className="fixed inset-x-0 top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-8">
         <a href="/" onClick={navigateHome} className="flex items-center">
-          <img src={logo} alt="BAGSCLUB" className="block h-14 w-auto shrink-0 object-contain sm:h-16 md:h-20" />
+          <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
         </a>
 
         <div className="flex items-center gap-3">
