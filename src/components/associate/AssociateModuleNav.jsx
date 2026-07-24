@@ -5,7 +5,6 @@ import {
   ChevronDown,
   Home,
   LifeBuoy,
-  List,
   PackageSearch,
   PlusCircle,
   Wallet
@@ -29,7 +28,6 @@ export default function AssociateNavbar() {
       ]
     },
     { name: "Add Money", path: `${basePath}/wallet`, icon: Wallet },
-    { name: "Rate List", path: `${basePath}/reports/rate-list`, icon: List },
     { name: "Add Order", path: `${basePath}/book-order`, icon: PlusCircle },
     {
       name: "Reports",
@@ -53,10 +51,8 @@ export default function AssociateNavbar() {
   ];
 
   return (
-    <>
-      <div className="h-[3px] w-full bg-[#a71a00]" aria-hidden="true" />
-      <nav className="w-full bg-white py-2">
-        <ul className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 text-sm font-medium text-gray-700 md:gap-6">
+    <nav className="border-y border-[#ddd7d0] bg-[#f5f2ef] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <ul className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-start gap-1 px-4 py-1.5 text-[12px] font-medium text-[#4d4d4d]">
           {menuItems.map((item, index) => (
             <li
               key={item.name}
@@ -77,13 +73,15 @@ export default function AssociateNavbar() {
                 if (item.dropdown) {
                   return (
                     <div
-                      className={`flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-2 transition-colors ${
-                        isActive ? "bg-red-600 font-bold text-white" : "text-gray-700 hover:bg-red-50 hover:text-red-600"
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none transition-all ${
+                        isActive
+                          ? "border-[#9f2d07] bg-[#b7370c] font-semibold text-white shadow-[0_1px_2px_rgba(167,26,0,0.18)]"
+                          : "border-transparent bg-transparent text-[#4d4d4d] hover:border-[#e6dfd8] hover:bg-white hover:text-[#a71a00]"
                       }`}
                     >
-                      <item.icon size={18} className={isActive ? "text-white" : "text-red-500"} />
+                      <item.icon size={12} className={isActive ? "text-white" : "text-[#d29a4c]"} />
                       {item.name}
-                      <ChevronDown size={14} className={isActive ? "text-white" : "text-gray-700"} />
+                      <ChevronDown size={12} className={isActive ? "text-white" : "text-[#7a7a7a]"} />
                     </div>
                   );
                 }
@@ -91,24 +89,26 @@ export default function AssociateNavbar() {
                 return (
                 <Link
                   to={item.path}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-2 transition-colors ${
-                    isActive ? "bg-red-600 font-bold text-white" : "text-gray-700 hover:bg-red-50 hover:text-red-600"
+                  className={`flex items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none transition-all ${
+                    isActive
+                      ? "border-[#9f2d07] bg-[#b7370c] font-semibold text-white shadow-[0_1px_2px_rgba(167,26,0,0.18)]"
+                      : "border-transparent bg-transparent text-[#4d4d4d] hover:border-[#e6dfd8] hover:bg-white hover:text-[#a71a00]"
                   }`}
                 >
-                  <item.icon size={18} className={isActive ? "text-white" : "text-red-500"} />
+                  <item.icon size={12} className={isActive ? "text-white" : "text-[#d29a4c]"} />
                   {item.name}
                 </Link>
                 );
               })()}
 
               {item.dropdown && activeDropdown === index ? (
-                <div className="absolute left-0 top-full z-50 w-64 rounded-md border border-gray-100 bg-white py-2 shadow-lg">
+                <div className="absolute left-0 top-full z-50 mt-1 w-64 overflow-hidden rounded-[8px] border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)]">
                   {item.dropdown.map((subItem) => (
                     <Link
                       key={subItem.path}
                       to={subItem.path}
-                      className={`block px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-[#a71a00] ${
-                        location.pathname.startsWith(subItem.path) ? "bg-gray-50 font-semibold text-[#a71a00]" : ""
+                      className={`block px-4 py-2 text-[12px] text-[#5f6673] transition-colors hover:bg-[#faf6f4] hover:text-[#a71a00] ${
+                        location.pathname.startsWith(subItem.path) ? "bg-[#faf6f4] font-semibold text-[#a71a00]" : ""
                       }`}
                     >
                       {subItem.name}
@@ -118,9 +118,7 @@ export default function AssociateNavbar() {
               ) : null}
             </li>
           ))}
-        </ul>
-      </nav>
-      <div className="h-[3px] w-full bg-[#a71a00]" aria-hidden="true" />
-    </>
+      </ul>
+    </nav>
   );
 }

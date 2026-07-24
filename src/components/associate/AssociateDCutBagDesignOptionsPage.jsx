@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 const designOptions = [
   { key: "single", title: "Single Color" },
   { key: "two", title: "Two Color" },
-  { key: "four", title: "Four Color" },
-  { key: "mix", title: "Mix Color" }
+  { key: "four", title: "Four Color" }
 ];
 
 export default function AssociateDCutBagDesignOptionsPage() {

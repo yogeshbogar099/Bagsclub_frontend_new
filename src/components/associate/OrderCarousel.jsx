@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Carousal_three from "../../assets/images/Carousal_three.jpeg";
 import banner_2 from "../../assets/images/banner_2.jpeg";
 
-const OrderCarousel = () => {
+const OrderCarousel = ({ aspectRatio = "706 / 150" }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -24,7 +24,7 @@ const OrderCarousel = () => {
         className="relative overflow-hidden w-full"
         style={{
           maxWidth: "100%",
-          aspectRatio: "706 / 150",
+          aspectRatio,
           height: "auto"
         }}
       >

@@ -10,13 +10,8 @@ async function submitTopUp(payload) {
   return data;
 }
 
-async function loadWalletHistory() {
-  const { data } = await apiClient.get("/super-admin/wallet/history");
-  return data;
-}
-
 export function SuperAdminAddMoneyLandingView() {
-  return <SharedAddMoneyPage basePath={SUPER_ADMIN_ADD_MONEY_BASE_PATH} loadWalletHistory={loadWalletHistory} />;
+  return <SharedAddMoneyPage basePath={SUPER_ADMIN_ADD_MONEY_BASE_PATH} />;
 }
 
 export function SuperAdminManualWalletTopUpView() {

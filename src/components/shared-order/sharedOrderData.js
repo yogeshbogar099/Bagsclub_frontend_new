@@ -1,11 +1,11 @@
 import boxBagImage from "../../assets/images/BoxBag.png";
-import canvasBag from "../../assets/images/CanvasBag.png";
+import canvasBag from "../../assets/images/Canvas_Bag.png";
 import dCutImage from "../../assets/images/D_Cut.png";
-import hdpeBag from "../../assets/images/HDPE.png";
+import hdpeBag from "../../assets/images/HDPE_Bag.png";
 import loopBagImage from "../../assets/images/LoopBag.png";
-import nonWovenBag from "../../assets/images/NonWoven.png";
-import paperBag from "../../assets/images/PaperBag.png";
-import plasticBag from "../../assets/images/PlasticBag.png";
+import nonWovenBag from "../../assets/images/Non_Woven_Bag.png";
+import paperBag from "../../assets/images/Paper_Bag.png";
+import plasticBag from "../../assets/images/Plastic_Bag.png";
 
 export const printingServiceCards = [
   { id: 1, title: "NON-WOVEN BAG", image: nonWovenBag },

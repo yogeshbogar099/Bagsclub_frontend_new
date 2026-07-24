@@ -3,11 +3,12 @@ import { FileText, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAssociateModule } from "../../context/AssociateModuleContext.jsx";
 import OrderCarousel from "./OrderCarousel.jsx";
-import NonWoven from "../../assets/images/NonWoven.png";
-import PlasticBag from "../../assets/images/PlasticBag.png";
-import HDPE from "../../assets/images/HDPE.png";
-import PaperBag from "../../assets/images/PaperBag.png";
-import CanvasBag from "../../assets/images/CanvasBag.png";
+import PrintingServicesCarousel from "../shared-order/PrintingServicesCarousel.jsx";
+import NonWoven from "../../assets/images/Non_Woven_Bag.png";
+import PlasticBag from "../../assets/images/Plastic_Bag.png";
+import HDPE from "../../assets/images/HDPE_Bag.png";
+import PaperBag from "../../assets/images/Paper_Bag.png";
+import CanvasBag from "../../assets/images/Canvas_Bag.png";
 import {
   getTableBodyRowClassName,
   tableActionButtonClassName,
@@ -36,6 +37,7 @@ export default function AssociateAddOrderPage() {
   const navigate = useNavigate();
   const { sectionLoading, loadRecentOrders } = useAssociateModule();
   const [recentOrders, setRecentOrders] = useState([]);
+  const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
 
   const refreshRecentOrders = useCallback(async () => {
     const data = await loadRecentOrders(5);
@@ -58,43 +60,70 @@ export default function AssociateAddOrderPage() {
     };
   }, [refreshRecentOrders]);
 
+  const handleSelectService = useCallback(
+    (card) => {
+      if (card.title === "NON-WOVEN BAG") {
+        navigate("/dashboard/associate-member/book-order/non-woven-bag");
+      }
+    },
+    [navigate]
+  );
+
+  const handleServiceNavClick = useCallback((index) => {
+    setSelectedServiceIndex(index);
+  }, []);
+
+  const handleCarouselIndexChange = useCallback((index) => {
+    setSelectedServiceIndex(index);
+  }, []);
+
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
-      <OrderCarousel />
+      <OrderCarousel aspectRatio="706 / 170" />
 
       <section className="px-4 py-6 md:px-8">
         <div className="mx-auto max-w-7xl">
           <h1
-            className="mb-5 text-3xl font-black uppercase tracking-tight text-black md:text-4xl"
+            className="mb-5 text-center text-3xl font-black uppercase tracking-tight text-black md:text-4xl"
             style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}
           >
             List Of Printing Services
           </h1>
 
-          <div
-            className="grid justify-items-center gap-x-6 gap-y-7"
-            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}
-          >
-            {printingServiceCards.map((card) => (
-              <button
-                key={card.id}
-                type="button"
-                className="group w-full max-w-[210px] text-center"
-                onClick={() => {
-                  if (card.title === "NON-WOVEN BAG") {
-                    navigate("/dashboard/associate-member/book-order/non-woven-bag");
-                  }
-                }}
-              >
-                <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <div className="flex h-[180px] w-full items-center justify-center bg-gradient-to-br from-[#3b2417] via-[#5a3925] to-[#8b684b] p-3 sm:h-[200px] md:h-[220px]">
-                    <img src={card.image} alt={card.title} className="h-full w-full object-contain object-center" />
-                  </div>
-                </div>
-                <div className="mt-2 text-[14px] font-bold uppercase leading-5 text-[#2d58a5] md:text-[15px]">{card.title}</div>
-              </button>
-            ))}
+          <div className="mb-6 overflow-x-auto pb-2">
+            <div className="mx-auto flex min-w-max items-center justify-center gap-5 sm:gap-7 md:gap-9">
+              {printingServiceCards.map((card, index) => {
+                const isActive = index === selectedServiceIndex;
+
+                return (
+                  <button
+                    key={card.id}
+                    type="button"
+                    onClick={() => handleServiceNavClick(index)}
+                    className={`group relative bg-transparent px-0 pb-3 text-sm font-normal tracking-normal transition-colors duration-300 sm:text-[15px] ${
+                      isActive ? "text-[#305CA7]" : "text-[#5f6673] hover:text-[#305CA7]"
+                    }`}
+                  >
+                    {card.title}
+                    <span
+                      aria-hidden="true"
+                      className={`absolute bottom-0 left-0 h-[2px] w-full origin-center rounded-full transition-all duration-300 ease-in-out ${
+                        isActive ? "bg-[#305CA7] opacity-100 h-[3px]" : "bg-[#cbd5e1] opacity-100 group-hover:bg-[#94a3b8]"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          <PrintingServicesCarousel
+            cards={printingServiceCards}
+            initialSelectedId={printingServiceCards[0]?.id}
+            activeIndex={selectedServiceIndex}
+            onActiveIndexChange={handleCarouselIndexChange}
+            onSelectCard={handleSelectService}
+          />
 
           <section className="mt-10">
             <div className="bg-white px-6 py-4 shadow-sm">

@@ -1,4 +1,4 @@
-import { LogOut, RefreshCcw, Wallet } from "lucide-react";
+import { LogOut, RefreshCcw, UserCircle2, Wallet } from "lucide-react";
 import logo from "../../assets/images/Bags_Club.png";
 import { clearAuthSession, navigateTo } from "../../utils/auth.js";
 
@@ -13,67 +13,73 @@ export default function AssociateModuleHeader({ session, headerData, onRefresh }
   }
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[280px_1fr_280px] md:items-center">
+    <header className="border-b border-[#d8dbe1] bg-[#f9f9fa]">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-3 md:grid-cols-[240px_1fr_320px] md:items-center">
         <div className="flex items-center justify-center md:justify-start">
-          <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
+          <img src={logo} alt="BAGSCLUB" className="block h-11 w-auto shrink-0 object-contain sm:h-12 md:h-14" />
         </div>
 
         <div className="text-center">
-          <div className="space-y-1">
-            <p className="text-sm font-bold text-[#333]">{headerData?.systemName || "Printing Services Division"}</p>
-            <p className="text-xs text-[#a71a00]">
+          <div className="space-y-0.5">
+            <p className="text-sm font-bold text-[#3a3a3a]">{headerData?.systemName || "Printing Services Division"}</p>
+            <p className="text-[11px] font-medium text-[#666]">
               Go to{" "}
               <button
                 type="button"
                 onClick={() => navigateTo("/")}
-                className="font-semibold text-blue-700 transition hover:text-[#a71a00] hover:underline"
+                className="font-semibold text-[#305CA7] transition hover:text-[#a71a00] hover:underline"
               >
                 All Services
               </button>
             </p>
-            <p className="text-xs leading-5 text-[#a71a00]">
+            <p className="text-[11px] leading-4 text-[#8b4d44]">
               {headerData?.systemDescription || "Responsive associate member portal with cards, forms, tables, and modal workflows."}
             </p>
           </div>
         </div>
 
-        <div className="text-center md:text-right">
-          <div className="space-y-1 text-sm">
-            <p className="font-bold">
-              Hi, <span>{userName}</span>
-            </p>
-            <div className="text-xs font-bold text-[#a71a00]">
-              <p>Member ID - {memberId}</p>
-              <p className="inline-flex items-center gap-2">
-                <Wallet size={14} />
-                <span>A/C Balance :</span>
+        <div className="flex flex-col items-center justify-center gap-2 md:items-end">
+          <div className="flex items-start gap-2 rounded-xl border border-[#e0e2e7] bg-white px-3 py-2 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+            <div className="mt-0.5 rounded-full bg-[#a71a00] p-1.5 text-white">
+              <UserCircle2 size={18} />
+            </div>
+            <div className="text-left text-xs leading-5 text-[#5c5c5c]">
+              <p className="font-bold text-[#2f2f2f]">
+                Hi, <span>{userName}</span>
+              </p>
+              <p className="font-semibold text-[#8f4d43]">Member ID - {memberId}</p>
+              <div className="inline-flex flex-wrap items-center gap-2 font-semibold text-[#8f4d43]">
+                <span className="inline-flex items-center gap-1.5">
+                  <Wallet size={13} />
+                  <span>A/C Balance :</span>
+                </span>
                 <button
                   type="button"
                   onClick={() => navigateTo("/dashboard/associate-member/wallet")}
-                  className="text-blue-700 transition hover:text-[#a71a00]"
+                  className="text-[#305CA7] transition hover:text-[#a71a00]"
                 >
                   {balance}
                 </button>
                 <button
                   type="button"
                   onClick={onRefresh}
-                  className="text-[#a71a00] transition hover:text-blue-700"
+                  className="text-[#a71a00] transition hover:text-[#305CA7]"
                   aria-label="Refresh balance"
                 >
-                  <RefreshCcw size={14} />
+                  <RefreshCcw size={13} />
                 </button>
-              </p>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition hover:text-[#a71a00]"
-            >
-              <LogOut size={16} />
-              Sign Out
-            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 rounded-full border border-[#f0c8bd] bg-white px-3 py-1.5 text-xs font-semibold text-[#a71a00] transition hover:border-[#a71a00] hover:bg-[#fff7f4]"
+          >
+            <LogOut size={14} />
+            Sign Out
+          </button>
         </div>
       </div>
     </header>

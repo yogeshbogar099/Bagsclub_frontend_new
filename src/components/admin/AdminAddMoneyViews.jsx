@@ -6,9 +6,7 @@ import SharedManualWalletTopUpPage from "../shared-wallet/SharedManualWalletTopU
 export const ADMIN_ADD_MONEY_BASE_PATH = "/dashboard/admin/wallet/add-money";
 
 export function AdminAddMoneyLandingView() {
-  const { fetchWalletHistory } = useAdminModule();
-
-  return <SharedAddMoneyPage basePath={ADMIN_ADD_MONEY_BASE_PATH} loadWalletHistory={fetchWalletHistory} />;
+  return <SharedAddMoneyPage basePath={ADMIN_ADD_MONEY_BASE_PATH} />;
 }
 
 export function AdminManualWalletTopUpView() {
