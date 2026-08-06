@@ -14,7 +14,7 @@ export default function AdminModuleLayout({ session, pathname, bootstrap, onRefr
     <div className="min-h-screen bg-[#f5f6f8] text-[#333]">
       <AdminModuleHeader session={session} headerData={headerData} onRefresh={onRefresh} />
       <AdminModuleNav pathname={pathname} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} onNavigate={navigateTo} />
-      <main className="mx-auto w-full max-w-7xl px-4 py-5">{children}</main>
+      <main className="mx-auto min-w-0 w-full max-w-7xl px-4 py-5">{children}</main>
       <AdminModuleFooter footerData={footerData} />
     </div>
   );

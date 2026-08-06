@@ -2495,8 +2495,8 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f6f8] text-[#333]">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[320px_1fr_280px] md:items-center">
-          <div className="flex justify-center md:justify-start">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)_280px] lg:items-center">
+          <div className="flex justify-center lg:justify-start">
             <div id="ctl00_imgLogo" className="flex items-center">
               <img
                 src={logo}
@@ -2506,7 +2506,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
             </div>
           </div>
 
-          <div className="text-center">
+          <div className="min-w-0 text-center">
             <div id="partnerTypeContainer" className="space-y-1">
               <p className="text-sm font-bold text-[#333]">Super Admin Module</p>
               <p className="text-xs text-[#a71a00]">
@@ -2525,7 +2525,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
             </div>
           </div>
 
-          <div className="text-center md:text-right">
+          <div className="min-w-0 text-center lg:text-right">
             <div id="ctl00_divUserInfo" className="space-y-1 text-sm">
               <p className="font-bold">
                 Hi, <span id="lbLoginUserName">{session.user.name || "Super Admin"}</span>
@@ -2565,7 +2565,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       <div className="h-[3px] w-full bg-[#a71a00] shadow-sm" aria-hidden="true" />
 
       <nav className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-1 gap-y-2 px-4 py-2">
+        <div className="mx-auto flex w-max min-w-full items-center gap-x-1 gap-y-2 overflow-x-auto px-4 py-2 md:max-w-7xl md:min-w-0 md:flex-wrap md:overflow-visible">
           {primaryNavItems.map((item) => {
             const isOpen = openMenuId === item.id;
             const isActive =
@@ -2594,7 +2594,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                   key={item.id}
                   type="button"
                   onClick={() => handleNavigate(item.path)}
-                  className={`rounded border px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
+                  className={`shrink-0 whitespace-nowrap rounded border px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
                 >
                   {item.label}
                 </button>
@@ -2604,7 +2604,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
             return (
               <div
                 key={item.id}
-                className="relative"
+                className="relative shrink-0"
                 onMouseEnter={() => handleMenuMouseEnter(item.id)}
                 onMouseLeave={() => handleMenuMouseLeave(item.id)}
               >
@@ -2612,7 +2612,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                   <button
                     type="button"
                     onClick={() => handleNavigate(item.path)}
-                    className={`px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
+                    className={`whitespace-nowrap px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
                   >
                     {item.label}
                   </button>
@@ -2634,7 +2634,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                 </div>
 
                 {isOpen ? (
-                  <div className="absolute left-0 top-full z-20 mt-1 min-w-[240px] overflow-hidden rounded-b border-t-2 border-[#a71a00] bg-white shadow-lg">
+                  <div className="absolute left-0 top-full z-20 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded-b border-t-2 border-[#a71a00] bg-white shadow-lg sm:min-w-[240px] sm:w-auto">
                     {item.children.map((child) => {
                       const isChildActive =
                         pathname === child.path ||

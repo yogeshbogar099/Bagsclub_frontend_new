@@ -14,12 +14,12 @@ export default function AssociateModuleHeader({ session, headerData, onRefresh }
 
   return (
     <header className="border-b border-[#d8dbe1] bg-[#f9f9fa]">
-      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-3 md:grid-cols-[240px_1fr_320px] md:items-center">
-        <div className="flex items-center justify-center md:justify-start">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-3 lg:grid-cols-[240px_minmax(0,1fr)_320px] lg:items-center">
+        <div className="flex items-center justify-center lg:justify-start">
           <img src={logo} alt="BAGSCLUB" className="block h-11 w-auto shrink-0 object-contain sm:h-12 md:h-14" />
         </div>
 
-        <div className="text-center">
+        <div className="min-w-0 text-center">
           <div className="space-y-0.5">
             <p className="text-sm font-bold text-[#3a3a3a]">{headerData?.systemName || "Printing Services Division"}</p>
             <p className="text-[11px] font-medium text-[#666]">
@@ -38,12 +38,12 @@ export default function AssociateModuleHeader({ session, headerData, onRefresh }
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2 md:items-end">
-          <div className="flex items-start gap-2 rounded-xl border border-[#e0e2e7] bg-white px-3 py-2 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+        <div className="flex min-w-0 flex-col items-center justify-center gap-2 lg:items-end">
+          <div className="flex w-full max-w-[320px] items-start gap-2 rounded-xl border border-[#e0e2e7] bg-white px-3 py-2 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
             <div className="mt-0.5 rounded-full bg-[#a71a00] p-1.5 text-white">
               <UserCircle2 size={18} />
             </div>
-            <div className="text-left text-xs leading-5 text-[#5c5c5c]">
+            <div className="min-w-0 text-left text-xs leading-5 text-[#5c5c5c]">
               <p className="font-bold text-[#2f2f2f]">
                 Hi, <span>{userName}</span>
               </p>

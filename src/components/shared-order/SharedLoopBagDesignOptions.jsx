@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import LoopSingleColor from "../../assets/images/Loop_Single_Color.jpeg";
+import LoopTwoColor from "../../assets/images/Loop_Two_Color.jpeg";
+import LoopFourColor from "../../assets/images/Loop_Four_Color.jpeg";
 
 const designOptions = [
-  { key: "single", title: "Single Color" },
-  { key: "two", title: "Two Color" },
-  { key: "four", title: "Four Color" }
+  { key: "single", title: "Single Color", image: LoopSingleColor },
+  { key: "two", title: "Two Color", image: LoopTwoColor },
+  { key: "four", title: "Four Color", image: LoopFourColor }
 ];
 
 export default function SharedLoopBagDesignOptions({ basePath }) {
@@ -11,8 +14,8 @@ export default function SharedLoopBagDesignOptions({ basePath }) {
 
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
-      <section className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="px-3 py-6 sm:px-4 md:px-8">
+        <div className="mx-auto min-w-0 max-w-7xl">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
@@ -39,10 +42,11 @@ export default function SharedLoopBagDesignOptions({ basePath }) {
                 type="button"
                 className="group w-full max-w-[260px] text-left"
                 onClick={() => navigate(`${basePath}/non-woven-bag/loop-bag?design=${option.key}`)}
+                aria-label={option.title}
               >
                 <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <div className="flex h-[240px] w-full items-center justify-center bg-[#6b4324] px-5 text-center sm:h-[260px] md:h-[280px]">
-                    <div className="text-[18px] font-extrabold uppercase tracking-wide text-white md:text-[20px]">{option.title}</div>
+                  <div className="relative aspect-[2040/3061] w-full overflow-hidden">
+                    <img src={option.image} alt={option.title} className="absolute inset-0 block h-full w-full object-cover object-center" />
                   </div>
                 </div>
               </button>

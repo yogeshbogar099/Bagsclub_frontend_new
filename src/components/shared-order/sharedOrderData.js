@@ -225,6 +225,7 @@ export const dCutTwoColorTextColorOptions = [
   { value: "White", hex: "#ffffff", borderClassName: "border-slate-300", textClassName: "text-slate-700" },
   { value: "Blue", hex: "#2563eb", borderClassName: "border-blue-300", textClassName: "text-white" },
   { value: "Black", hex: "#111827", borderClassName: "border-slate-800", textClassName: "text-white" },
+  { value: "Red", hex: "#dc2626", borderClassName: "border-red-300", textClassName: "text-white" },
   { value: "Orange", hex: "#f97316", borderClassName: "border-orange-300", textClassName: "text-white" }
 ];
 

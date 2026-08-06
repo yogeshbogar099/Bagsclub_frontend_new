@@ -25,8 +25,8 @@ export default function AdminModuleNav({ pathname, openMenuId, setOpenMenuId, on
     <>
       <div className="h-[3px] w-full bg-[#a71a00] shadow-sm" aria-hidden="true" />
       <nav className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-1 gap-y-2 px-4 py-2">
-          <div className="mr-2 inline-flex items-center gap-2 rounded border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 md:hidden">
+        <div className="mx-auto flex w-max min-w-full items-center gap-x-1 gap-y-2 overflow-x-auto px-4 py-2 md:max-w-7xl md:min-w-0 md:flex-wrap md:overflow-visible">
+          <div className="mr-2 inline-flex shrink-0 items-center gap-2 rounded border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 md:hidden">
             <Menu size={16} /> Menu
           </div>
           {adminModuleNavItems.map((item) => {
@@ -46,7 +46,7 @@ export default function AdminModuleNav({ pathname, openMenuId, setOpenMenuId, on
                   key={item.id}
                   type="button"
                   onClick={() => onNavigate(item.path)}
-                  className={`rounded border px-3 py-2 text-sm font-semibold transition ${
+                  className={`shrink-0 whitespace-nowrap rounded border px-3 py-2 text-sm font-semibold transition ${
                     isActive
                       ? "border-[#a71a00] bg-[#a71a00] text-white"
                       : "border-transparent bg-transparent text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
@@ -62,7 +62,7 @@ export default function AdminModuleNav({ pathname, openMenuId, setOpenMenuId, on
             return (
               <div
                 key={item.id}
-                className="relative"
+                className="relative shrink-0"
                 onMouseEnter={() => openMenu(item.id)}
                 onMouseLeave={closeMenu}
               >
@@ -73,7 +73,7 @@ export default function AdminModuleNav({ pathname, openMenuId, setOpenMenuId, on
                       clearHoverTimeout();
                       setOpenMenuId((current) => (current === item.id ? null : item.id));
                     }}
-                    className={`px-3 py-2 text-sm font-semibold transition ${
+                    className={`whitespace-nowrap px-3 py-2 text-sm font-semibold transition ${
                       isActive
                         ? "border-[#a71a00] bg-[#a71a00] text-white"
                         : "border-transparent bg-transparent text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
@@ -99,7 +99,7 @@ export default function AdminModuleNav({ pathname, openMenuId, setOpenMenuId, on
                 </div>
 
                 {isOpen ? (
-                  <div className="absolute left-0 top-full z-20 min-w-[240px] translate-y-1 overflow-hidden rounded-b border-t-2 border-[#a71a00] bg-white shadow-lg">
+                  <div className="absolute left-0 top-full z-20 w-[min(16rem,calc(100vw-2rem))] translate-y-1 overflow-hidden rounded-b border-t-2 border-[#a71a00] bg-white shadow-lg sm:min-w-[240px] sm:w-auto">
                     {item.children.map((child) => {
                       const isChildActive =
                         pathname === child.path ||

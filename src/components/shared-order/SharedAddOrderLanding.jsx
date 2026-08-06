@@ -72,8 +72,8 @@ export default function SharedAddOrderLanding({ basePath, loadRecentOrders, onOp
     <div className="w-full bg-[#e8e8e8] pb-10">
       <OrderCarousel aspectRatio="706 / 170" />
 
-      <section className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="px-3 py-6 sm:px-4 md:px-8">
+        <div className="mx-auto min-w-0 max-w-7xl">
           <h1
             className="mb-5 text-center text-3xl font-black uppercase tracking-tight text-black md:text-4xl"
             style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}
@@ -82,7 +82,7 @@ export default function SharedAddOrderLanding({ basePath, loadRecentOrders, onOp
           </h1>
 
           <div className="mb-6 overflow-x-auto pb-2">
-            <div className="mx-auto flex min-w-max items-center justify-center gap-5 sm:gap-7 md:gap-9">
+            <div className="mx-auto flex min-w-max items-center justify-start gap-5 sm:justify-center sm:gap-7 md:gap-9">
               {printingServiceCards.map((card, index) => {
                 const isActive = index === selectedServiceIndex;
 
@@ -108,22 +108,24 @@ export default function SharedAddOrderLanding({ basePath, loadRecentOrders, onOp
             </div>
           </div>
 
-          <PrintingServicesCarousel
-            cards={printingServiceCards}
-            initialSelectedId={printingServiceCards[0]?.id}
-            activeIndex={selectedServiceIndex}
-            onActiveIndexChange={handleCarouselIndexChange}
-            onSelectCard={handleSelectService}
-          />
+          <div className="min-w-0">
+            <PrintingServicesCarousel
+              cards={printingServiceCards}
+              initialSelectedId={printingServiceCards[0]?.id}
+              activeIndex={selectedServiceIndex}
+              onActiveIndexChange={handleCarouselIndexChange}
+              onSelectCard={handleSelectService}
+            />
+          </div>
 
           <section className="mt-10">
-            <div className="bg-white px-6 py-4 shadow-sm">
-              <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-[#2d58a5]">Recent Orders</h2>
+            <div className="bg-white px-4 py-4 shadow-sm sm:px-6">
+              <h2 className="text-center text-2xl font-extrabold uppercase tracking-wide text-[#2d58a5] sm:text-3xl">Recent Orders</h2>
             </div>
 
-            <div className={tableCardClassName}>
-              <div className={tableShellClassName}>
-              <table className={`${tableElementClassName} min-w-[1100px]`}>
+            <div className={`${tableCardClassName} min-w-0`}>
+              <div className={`${tableShellClassName} w-full`}>
+              <table className={`${tableElementClassName} min-w-[980px] xl:min-w-[1100px]`}>
                 <thead>
                   <tr className={tableHeaderRowClassName}>
                     <th className={tableHeaderCellClassName}>Order No.</th>

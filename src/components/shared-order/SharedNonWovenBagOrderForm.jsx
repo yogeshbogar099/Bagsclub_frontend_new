@@ -24,12 +24,10 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef(null);
-  const bagColorDropdownRef = useRef(null);
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [bagColorDropdownOpen, setBagColorDropdownOpen] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: "", text: "" });
 
   const product = bagCatalog[bagSlug] || bagCatalog["d-cut-bag"];
@@ -174,19 +172,6 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     });
   }, [sizeOptions]);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (bagColorDropdownRef.current && !bagColorDropdownRef.current.contains(event.target)) {
-        setBagColorDropdownOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const printingTypeValue = useMemo(() => (formData.bagType === "Both sides" ? "double-side" : "single-side"), [formData.bagType]);
   const basePayableAmount = useMemo(() => Number(costs.totalAmount.toFixed(2)), [costs.totalAmount]);
   const payableAmount = useMemo(() => Number(Math.max(basePayableAmount - pdfDiscountAmount, 0).toFixed(2)), [basePayableAmount, pdfDiscountAmount]);
@@ -219,13 +204,15 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
       }),
     [bagSlug, formData.bagColor, formData.bagSize, formData.textColorSelection, formData.textColorType, product.image]
   );
-  const hasOrderBasics = useMemo(
-    () => formData.orderName.trim().length > 0 && Boolean(formData.bagType),
-    [formData.bagType, formData.orderName]
+  const usesDeferredDescriptionImage = useMemo(
+    () => bagSlug === "d-cut-bag" && formData.textColorType === "Single color",
+    [bagSlug, formData.textColorType]
   );
-  const selectedBagColorOption = useMemo(
-    () => availableBagColors.find((color) => color.value === formData.bagColor) || null,
-    [availableBagColors, formData.bagColor]
+  const shouldShowDescriptionImage = Boolean(descriptionImage);
+  const hasBagSize = Boolean(formData.bagSize);
+  const hasOrderBasics = useMemo(
+    () => formData.orderName.trim().length > 0 && Boolean(formData.bagSize),
+    [formData.bagSize, formData.orderName]
   );
   const isCostSummaryReady = useMemo(
     () =>
@@ -277,6 +264,30 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     const { name, value } = event.target;
     if (name === "quantity") {
       setStatusMessage((prev) => (prev.text === "Minimum quantity is 1000." ? { type: "", text: "" } : prev));
+    }
+    if (name === "bagColor") {
+      setStatusMessage({ type: "", text: "" });
+    }
+    if (name === "bagSize") {
+      if (!value) {
+        setFormData((prev) => ({
+          ...prev,
+          bagSize: "",
+          bagType: "",
+          bagColor: "",
+          textColorSelection: [],
+          quantity: String(MINIMUM_QUANTITY),
+          privacy: "Required",
+          deliveryOption: "Dispatch By Transport",
+          fileOption: "",
+          fileName: "",
+          fileUrl: "",
+          remark: ""
+        }));
+      } else {
+        setFormData((prev) => ({ ...prev, bagSize: value }));
+      }
+      return;
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
@@ -578,17 +589,17 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                 </div>
 
                 <div>
-                  <div className="mb-3 text-[16px] font-bold uppercase tracking-wide">Printing Side</div>
+                  <div className="mb-3 text-[16px] font-bold uppercase tracking-wide">Non Woven Sizes</div>
                   <select
-                    name="bagType"
-                    value={formData.bagType}
+                    name="bagSize"
+                    value={formData.bagSize}
                     onChange={handleInputChange}
                     className="h-[45px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                   >
-                    <option value="">Select printing side</option>
-                    {bagTypeOptions.map((option) => (
+                    <option value="">Select Bag Size</option>
+                    {sizeOptions.map((option) => (
                       <option key={option.value} value={option.value}>
-                        {option.value === "Both sides" ? "Both Side" : "Single Side"}
+                        {option.label}
                       </option>
                     ))}
                   </select>
@@ -596,7 +607,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
               </div>
             </div>
 
-            {hasOrderBasics ? (
+            {hasBagSize ? (
               <>
                 <div className="rounded-[8px] border border-[#d3d7de] bg-white p-[18px] shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
                   <div className="mb-4 flex flex-wrap items-center gap-[15px]">
@@ -626,17 +637,17 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
 
                   <div className="space-y-5 p-4">
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Non Woven Sizes</div>
+                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Printing Side</div>
                       <select
-                        name="bagSize"
-                        value={formData.bagSize}
+                        name="bagType"
+                        value={formData.bagType}
                         onChange={handleInputChange}
                         className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                       >
-                        <option value="">Select Bag Size</option>
-                        {sizeOptions.map((option) => (
+                        <option value="">Select printing side</option>
+                        {bagTypeOptions.map((option) => (
                           <option key={option.value} value={option.value}>
-                            {option.label}
+                            {option.value === "Both sides" ? "Both Side" : "Single Side"}
                           </option>
                         ))}
                       </select>
@@ -659,55 +670,19 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
 
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
                       <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Bag Color</div>
-                      <div ref={bagColorDropdownRef} className="relative w-full flex-1">
-                        <button
-                          type="button"
-                          onClick={() => setBagColorDropdownOpen((prev) => !prev)}
-                          className="flex h-[45px] w-full items-center justify-between rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none transition focus:border-[#1f73ff]"
-                          aria-haspopup="listbox"
-                          aria-expanded={bagColorDropdownOpen}
-                        >
-                          {selectedBagColorOption ? (
-                            <span className="flex flex-1 items-center pr-3" aria-label={selectedBagColorOption.value}>
-                              <span className="block h-4 w-full max-w-[220px] rounded-[4px] border border-slate-300 ring-2 ring-[#3cc7dc]/30" style={{ backgroundColor: selectedBagColorOption.hex }} />
-                            </span>
-                          ) : (
-                            <span className="text-slate-500">Select Bag Color</span>
-                          )}
-                          <span className="text-xs text-slate-400">v</span>
-                        </button>
-
-                        {bagColorDropdownOpen ? (
-                          <div className="absolute left-0 right-0 z-20 mt-2 rounded-[8px] border border-[#d8d8d8] bg-white p-3 shadow-lg">
-                            <div className="space-y-2" role="listbox" aria-label="Bag Color">
-                              {availableBagColors.map((color) => {
-                                const selected = formData.bagColor === color.value;
-
-                                return (
-                                  <button
-                                    key={color.value}
-                                    type="button"
-                                    onClick={() => {
-                                      handleSelectField("bagColor", color.value);
-                                      setBagColorDropdownOpen(false);
-                                    }}
-                                    className={`flex h-[38px] w-full items-center rounded-[6px] border bg-white px-3 transition-all ${
-                                      selected
-                                        ? "border-[#1ca3ba] ring-2 ring-[#3cc7dc]/30"
-                                        : "border-[#d8d8d8] hover:border-[#999]"
-                                    }`}
-                                    aria-label={color.value}
-                                    aria-selected={selected}
-                                    role="option"
-                                  >
-                                    <span className="block h-4 w-full rounded-[4px] border border-slate-300" style={{ backgroundColor: color.hex }} />
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
+                      <select
+                        name="bagColor"
+                        value={formData.bagColor}
+                        onChange={handleInputChange}
+                        className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
+                      >
+                        <option value="">Select Bag Color</option>
+                        {availableBagColors.map((color) => (
+                          <option key={color.value} value={color.value}>
+                            {color.value}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>
@@ -859,14 +834,6 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                     <span className="font-bold">Rs. {displayedBagCost.toFixed(2)}/-</span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-4 text-[15px]">
-                    <span>Privacy Packing Charge</span>
-                    <span className="font-bold">Rs. {displayedPrivacyCharge.toFixed(2)}/-</span>
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-4 text-[15px]">
-                    <span>Applicable Cost</span>
-                    <span className="font-bold">Rs. {displayedApplicableCost.toFixed(2)}/-</span>
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-4 text-[15px]">
                     <span>GST ({GST_PERCENT_LABEL})</span>
                     <span className="font-bold">Rs. {displayedGst.toFixed(2)}/-</span>
                   </div>
@@ -897,18 +864,33 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
             ) : null}
           </form>
 
-          {hasOrderBasics ? (
+          {hasBagSize ? (
               <div className="space-y-6">
-              <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                <div
-                  className={[
-                    "flex items-center justify-center bg-white p-5",
-                    hasExpandedDescriptionImage ? "h-[320px] sm:h-[380px] lg:h-[440px]" : "h-[280px] sm:h-[330px]"
-                  ].join(" ")}
-                >
-                  <img src={descriptionImage} alt={product.title} className="max-h-full max-w-full object-contain object-center" />
+              {!usesDeferredDescriptionImage && shouldShowDescriptionImage ? (
+                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                  <div
+                    className={[
+                      "flex items-center justify-center bg-white p-5",
+                      hasExpandedDescriptionImage ? "h-[320px] sm:h-[380px] lg:h-[440px]" : "h-[280px] sm:h-[330px]"
+                    ].join(" ")}
+                  >
+                    <img src={descriptionImage} alt={product.title} className="max-h-full max-w-full object-contain object-center" />
+                  </div>
                 </div>
-              </div>
+              ) : null}
+
+              {usesDeferredDescriptionImage && shouldShowDescriptionImage ? (
+                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                  <div
+                    className={[
+                      "flex items-center justify-center bg-white p-5",
+                      hasExpandedDescriptionImage ? "h-[320px] sm:h-[380px] lg:h-[440px]" : "h-[280px] sm:h-[330px]"
+                    ].join(" ")}
+                  >
+                    <img src={descriptionImage} alt={product.title} className="max-h-full max-w-full object-contain object-center" />
+                  </div>
+                </div>
+              ) : null}
 
               <section className="border-l-[3px] border-[#2d58a5] pl-3">
                 <h2 className="mb-3 text-[18px] font-bold text-[#183b8f] underline">Product Description</h2>

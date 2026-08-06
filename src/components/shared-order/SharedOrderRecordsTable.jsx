@@ -35,7 +35,7 @@ export default function SharedOrderRecordsTable({
   return (
     <div className={tableCardClassName}>
       <div className={tableShellClassName}>
-      <table className={`${tableElementClassName} min-w-[1220px]`}>
+      <table className={`${tableElementClassName} min-w-[980px] xl:min-w-[1220px]`}>
         <thead>
           <tr className={tableHeaderRowClassName}>
             <th className={tableHeaderCellClassName}>Order No.</th>

@@ -52,11 +52,11 @@ export default function AssociateNavbar() {
 
   return (
     <nav className="border-y border-[#ddd7d0] bg-[#f5f2ef] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-      <ul className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-start gap-1 px-4 py-1.5 text-[12px] font-medium text-[#4d4d4d]">
+      <ul className="relative mx-auto flex w-max min-w-full items-center justify-start gap-1 overflow-x-auto px-4 py-1.5 text-[12px] font-medium text-[#4d4d4d] md:w-auto md:max-w-7xl md:min-w-0 md:flex-wrap md:overflow-visible">
           {menuItems.map((item, index) => (
             <li
               key={item.name}
-              className="relative"
+              className="relative shrink-0"
               onMouseEnter={() => item.dropdown && setActiveDropdown(index)}
               onMouseLeave={() => item.dropdown && setActiveDropdown(null)}
             >
@@ -73,7 +73,7 @@ export default function AssociateNavbar() {
                 if (item.dropdown) {
                   return (
                     <div
-                      className={`flex cursor-pointer items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none transition-all ${
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none whitespace-nowrap transition-all ${
                         isActive
                           ? "border-[#9f2d07] bg-[#b7370c] font-semibold text-white shadow-[0_1px_2px_rgba(167,26,0,0.18)]"
                           : "border-transparent bg-transparent text-[#4d4d4d] hover:border-[#e6dfd8] hover:bg-white hover:text-[#a71a00]"
@@ -89,7 +89,7 @@ export default function AssociateNavbar() {
                 return (
                 <Link
                   to={item.path}
-                  className={`flex items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none transition-all ${
+                  className={`flex items-center gap-1.5 rounded-[6px] border px-3 py-[7px] leading-none whitespace-nowrap transition-all ${
                     isActive
                       ? "border-[#9f2d07] bg-[#b7370c] font-semibold text-white shadow-[0_1px_2px_rgba(167,26,0,0.18)]"
                       : "border-transparent bg-transparent text-[#4d4d4d] hover:border-[#e6dfd8] hover:bg-white hover:text-[#a71a00]"
@@ -102,7 +102,7 @@ export default function AssociateNavbar() {
               })()}
 
               {item.dropdown && activeDropdown === index ? (
-                <div className="absolute left-0 top-full z-50 mt-1 w-64 overflow-hidden rounded-[8px] border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)]">
+                <div className="absolute left-0 top-full z-50 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded-[8px] border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)] sm:w-64">
                   {item.dropdown.map((subItem) => (
                     <Link
                       key={subItem.path}

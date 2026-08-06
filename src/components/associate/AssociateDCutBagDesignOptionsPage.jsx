@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import DCutSingleColor from "../../assets/images/D_Cut_Single_Color.jpeg";
+import DCutTwoColor from "../../assets/images/D_Cut_Two_Color.jpeg";
+import DCutFourColor from "../../assets/images/D_Cut_Four_Color.jpeg";
 
 const designOptions = [
-  { key: "single", title: "Single Color" },
-  { key: "two", title: "Two Color" },
-  { key: "four", title: "Four Color" }
+  { key: "single", title: "Single Color", image: DCutSingleColor },
+  { key: "two", title: "Two Color", image: DCutTwoColor },
+  { key: "four", title: "Four Color", image: DCutFourColor }
 ];
 
 export default function AssociateDCutBagDesignOptionsPage() {
@@ -39,10 +42,11 @@ export default function AssociateDCutBagDesignOptionsPage() {
                 type="button"
                 className="group w-full max-w-[260px] text-left"
                 onClick={() => navigate(`/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag?design=${option.key}`)}
+                aria-label={option.title}
               >
                 <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <div className="flex h-[240px] w-full items-center justify-center bg-[#6b4324] px-5 text-center sm:h-[260px] md:h-[280px]">
-                    <div className="text-[18px] font-extrabold uppercase tracking-wide text-white md:text-[20px]">{option.title}</div>
+                  <div className="relative aspect-[2040/3061] w-full overflow-hidden">
+                    <img src={option.image} alt={option.title} className="absolute inset-0 block h-full w-full object-cover object-center" />
                   </div>
                 </div>
               </button>

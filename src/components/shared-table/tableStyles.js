@@ -1,6 +1,6 @@
-export const tableCardClassName = "overflow-hidden rounded-[18px] border border-slate-300 bg-white shadow-sm";
+export const tableCardClassName = "min-w-0 overflow-hidden rounded-[18px] border border-slate-300 bg-white shadow-sm";
 
-export const tableShellClassName = "overflow-x-auto bg-white";
+export const tableShellClassName = "w-full overflow-x-auto overscroll-x-contain bg-white";
 
 export const tableElementClassName = "w-full border-collapse text-sm";
 

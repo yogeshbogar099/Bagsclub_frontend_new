@@ -6,8 +6,8 @@ export default function SharedNonWovenBagSelection({ basePath, useDCutDesignOpti
 
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
-      <section className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="px-3 py-6 sm:px-4 md:px-8">
+        <div className="mx-auto min-w-0 max-w-7xl">
           <div className="mb-4">
             <button
               type="button"

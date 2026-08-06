@@ -14,12 +14,12 @@ export default function AdminModuleHeader({ session, headerData, onRefresh }) {
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[280px_1fr_280px] md:items-center">
-        <div className="flex items-center justify-center md:justify-start">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[280px_minmax(0,1fr)_280px] lg:items-center">
+        <div className="flex items-center justify-center lg:justify-start">
           <img src={logo} alt="Printers Club" className="h-12 w-auto object-contain sm:h-14 md:h-16" />
         </div>
 
-        <div className="text-center">
+        <div className="min-w-0 text-center">
           <div className="space-y-1">
             <p className="text-sm font-bold text-[#333]">{headerData?.systemName || "Admin Module"}</p>
             <p className="text-xs text-[#a71a00]">
@@ -38,14 +38,14 @@ export default function AdminModuleHeader({ session, headerData, onRefresh }) {
           </div>
         </div>
 
-        <div className="text-center md:text-right">
+        <div className="min-w-0 text-center lg:text-right">
           <div className="space-y-1 text-sm">
             <p className="font-bold">
               Hi, <span>{userName}</span>
             </p>
             <div className="text-xs font-bold text-[#a71a00]">
               <p>Member ID - {memberId}</p>
-              <p className="inline-flex items-center gap-2">
+              <p className="inline-flex flex-wrap items-center justify-center gap-2 lg:justify-end">
                 <span>A/C Balance :</span>
                 <button
                   type="button"
