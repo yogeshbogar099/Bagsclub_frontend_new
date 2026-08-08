@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import bg02 from "../../assets/images/bg_02.jpg";
 import sampleImage from "../../assets/images/8.jpg";
 import printingServicesImage from "../../assets/images/login_Printing_Services.png";
-import D_Cut from "../../assets/images/D_Cut.png"
-import LoopBag from "../../assets/images/LoopBag.png"
-import BoxBag from "../../assets/images/BoxBag.png"
+import D_Cut from "../../assets/images/D-Cut-bag-card.jpg"
+import LoopBag from "../../assets/images/Loop-Bag-Card.jpeg"
+import BoxBag from "../../assets/images/Box-Bag-Card.jpeg"
 
 const nonWovenBagCards = [
   { id: 1, title: "D-CUT BAG", slug: "d-cut-bag", image: D_Cut },
@@ -17,8 +17,8 @@ export default function AssociateNonWovenBagPage() {
 
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
-      <section className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="px-4 py-6 sm:px-6 md:px-8 lg:px-0">
+        <div className="mx-auto max-w-7xl px-[2vw]">
           <div className="mb-4">
             <button
               type="button"

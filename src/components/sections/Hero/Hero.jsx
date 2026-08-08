@@ -31,12 +31,13 @@ export default function Hero() {
   }, [slides.length]);
 
   return (
-    <section className="relative h-[100svh] w-[100vw] overflow-hidden text-white">
+    <section className="relative h-[100svh] w-full overflow-hidden text-white">
       {slides.map((slide, index) => (
         <img
           key={slide.title}
           src={slide.image}
           alt=""
+          loading="eager"
           className={[
             "absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out",
             index === activeIndex ? "opacity-100" : "opacity-0"
@@ -44,19 +45,33 @@ export default function Hero() {
         />
       ))}
       <div className="absolute inset-0 bg-ink/70" />
-      <div className="relative z-10 flex h-full w-full items-start justify-center px-4 text-center sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-5xl pt-24 sm:pt-28 md:pt-32">
-          <p className="text-base font-semibold text-white/85 sm:text-lg">Welcome to</p>
-          <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl items-start justify-center px-4 text-center sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-4xl pt-24 sm:pt-28 md:pt-32 lg:pt-36">
+          <p className="text-sm font-semibold text-white/85 sm:text-base md:text-lg">Welcome to</p>
+          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:mt-3 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
             {slides[activeIndex].title}
           </h1>
-          <p className="mt-3 text-lg font-semibold uppercase text-white/90 sm:text-2xl">
+          <p className="mt-2 text-base font-semibold uppercase text-white/90 sm:mt-3 sm:text-xl md:text-2xl">
             {slides[activeIndex].subtitle}
           </p>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-white/80 sm:text-base md:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-xs leading-6 text-white/80 sm:mt-6 sm:text-sm md:text-base md:leading-7 lg:text-lg">
             {slides[activeIndex].description}
           </p>
         </div>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-2 sm:bottom-8">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            aria-label={`Go to slide ${index + 1}`}
+            onClick={() => setActiveIndex(index)}
+            className={`touch-target h-2 rounded-full transition-all duration-300 ${
+              index === activeIndex ? "w-8 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+            }`}
+          />
+        ))}
       </div>
     </section>
   );

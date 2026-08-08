@@ -31,11 +31,12 @@ import Principles from "./components/sections/Principles/Principles.jsx";
 import Reach from "./components/sections/Reach/Reach.jsx";
 import Reasons from "./components/sections/Reasons/Reasons.jsx";
 import Services from "./components/sections/Services/Services.jsx";
+import FloatingWhatsApp from "./components/sections/FloatingWhatsApp/FloatingWhatsApp.jsx";
 import { getAuthSession, getDashboardPath } from "./utils/auth.js";
 
 function LandingPage() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <Navbar />
       <main>
         <Hero />
@@ -49,6 +50,7 @@ function LandingPage() {
         <Dedicated />
       </main>
       <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 }

@@ -6,16 +6,32 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   @apply bg-[#f4f7f6] text-slate-700 antialiased;
   font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 @layer components {
   .section-title {
-    @apply text-center text-3xl font-bold text-ink;
+    @apply text-center text-2xl font-bold text-ink sm:text-3xl md:text-4xl;
   }
 
   .title-line {
@@ -23,11 +39,11 @@ body {
   }
 
   .card {
-    @apply h-full rounded-lg border border-slate-100 bg-white p-6 text-center shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-xl;
+    @apply h-full rounded-lg border border-slate-100 bg-white p-4 text-center shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6;
   }
 
   .icon-badge {
-    @apply mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg;
+    @apply mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg sm:h-16 sm:w-16;
   }
 
   .field-label {
@@ -62,3 +78,17 @@ body {
     @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white;
   }
 }
+
+@layer utilities {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    @apply p-4;
+  }
+}
+

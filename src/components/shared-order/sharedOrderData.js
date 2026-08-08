@@ -1,8 +1,8 @@
-import boxBagImage from "../../assets/images/BoxBag.png";
+import boxBagImage from "../../assets/images/Box-Bag-Card.jpeg";
 import canvasBag from "../../assets/images/Canvas_Bag.png";
-import dCutImage from "../../assets/images/D_Cut.png";
+import dCutImage from "../../assets/images/D-Cut-bag-card.jpg";
 import hdpeBag from "../../assets/images/HDPE_Bag.png";
-import loopBagImage from "../../assets/images/LoopBag.png";
+import loopBagImage from "../../assets/images/Loop-Bag-Card.jpeg";
 import nonWovenBag from "../../assets/images/Non_Woven_Bag.png";
 import paperBag from "../../assets/images/Paper_Bag.png";
 import plasticBag from "../../assets/images/Plastic_Bag.png";
@@ -212,21 +212,19 @@ export const blackBagColorOption = {
 };
 export const textColorTypes = ["Single color", "Two color", "Four color", "Mix color"];
 export const textColorOptions = [
-  { value: "Red", hex: "#dc2626", borderClassName: "border-red-300", textClassName: "text-white" },
-  { value: "Green", hex: "#16a34a", borderClassName: "border-green-300", textClassName: "text-white" },
-  { value: "Blue", hex: "#2563eb", borderClassName: "border-blue-300", textClassName: "text-white" },
-  { value: "Black", hex: "#111827", borderClassName: "border-slate-800", textClassName: "text-white" },
-  { value: "White", hex: "#ffffff", borderClassName: "border-slate-300", textClassName: "text-slate-700" },
-  { value: "Magenta", hex: "#d946ef", borderClassName: "border-fuchsia-300", textClassName: "text-white" }
+  { value: "Red", hex: "#dc2626", borderClassName: "border-red-300", textClassName: "text-white", swatchBackground: "#dc2626" },
+  { value: "Magenta", hex: "#d946ef", borderClassName: "border-fuchsia-300", textClassName: "text-white", swatchBackground: "#d946ef" },
+  { value: "Blue", hex: "#2563eb", borderClassName: "border-blue-300", textClassName: "text-white", swatchBackground: "#2563eb" },
+  { value: "Black", hex: "#111827", borderClassName: "border-slate-800", textClassName: "text-white", swatchBackground: "#111827" },
+  { value: "Rembo", hex: "#dc2626", borderClassName: "border-purple-400", textClassName: "text-white", swatchBackground: "linear-gradient(90deg,#dc2626 0%,#f97316 20%,#eab308 40%,#16a34a 60%,#2563eb 80%,#d946ef 100%)" }
 ];
 
 export const dCutTwoColorTextColorOptions = [
-  { value: "Pink", hex: "#ec4899", borderClassName: "border-pink-300", textClassName: "text-white" },
-  { value: "White", hex: "#ffffff", borderClassName: "border-slate-300", textClassName: "text-slate-700" },
-  { value: "Blue", hex: "#2563eb", borderClassName: "border-blue-300", textClassName: "text-white" },
-  { value: "Black", hex: "#111827", borderClassName: "border-slate-800", textClassName: "text-white" },
-  { value: "Red", hex: "#dc2626", borderClassName: "border-red-300", textClassName: "text-white" },
-  { value: "Orange", hex: "#f97316", borderClassName: "border-orange-300", textClassName: "text-white" }
+  { value: "Red", hex: "#dc2626", borderClassName: "border-red-300", textClassName: "text-white", swatchBackground: "#dc2626" },
+  { value: "Magenta", hex: "#d946ef", borderClassName: "border-fuchsia-300", textClassName: "text-white", swatchBackground: "#d946ef" },
+  { value: "Blue", hex: "#2563eb", borderClassName: "border-blue-300", textClassName: "text-white", swatchBackground: "#2563eb" },
+  { value: "Black", hex: "#111827", borderClassName: "border-slate-800", textClassName: "text-white", swatchBackground: "#111827" },
+  { value: "Rembo", hex: "#dc2626", borderClassName: "border-purple-400", textClassName: "text-white", swatchBackground: "linear-gradient(90deg,#dc2626 0%,#f97316 20%,#eab308 40%,#16a34a 60%,#2563eb 80%,#d946ef 100%)" }
 ];
 
 export function getAvailableTextColorOptions(bagSlug, textColorType) {

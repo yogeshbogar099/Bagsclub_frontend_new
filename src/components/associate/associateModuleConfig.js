@@ -10,16 +10,6 @@ export const associateModuleNavItems = [
     description: "Associate member home and product selection overview."
   },
   {
-    id: "order-status",
-    label: "Order Status",
-    description: "Search orders by number, stage, and order date.",
-    children: [
-      { id: "search-order-number", label: "Search by Order Number", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-number`, section: "order-search", view: "order-number" },
-      { id: "search-order-stage", label: "Search by Order Stage", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-stage`, section: "order-search", view: "order-stage" },
-      { id: "search-order-date", label: "Search by Order Date", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-date`, section: "order-search", view: "order-date" }
-    ]
-  },
-  {
     id: "add-money",
     label: "Add Money",
     path: `${ASSOCIATE_BASE_PATH}/wallet`,
@@ -28,20 +18,22 @@ export const associateModuleNavItems = [
     description: "Topup your wallet."
   },
   {
-    id: "rate-list",
-    label: "Rate List",
-    path: `${ASSOCIATE_BASE_PATH}/reports/rate-list`,
-    section: "reports",
-    view: "rate-list",
-    description: "Product and service rate list."
-  },
-  {
     id: "add-order",
     label: "Add Order",
     path: `${ASSOCIATE_BASE_PATH}/book-order`,
     section: "book-order",
     view: "new",
     description: "Add order and categorywise product selection."
+  },
+  {
+    id: "order-status",
+    label: "Order Status",
+    description: "Search orders by number, stage, and order date.",
+    children: [
+      { id: "search-order-number", label: "Search by Order Number", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-number`, section: "order-search", view: "order-number" },
+      { id: "search-order-stage", label: "Search by Order Stage", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-stage`, section: "order-search", view: "order-stage" },
+      { id: "search-order-date", label: "Search by Order Date", path: `${ASSOCIATE_BASE_PATH}/orders/search/order-date`, section: "order-search", view: "order-date" }
+    ]
   },
   {
     id: "reports",
@@ -60,16 +52,26 @@ export const associateModuleNavItems = [
     description: "Help and system support updates.",
     children: [
       { id: "support-notifications", label: "Notifications", path: `${ASSOCIATE_BASE_PATH}/support/notifications`, section: "notifications", view: "all" },
-      { id: "support-help", label: "Help Desk", path: `${ASSOCIATE_BASE_PATH}/support/help`, section: "support", view: "help" }
+      { id: "support-help", label: "Help Desk", path: `${ASSOCIATE_BASE_PATH}/support/help`, section: "support", view: "help" },
+      { id: "support-terms", label: "Terms & Conditions", path: `${ASSOCIATE_BASE_PATH}/support/terms`, section: "support", view: "terms" }
     ]
   },
   {
-    id: "profile",
-    label: "Profile",
-    path: `${ASSOCIATE_BASE_PATH}/profile`,
-    section: "profile",
-    view: "overview",
-    description: "Manage profile details and business information."
+    id: "setting",
+    label: "Setting / Setup",
+    description: "Profile, password, and account configuration.",
+    children: [
+      { id: "setting-profile", label: "Profile", path: `${ASSOCIATE_BASE_PATH}/settings/profile`, section: "profile", view: "overview" },
+      { id: "setting-change-password", label: "Change Password", path: `${ASSOCIATE_BASE_PATH}/settings/change-password`, section: "settings", view: "change-password" }
+    ]
+  },
+  {
+    id: "training-videos",
+    label: "Instruction & Training Videos",
+    path: `${ASSOCIATE_BASE_PATH}/training-videos`,
+    section: "training",
+    view: "videos",
+    description: "Step-by-step instruction and training video guides."
   }
 ];
 

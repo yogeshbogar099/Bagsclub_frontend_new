@@ -94,8 +94,8 @@ export default function SharedAutoWalletTopUpPage() {
   }
 
   return (
-    <section className="min-h-[calc(100vh-300px)] bg-[#efefef] px-4 py-4 md:px-8 md:py-5">
-      <div className="mx-auto max-w-[1280px]">
+    <section className="min-h-[calc(100vh-300px)] w-full bg-[#efefef] px-4 py-4 sm:px-6 md:py-5 md:px-0">
+      <div className="mx-auto max-w-[1280px] px-[4vw]">
         <h1 className="mb-8 text-center text-[24px] font-bold uppercase tracking-wide text-[#2d58a5] md:text-[40px]">
           Enter Amount To Be Added
         </h1>

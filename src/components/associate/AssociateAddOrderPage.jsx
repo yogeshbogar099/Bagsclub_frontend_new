@@ -81,8 +81,8 @@ export default function AssociateAddOrderPage() {
     <div className="w-full bg-[#e8e8e8] pb-10">
       <OrderCarousel aspectRatio="706 / 170" />
 
-      <section className="px-4 py-6 md:px-8">
-        <div className="mx-auto min-w-0 max-w-7xl">
+      <section className="px-4 py-6 sm:px-6 md:px-8 lg:px-0">
+        <div className="mx-auto min-w-0 max-w-7xl px-[2vw]">
           <h1
             className="mb-5 text-center text-3xl font-black uppercase tracking-tight text-black md:text-4xl"
             style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}

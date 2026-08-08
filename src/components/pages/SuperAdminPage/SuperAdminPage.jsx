@@ -8,12 +8,14 @@ import {
   LayoutDashboard,
   LogOut,
   Mail,
+  Menu,
   Paperclip,
   Settings,
   ShieldCheck,
   UserCog,
   Users,
   Wallet,
+  X,
 } from "lucide-react";
 import { clearAuthSession, navigateTo } from "../../../utils/auth.js";
 import { buildApiUrl } from "../../../lib/apiBaseUrl.js";
@@ -877,6 +879,8 @@ function DataTable({
 
 export default function SuperAdminPage({ session, pathname = "/dashboard/super-admin" }) {
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileExpandedId, setMobileExpandedId] = useState(null);
   const menuHoverTimeoutRef = useRef(null);
   const [filters, setFilters] = useState({
     module: "",
@@ -1103,6 +1107,34 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
       navigateTo(redirectPath);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (mobileNavOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileNavOpen]);
+
+  const isSuperAdminPathActive = (item) =>
+    pathname === item.path ||
+    item.children?.some(
+      (child) =>
+        child.path === pathname ||
+        (child.path === "/dashboard/super-admin/order-management/add-order" &&
+          pathname.startsWith("/dashboard/super-admin/order-management/add-order/")) ||
+        (child.path === "/dashboard/super-admin/order-management/all-orders" &&
+          pathname.startsWith("/dashboard/super-admin/order-management/details/")) ||
+        (child.path === "/dashboard/super-admin/user-management/associate-member-management" &&
+          pathname.startsWith("/dashboard/super-admin/user-management/associate-member-management/details/")) ||
+        (child.path === "/dashboard/super-admin/user-management/admin-management" &&
+          pathname.startsWith("/dashboard/super-admin/user-management/admin-management/details/")) ||
+        (child.path === "/dashboard/super-admin/wallet-management/add-money" &&
+          pathname.startsWith("/dashboard/super-admin/wallet-management/add-money/"))
+    );
 
   const orderTableItems = useMemo(
     () =>
@@ -2494,57 +2526,58 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f6f8] text-[#333]">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)_280px] lg:items-center">
-          <div className="flex justify-center lg:justify-start">
-            <div id="ctl00_imgLogo" className="flex items-center">
+      <header className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] rounded">
+        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 box-border">
+          <div className="grid gap-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)_280px] lg:items-center box-border">
+          <div className="flex justify-center lg:justify-start box-border">
+            <div id="ctl00_imgLogo" className="flex items-center box-border">
               <img
                 src={logo}
                 alt="BAGSCLUB"
-                className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16"
+                className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16 box-border"
               />
             </div>
           </div>
 
-          <div className="min-w-0 text-center">
-            <div id="partnerTypeContainer" className="space-y-1">
-              <p className="text-sm font-bold text-[#333]">Super Admin Module</p>
-              <p className="text-xs text-[#a71a00]">
+          <div className="min-w-0 text-center box-border">
+            <div id="partnerTypeContainer" className="space-y-1 box-border">
+              <p className="text-[14px] leading-[1.42] font-bold text-[#333] box-border">Super Admin Module</p>
+              <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
                 Go to{" "}
                 <button
                   type="button"
                   onClick={() => handleNavigate("/dashboard/super-admin")}
-                  className="font-semibold text-blue-700 underline-offset-2 transition hover:text-[#a71a00] hover:underline"
+                  className="font-bold text-blue-700 underline-offset-2 transition hover:text-[#a71a00] hover:underline box-border"
                 >
                   Dashboard
                 </button>
               </p>
-              <p className="text-xs leading-5 text-[#a71a00]">
+              <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
                 Centralized control panel for users, orders, wallets, reports, and audit activity.
               </p>
             </div>
           </div>
 
-          <div className="min-w-0 text-center lg:text-right">
-            <div id="ctl00_divUserInfo" className="space-y-1 text-sm">
-              <p className="font-bold">
-                Hi, <span id="lbLoginUserName">{session.user.name || "Super Admin"}</span>
+          <div className="min-w-0 text-center lg:text-right box-border">
+            <div id="ctl00_divUserInfo" className="space-y-1 text-[14px] leading-[1.42] box-border">
+              <p className="font-bold box-border">
+                Hi, <span id="lbLoginUserName" className="box-border">{session.user.name || "Super Admin"}</span>
               </p>
-              <div id="ctl00_lbDistAccountDetails" className="text-xs font-bold text-[#a71a00]">
-                <p>Role - {normalizeRole(session.user.role)}</p>
-                <p>
+              <div id="ctl00_lbDistAccountDetails" className="text-[14px] leading-[1.42] font-bold text-[#a71a00] box-border">
+                <p className="box-border">Role - {normalizeRole(session.user.role)}</p>
+                <p className="box-border">
                   A/C Balance :{" "}
                   <button
                     type="button"
                     onClick={() => handleNavigate("/dashboard/super-admin/wallet-management/add-money")}
-                    className="text-blue-700 transition hover:text-[#a71a00]"
+                    className="text-blue-700 transition hover:text-[#a71a00] box-border"
                   >
                     {accountBalance}
                   </button>
                 </p>
-                <p>
+                <p className="box-border">
                   Session :{" "}
-                  <span id="spnBalance" className="cursor-pointer text-blue-700">
+                  <span id="spnBalance" className="cursor-pointer text-blue-700 box-border">
                     Active
                   </span>
                 </p>
@@ -2552,127 +2585,242 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition hover:text-[#a71a00]"
+                className="inline-flex items-center gap-2 text-[14px] leading-[1.42] font-bold text-blue-700 transition hover:text-[#a71a00] box-border"
               >
-                <LogOut size={16} />
+                <LogOut size={14} />
                 Sign Out
               </button>
             </div>
           </div>
+          </div>
         </div>
       </header>
 
-      <div className="h-[3px] w-full bg-[#a71a00] shadow-sm" aria-hidden="true" />
+      <div className="h-[3px] w-full bg-[#a71a00] shadow-sm box-border" aria-hidden="true" />
 
-      <nav className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex w-max min-w-full items-center gap-x-1 gap-y-2 overflow-x-auto px-4 py-2 md:max-w-7xl md:min-w-0 md:flex-wrap md:overflow-visible">
-          {primaryNavItems.map((item) => {
-            const isOpen = openMenuId === item.id;
-            const isActive =
-              pathname === item.path ||
-              item.children?.some(
-                (child) =>
-                  child.path === pathname ||
-                  (child.path === "/dashboard/super-admin/order-management/add-order" &&
-                    pathname.startsWith("/dashboard/super-admin/order-management/add-order/")) ||
-                  (child.path === "/dashboard/super-admin/order-management/all-orders" &&
-                    pathname.startsWith("/dashboard/super-admin/order-management/details/")) ||
-                  (child.path === "/dashboard/super-admin/user-management/associate-member-management" &&
-                    pathname.startsWith("/dashboard/super-admin/user-management/associate-member-management/details/")) ||
-                  (child.path === "/dashboard/super-admin/user-management/admin-management" &&
-                    pathname.startsWith("/dashboard/super-admin/user-management/admin-management/details/")) ||
-                  (child.path === "/dashboard/super-admin/wallet-management/add-money" &&
-                    pathname.startsWith("/dashboard/super-admin/wallet-management/add-money/"))
-              );
-            const buttonClassName = isActive
-              ? "border-[#a71a00] bg-[#a71a00] text-white"
-              : "border-transparent bg-transparent text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]";
+      <nav
+        aria-label="Super Admin primary navigation"
+        className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] min-h-[34px] rounded"
+      >
+        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 box-border">
+          <div className="flex h-[34px] w-full items-center justify-between box-border">
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((open) => !open)}
+              aria-expanded={mobileNavOpen}
+              aria-controls="super-admin-mobile-nav"
+              className="inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded border border-[#e7eaec] bg-white text-slate-700 transition hover:bg-slate-50 hover:text-[#a71a00] box-border md:hidden"
+            >
+              {mobileNavOpen ? <X size={14} /> : <Menu size={14} />}
+              <span className="sr-only">Toggle navigation menu</span>
+            </button>
 
-            if (!item.children) {
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleNavigate(item.path)}
-                  className={`shrink-0 whitespace-nowrap rounded border px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
-                >
-                  {item.label}
-                </button>
-              );
-            }
+            <div className="hidden w-full md:flex md:min-h-[34px] md:items-center md:justify-start md:gap-1 md:overflow-visible md:whitespace-nowrap box-border">
+              {primaryNavItems.map((item) => {
+                const isOpen = openMenuId === item.id;
+                const isActive = isSuperAdminPathActive(item);
+                const buttonClassName = isActive
+                  ? "border-[#a71a00] bg-[#a71a00] text-white"
+                  : "border-transparent bg-transparent text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]";
 
-            return (
-              <div
-                key={item.id}
-                className="relative shrink-0"
-                onMouseEnter={() => handleMenuMouseEnter(item.id)}
-                onMouseLeave={() => handleMenuMouseLeave(item.id)}
-              >
-                <div className="flex overflow-hidden rounded border">
-                  <button
-                    type="button"
-                    onClick={() => handleNavigate(item.path)}
-                    className={`whitespace-nowrap px-3 py-2 text-sm font-semibold transition ${buttonClassName}`}
+                if (!item.children) {
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleNavigate(item.path)}
+                      className={`inline-flex h-[30px] shrink-0 items-center rounded border px-4 text-[14px] leading-[1.42] font-bold transition box-border ${buttonClassName}`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                }
+
+                return (
+                  <div
+                    key={item.id}
+                    className="relative shrink-0 box-border"
+                    onMouseEnter={() => handleMenuMouseEnter(item.id)}
+                    onMouseLeave={() => handleMenuMouseLeave(item.id)}
                   >
-                    {item.label}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      clearMenuHoverTimeout();
-                      setOpenMenuId((current) => (current === item.id ? null : item.id));
-                    }}
-                    className={`border-l px-2 py-2 transition ${
-                      isActive
-                        ? "border-[#841400] bg-[#a71a00] text-white"
-                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
-                    }`}
-                    aria-label={`Toggle ${item.label} submenu`}
-                  >
-                    <ChevronDown size={14} className={isOpen ? "rotate-180 transition" : "transition"} />
-                  </button>
-                </div>
+                    <div className="flex h-[30px] overflow-hidden rounded border box-border">
+                      <button
+                        type="button"
+                        onClick={() => handleNavigate(item.path)}
+                        className={`inline-flex items-center px-4 text-[14px] leading-[1.42] font-bold transition box-border ${buttonClassName}`}
+                      >
+                        {item.label}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          clearMenuHoverTimeout();
+                          setOpenMenuId((current) => (current === item.id ? null : item.id));
+                        }}
+                        className={`inline-flex items-center border-l px-3 transition box-border ${
+                          isActive
+                            ? "border-[#841400] bg-[#a71a00] text-white"
+                            : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                        }`}
+                        aria-label={`Toggle ${item.label} submenu`}
+                      >
+                        <ChevronDown size={14} className={isOpen ? "rotate-180 transition" : "transition"} />
+                      </button>
+                    </div>
 
-                {isOpen ? (
-                  <div className="absolute left-0 top-full z-20 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded-b border-t-2 border-[#a71a00] bg-white shadow-lg sm:min-w-[240px] sm:w-auto">
-                    {item.children.map((child) => {
-                      const isChildActive =
-                        pathname === child.path ||
-                        (child.path === "/dashboard/super-admin/order-management/add-order" &&
-                          pathname.startsWith("/dashboard/super-admin/order-management/add-order/")) ||
-                        (child.path === "/dashboard/super-admin/order-management/all-orders" &&
-                          pathname.startsWith("/dashboard/super-admin/order-management/details/")) ||
-                        (child.path === "/dashboard/super-admin/user-management/associate-member-management" &&
-                          pathname.startsWith("/dashboard/super-admin/user-management/associate-member-management/details/")) ||
-                        (child.path === "/dashboard/super-admin/user-management/admin-management" &&
-                          pathname.startsWith("/dashboard/super-admin/user-management/admin-management/details/")) ||
-                        (child.path === "/dashboard/super-admin/wallet-management/add-money" &&
-                          pathname.startsWith("/dashboard/super-admin/wallet-management/add-money/"));
+                    {isOpen ? (
+                      <div className="absolute left-0 top-full z-40 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded border-t-2 border-[#a71a00] bg-white shadow-[0_10px_25px_rgba(15,23,42,0.12)] sm:min-w-[240px] sm:w-auto box-border">
+                        {item.children.map((child) => {
+                          const isChildActive =
+                            pathname === child.path ||
+                            (child.path === "/dashboard/super-admin/order-management/add-order" &&
+                              pathname.startsWith("/dashboard/super-admin/order-management/add-order/")) ||
+                            (child.path === "/dashboard/super-admin/order-management/all-orders" &&
+                              pathname.startsWith("/dashboard/super-admin/order-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/user-management/associate-member-management" &&
+                              pathname.startsWith("/dashboard/super-admin/user-management/associate-member-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/user-management/admin-management" &&
+                              pathname.startsWith("/dashboard/super-admin/user-management/admin-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/wallet-management/add-money" &&
+                              pathname.startsWith("/dashboard/super-admin/wallet-management/add-money/"));
 
-                      return (
-                        <button
-                          key={child.id}
-                          type="button"
-                          onClick={() => handleNavigate(child.path)}
-                          className={`block w-full border-b px-4 py-2 text-left text-sm transition last:border-b-0 ${
-                            isChildActive
-                              ? "border-slate-200 bg-[#a71a00] font-semibold text-white"
-                              : "border-slate-100 text-slate-700 hover:bg-rose-50 hover:pl-5 hover:text-[#a71a00]"
-                          }`}
-                        >
-                          {child.label}
-                        </button>
-                      );
-                    })}
+                          return (
+                            <button
+                              key={child.id}
+                              type="button"
+                              onClick={() => handleNavigate(child.path)}
+                              className={`block w-full border-b px-4 py-2.5 text-left text-[14px] leading-[1.42] transition last:border-b-0 box-border ${
+                                isChildActive
+                                  ? "border-slate-200 bg-[#a71a00] font-bold text-white"
+                                  : "border-slate-100 text-slate-700 hover:bg-rose-50 hover:pl-5 hover:text-[#a71a00]"
+                              }`}
+                            >
+                              {child.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="super-admin-mobile-nav"
+          className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${
+            mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="border-t border-[#e7eaec] bg-white px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)] sm:px-6 box-border">
+            <div className="space-y-1 text-[14px] leading-[1.42] font-bold text-slate-700 box-border">
+              {primaryNavItems.map((item) => {
+                const isActive = isSuperAdminPathActive(item);
+                const activeBtn = "border-[#a71a00] bg-[#a71a00] text-white";
+                const inactiveBtn = "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]";
+
+                if (!item.children) {
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setMobileNavOpen(false);
+                        handleNavigate(item.path);
+                      }}
+                      className={`flex min-h-[44px] w-full items-center rounded border px-4 text-left transition box-border ${
+                        isActive ? activeBtn : inactiveBtn
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                }
+
+                const expanded = mobileExpandedId === item.id;
+
+                return (
+                  <div key={item.id} className="space-y-1 box-border">
+                    <div className={`flex overflow-hidden rounded border box-border ${isActive ? "border-[#a71a00]" : "border-[#e7eaec]"}`}>
+                      <button
+                        type="button"
+                        onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
+                        aria-expanded={expanded}
+                        className={`flex min-h-[44px] flex-1 items-center px-4 text-left transition box-border ${
+                          isActive
+                            ? "bg-[#a71a00] text-white"
+                            : "bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
+                        aria-expanded={expanded}
+                        aria-label={`Toggle ${item.label} mobile submenu`}
+                        className={`inline-flex min-h-[44px] w-12 shrink-0 items-center justify-center border-l transition box-border ${
+                          isActive
+                            ? "border-[#841400] bg-[#a71a00] text-white"
+                            : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                        }`}
+                      >
+                        <ChevronDown size={14} className={expanded ? "rotate-180 transition" : "transition"} />
+                      </button>
+                    </div>
+
+                    <div
+                      className={`overflow-hidden rounded border border-[#e7eaec] bg-slate-50 transition-[max-height] duration-300 ease-in-out box-border ${
+                        expanded ? "max-h-[9999px]" : "max-h-0"
+                      }`}
+                    >
+                      <div className="space-y-0.5 py-1 pl-4 box-border">
+                        {item.children.map((child) => {
+                          const isChildActive =
+                            pathname === child.path ||
+                            (child.path === "/dashboard/super-admin/order-management/add-order" &&
+                              pathname.startsWith("/dashboard/super-admin/order-management/add-order/")) ||
+                            (child.path === "/dashboard/super-admin/order-management/all-orders" &&
+                              pathname.startsWith("/dashboard/super-admin/order-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/user-management/associate-member-management" &&
+                              pathname.startsWith("/dashboard/super-admin/user-management/associate-member-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/user-management/admin-management" &&
+                              pathname.startsWith("/dashboard/super-admin/user-management/admin-management/details/")) ||
+                            (child.path === "/dashboard/super-admin/wallet-management/add-money" &&
+                              pathname.startsWith("/dashboard/super-admin/wallet-management/add-money/"));
+
+                          return (
+                            <button
+                              key={child.id}
+                              type="button"
+                              onClick={() => {
+                                setMobileNavOpen(false);
+                                setMobileExpandedId(null);
+                                handleNavigate(child.path);
+                              }}
+                              className={`flex min-h-[44px] w-full items-center rounded px-4 text-left transition box-border ${
+                                isChildActive
+                                  ? "bg-[#a71a00] font-bold text-white"
+                                  : "bg-white text-slate-700 hover:bg-rose-50 hover:text-[#a71a00]"
+                              }`}
+                            >
+                              {child.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </nav>
 
-      <div className="h-[3px] w-full bg-[#a71a00] shadow-sm" aria-hidden="true" />
+      <div className="h-[3px] w-full bg-[#a71a00] shadow-sm box-border" aria-hidden="true" />
 
       {isAddOrderRoute ? (
         <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-5">

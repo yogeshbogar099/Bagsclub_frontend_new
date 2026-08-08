@@ -33,7 +33,7 @@ export default function AssociateLayout() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <header className="w-full bg-white">
-        <div className="container mx-auto flex items-start justify-between px-4 py-4">
+        <div className="container mx-auto flex items-start justify-between px-4 py-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
             <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
           </div>
@@ -58,14 +58,14 @@ export default function AssociateLayout() {
 
         <div className="w-full">
           <div className="h-[2px] w-full bg-red-600" />
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4 sm:px-6 md:px-8">
             <AssociateNavbar />
           </div>
           <div className="h-[2px] w-full bg-red-600" />
         </div>
       </header>
 
-      <main className={isFullWidth ? "w-full" : "container mx-auto px-4 py-8"}>
+      <main className={isFullWidth ? "w-full" : "container mx-auto px-4 py-8 sm:px-6 md:px-[2vw] lg:px-[2.5vw] xl:px-[2.5vw]"}>
         <AssociateModuleProvider>
           <Outlet />
         </AssociateModuleProvider>

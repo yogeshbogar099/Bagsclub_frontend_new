@@ -2,9 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AlertCircle,
+  Check,
   CheckCircle,
+  ChevronDown,
   Loader2,
   Mail,
+  Package,
+  Palette,
+  Printer,
   Truck,
   Upload,
   X
@@ -24,11 +29,13 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef(null);
+  const printingColorDropdownRef = useRef(null);
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: "", text: "" });
+  const [printingColorDropdownOpen, setPrintingColorDropdownOpen] = useState(false);
 
   const product = bagCatalog[bagSlug] || bagCatalog["d-cut-bag"];
   const sizeOptions = useMemo(() => bagSizeOptionsBySlug[bagSlug] || bagSizeOptionsBySlug["d-cut-bag"], [bagSlug]);
@@ -42,7 +49,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     bagColor: "",
     textColorType: "Single color",
     textColorSelection: [],
-    privacy: "Required",
+    privacy: "Not Required",
     deliveryOption: "Dispatch By Transport",
     fileOption: "",
     fileName: "",
@@ -152,12 +159,13 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
           : Number.isFinite(parsedQuantity)
             ? parsedQuantity
             : String(MINIMUM_QUANTITY);
+      const nextPrivacy = prev.privacy === "Required" || prev.privacy === "Not Required" ? prev.privacy : "Not Required";
 
       if (
         nextBagSize === prev.bagSize &&
         nextBagColor === prev.bagColor &&
         nextQuantity === Number(prev.quantity) &&
-        prev.privacy === "Required"
+        nextPrivacy === prev.privacy
       ) {
         return prev;
       }
@@ -167,10 +175,29 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
         bagSize: nextBagSize,
         bagColor: nextBagColor,
         quantity: nextQuantity,
-        privacy: "Required"
+        privacy: nextPrivacy
       };
     });
   }, [sizeOptions]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (printingColorDropdownRef.current && !printingColorDropdownRef.current.contains(event.target)) {
+        setPrintingColorDropdownOpen(false);
+      }
+    }
+
+    if (printingColorDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [printingColorDropdownOpen]);
+
+  const selectedPrintingColorObjects = useMemo(
+    () => formData.textColorSelection.map((value) => availableTextColorOptions.find((o) => o.value === value)).filter(Boolean),
+    [formData.textColorSelection, availableTextColorOptions]
+  );
 
   const printingTypeValue = useMemo(() => (formData.bagType === "Both sides" ? "double-side" : "single-side"), [formData.bagType]);
   const basePayableAmount = useMemo(() => Number(costs.totalAmount.toFixed(2)), [costs.totalAmount]);
@@ -238,9 +265,8 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
       `Quantity: ${formData.quantity}`,
       `Size: ${formData.bagSize}`,
       `Bag Color: ${formData.bagColor}`,
-      `Text Color Type: ${formData.textColorType}`,
-      `Text Colors: ${colorSelection}`,
-      `Privacy Packing: ${formData.privacy}`,
+      `Printing Color Type: ${formData.textColorType}`,
+      `Printing Colors: ${colorSelection}`,
       `Delivery Option: ${formData.deliveryOption}`,
       `Printing Press: ${formData.printingPress}`,
       `Final Payable: Rs. ${payableAmount.toFixed(2)}`
@@ -251,7 +277,6 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     formData.bagSize,
     formData.deliveryOption,
     formData.printingPress,
-    formData.privacy,
     formData.quantity,
     formData.textColorSelection,
     formData.textColorType,
@@ -277,7 +302,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
           bagColor: "",
           textColorSelection: [],
           quantity: String(MINIMUM_QUANTITY),
-          privacy: "Required",
+          privacy: "Not Required",
           deliveryOption: "Dispatch By Transport",
           fileOption: "",
           fileName: "",
@@ -558,8 +583,8 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
   }
 
   return (
-    <div className="min-h-screen bg-[#eeeeef] py-6 font-sans text-[#222] md:py-8">
-      <div className="mx-auto w-full max-w-[1040px] px-4">
+    <div className="min-h-screen w-full bg-[#eeeeef] py-6 font-sans text-[#222] px-4 sm:px-6 md:px-0 md:py-8">
+      <div className="mx-auto w-full max-w-[1040px] px-[2vw]">
         <div className="mb-5 grid grid-cols-[auto_1fr_auto] items-center gap-4">
           <button
             type="button"
@@ -637,7 +662,12 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
 
                   <div className="space-y-5 p-4">
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Printing Side</div>
+                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
+                        <span className="inline-flex items-center gap-2">
+                          <Printer size={15} className="shrink-0 text-[#1f73ff]" />
+                          <span className="box-border">Printing Side</span>
+                        </span>
+                      </div>
                       <select
                         name="bagType"
                         value={formData.bagType}
@@ -654,7 +684,12 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                     </div>
 
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Quantity</div>
+                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
+                        <span className="inline-flex items-center gap-2">
+                          <Package size={15} className="shrink-0 text-[#1f73ff]" />
+                          <span className="box-border">Quantity</span>
+                        </span>
+                      </div>
                       <input
                         type="number"
                         name="quantity"
@@ -669,7 +704,12 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                     </div>
 
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">Bag Color</div>
+                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
+                        <span className="inline-flex items-center gap-2">
+                          <Palette size={15} className="shrink-0 text-[#1f73ff]" />
+                          <span className="box-border">Bag Color</span>
+                        </span>
+                      </div>
                       <select
                         name="bagColor"
                         value={formData.bagColor}
@@ -687,7 +727,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
 
                     <div>
                       <div className="mb-2.5 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333]">
-                        Text Color Type: <span className="font-semibold normal-case text-slate-500">{formData.textColorType}</span>
+                        Printing Color Type: <span className="font-semibold normal-case text-slate-500">{formData.textColorType}</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {availableTextColorTypes.map((type) => {
@@ -721,32 +761,80 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                     </div>
 
                     <div>
-                      <div className="mb-2.5 text-[14px] font-bold text-slate-600">Text Color :</div>
-                      <div className="flex-1">
-                        <div className="flex flex-wrap gap-2">
-                          {availableTextColorOptions.map((color) => (
-                            <button
-                              key={color.value}
-                              type="button"
-                              onClick={() => handleColorSelect(color.value)}
-                              className={`relative flex h-8 w-8 items-center justify-center border transition-all ${
-                                formData.textColorSelection.includes(color.value)
-                                  ? "border-[#1ca3ba] ring-2 ring-[#3cc7dc]/30"
-                                  : `${color.borderClassName} hover:border-[#999]`
-                              }`}
-                              aria-pressed={formData.textColorSelection.includes(color.value)}
-                              title={color.value}
-                            >
-                              <span
-                                className="absolute inset-0"
-                                style={{ backgroundColor: color.hex }}
-                              />
-                              {formData.textColorSelection.includes(color.value) ? (
-                                <span className={`relative z-10 text-xs font-bold ${color.value === "White" ? "text-slate-700" : "text-white"}`}>✓</span>
-                              ) : null}
-                            </button>
-                          ))}
-                        </div>
+                      <div className="mb-2.5 text-[14px] font-bold text-slate-600">
+                        <span className="inline-flex items-center gap-2">
+                          <Palette size={15} className="shrink-0 text-[#1f73ff]" />
+                          <span className="box-border">Printing Color :</span>
+                        </span>
+                      </div>
+                      <div className="flex-1" ref={printingColorDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => setPrintingColorDropdownOpen((o) => !o)}
+                          className="flex h-[45px] w-full items-center justify-between gap-3 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-3.5 text-left text-sm outline-none transition focus:border-[#1f73ff] focus:bg-white"
+                          aria-haspopup="listbox"
+                          aria-expanded={printingColorDropdownOpen}
+                        >
+                          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+                            {selectedPrintingColorObjects.length === 0 ? (
+                              <span className="text-slate-400">Select Printing Color</span>
+                            ) : (
+                              selectedPrintingColorObjects.map((color) => (
+                                <span
+                                  key={color.value}
+                                  className="inline-flex h-[26px] shrink-0 items-center gap-2 rounded-[4px] border px-2 shadow-[0_1px_2px_rgba(15,23,42,0.05)]"
+                                  style={{ borderColor: color.hex }}
+                                >
+                                  <span
+                                    className="inline-block h-4 w-10 shrink-0 rounded-[2px]"
+                                    style={{ background: color.swatchBackground }}
+                                  />
+                                  <span className="text-[12px] font-semibold text-slate-700">{color.value}</span>
+                                </span>
+                              ))
+                            )}
+                          </div>
+                          <ChevronDown
+                            size={18}
+                            className={`shrink-0 text-slate-500 transition-transform ${printingColorDropdownOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+
+                        {printingColorDropdownOpen ? (
+                          <ul
+                            role="listbox"
+                            className="mt-1 max-h-[300px] overflow-auto rounded-[6px] border border-[#d8d8d8] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)] ring-1 ring-black/5 z-50"
+                          >
+                            {availableTextColorOptions.map((color) => {
+                              const isSelected = formData.textColorSelection.includes(color.value);
+                              return (
+                                <li key={color.value}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleColorSelect(color.value)}
+                                    className={`flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors ${
+                                      isSelected ? "bg-[#eef5ff]" : "hover:bg-slate-50"
+                                    }`}
+                                    role="option"
+                                    aria-selected={isSelected}
+                                  >
+                                    <span
+                                      className="inline-block h-5 w-20 shrink-0 rounded-[3px] border border-black/10"
+                                      style={{ background: color.swatchBackground }}
+                                    />
+                                    <span className="flex-1 text-sm font-semibold text-slate-700">{color.value}</span>
+                                    {isSelected ? (
+                                      <span className="shrink-0 rounded-full bg-[#1f73ff] p-0.5 text-white">
+                                        <Check size={12} strokeWidth={3} />
+                                      </span>
+                                    ) : null}
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        ) : null}
+
                         <div className="mt-2 text-[11px] font-bold text-gray-400">
                           {formData.textColorType === "Single color" && "Select any one color"}
                           {formData.textColorType === "Two color" && "Select any two colors"}
@@ -759,16 +847,16 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                 </div>
 
                 <div className="border-b border-[#ededed] p-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="text-[15px] font-bold text-[#12286e]">Privacy Packing</div>
-                    {formData.privacy === "Required" ? <span className="animate-pulse text-[11px] font-bold text-[#1f73ff]">(+ Rs. 100/- Privacy Charge)</span> : null}
-                  </div>
-                  <input type="hidden" name="privacy" value="Required" />
-                  <div className="max-w-[240px] rounded-[10px] border border-[#1f73ff] bg-[#eff6ff] px-4 py-3 shadow-sm">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-[#1f4fbf]">
-                      <AlertCircle size={16} className="text-[#1f73ff]" />
+                  <div className="mb-4 text-[15px] font-bold text-[#12286e]">Privacy Packaging</div>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
+                      <input type="radio" name="privacy" value="Required" checked={formData.privacy === "Required"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
                       Required
-                    </div>
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
+                      <input type="radio" name="privacy" value="Not Required" checked={formData.privacy === "Not Required"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
+                      Not Required
+                    </label>
                   </div>
                 </div>
 
@@ -781,6 +869,8 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                   </label>
                   <div className="mt-1 text-[12px] text-gray-500">Transport Charges extra as per bilty amount</div>
                 </div>
+
+                <div className="mb-2 rounded-[8px] bg-[#eaf1ff] px-4 py-2.5 text-center text-[12px] font-bold uppercase tracking-[0.06em] text-[#12286e] shadow-[0_1px_2px_rgba(18,40,110,0.08)] ring-1 ring-[#c9d9ff]">CONGRATULATIONS! ORDER'S ELIGIBLE FOR FREE DELIVERY</div>
 
                 <div className="border-b border-[#ededed] p-4">
                   <div className="mb-3 text-[15px] font-bold text-[#12286e]">Select File Option</div>
@@ -840,10 +930,6 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
                   <div className="flex items-center justify-between px-4 py-4 text-[16px]">
                     <span>Payable Amount</span>
                     <span className="font-bold text-[#1f73ff]">Rs. {displayedPayableAmount.toFixed(2)}/-</span>
-                  </div>
-                  <div className="px-4 py-4">
-                    <div className="mt-1 text-[12px] text-red-500">Transportation / Delivery extra.</div>
-                    {knownWalletBalance !== null ? <div className="mt-2 text-[12px] font-semibold text-[#12286e]">Available Wallet Balance: Rs. {knownWalletBalance.toFixed(2)}/-</div> : null}
                   </div>
                   <input type="hidden" name="sellingPrice" value={formData.sellingPrice} />
                   <div className="px-4 py-4">

@@ -24,8 +24,8 @@ export default function SharedAddMoneyPage({ basePath }) {
   const navigate = useNavigate();
 
   return (
-    <section className="min-h-[calc(100vh-220px)] bg-[#efefef] px-3 py-4 md:px-6 md:py-5">
-      <div className="mx-auto flex min-h-[calc(100vh-260px)] w-full max-w-[1320px] flex-col justify-start">
+    <section className="min-h-[calc(100vh-220px)] w-full bg-[#efefef] px-4 py-4 sm:px-6 md:py-5 md:px-0">
+      <div className="mx-auto flex min-h-[calc(100vh-260px)] w-full max-w-[1320px] flex-col justify-start px-[4vw]">
         <h1 className="mb-10 text-center text-[24px] font-bold uppercase tracking-wide text-[#2d58a5] md:mb-12 md:text-[32px]">
           Select Payment Option
         </h1>

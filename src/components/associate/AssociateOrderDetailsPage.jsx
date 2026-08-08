@@ -216,9 +216,11 @@ export default function AssociateOrderDetailsPage() {
 
   if (!isLoaded && (sectionLoading || orderLoading)) {
     return (
-      <div className="px-4 py-10">
-        <div className="mx-auto max-w-7xl rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
-          <div className="text-sm font-semibold text-slate-500">Loading order details...</div>
+      <div className="w-full bg-[#dfe3e8] px-4 py-10 sm:px-6 md:px-0">
+        <div className="mx-auto max-w-7xl px-[2vw]">
+          <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
+            <div className="text-sm font-semibold text-slate-500">Loading order details...</div>
+          </div>
         </div>
       </div>
     );
@@ -226,8 +228,9 @@ export default function AssociateOrderDetailsPage() {
 
   if (isLoaded && !order) {
     return (
-      <div className="px-4 py-10">
-        <div className="mx-auto max-w-5xl rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
+      <div className="w-full bg-[#dfe3e8] px-4 py-10 sm:px-6 md:px-0">
+        <div className="mx-auto max-w-5xl px-[2vw]">
+        <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-black uppercase tracking-wide text-slate-900">Order Details</h1>
@@ -243,14 +246,16 @@ export default function AssociateOrderDetailsPage() {
             </button>
           </div>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#dfe3e8] px-4 py-8 md:px-6">
-      <div className="mx-auto max-w-7xl rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
-        <div className="px-5 py-5 sm:px-8 sm:py-7">
+    <div className="w-full bg-[#dfe3e8] px-4 py-8 sm:px-6 md:px-0">
+      <div className="mx-auto max-w-7xl px-[2vw]">
+        <div className="rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
+          <div className="px-5 py-5 sm:px-8 sm:py-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <button
@@ -384,6 +389,7 @@ export default function AssociateOrderDetailsPage() {
             </aside>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

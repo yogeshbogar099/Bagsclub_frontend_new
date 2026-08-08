@@ -14,8 +14,8 @@ export default function SharedLoopBagDesignOptions({ basePath }) {
 
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
-      <section className="px-3 py-6 sm:px-4 md:px-8">
-        <div className="mx-auto min-w-0 max-w-7xl">
+      <section className="px-4 py-6 sm:px-6 md:px-0 md:py-8">
+        <div className="mx-auto min-w-0 max-w-7xl px-[2vw]">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"

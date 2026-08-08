@@ -63,9 +63,10 @@ export default function AssociateOrderProductionLogPage() {
   }
 
   return (
-    <div className="bg-[#dfe3e8] px-4 py-8 md:px-6">
-      <div className="mx-auto max-w-7xl rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
-        <div className="px-5 py-5 sm:px-8 sm:py-7">
+    <div className="w-full bg-[#dfe3e8] px-4 py-8 sm:px-6 md:px-0">
+      <div className="mx-auto max-w-7xl px-[2vw]">
+        <div className="rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
+          <div className="px-5 py-5 sm:px-8 sm:py-7">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <button
@@ -100,6 +101,7 @@ export default function AssociateOrderProductionLogPage() {
             <AssociateProductionLogTimeline order={order} title="Tracking Log" showOrderNumber={false} />
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

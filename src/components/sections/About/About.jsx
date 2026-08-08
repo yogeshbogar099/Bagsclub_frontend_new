@@ -10,34 +10,25 @@ const aboutHighlights = [
 
 export default function About() {
   return (
-    <section id="about" className="py-16">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <div>
-          <p className="mb-3 text-sm font-semibold uppercase text-brand">Bag Club of India Limited</p>
-          <h2 className="text-4xl font-bold leading-tight text-ink">
+    <section id="about" className="py-10 sm:py-12 md:py-16">
+      <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 sm:gap-8 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:px-8">
+        <div className="order-2 lg:order-1">
+          <p className="mb-2 text-xs font-semibold uppercase text-brand sm:mb-3 sm:text-sm">Bag Club of India Limited</p>
+          <h2 className="text-2xl font-bold leading-tight text-ink sm:text-3xl md:text-4xl">
             Always Ready to Help Printers & Advertisers
           </h2>
-          <p className="mt-5 text-lg leading-8 text-slate-600">
+          <p className="mt-4 text-sm leading-7 text-slate-600 sm:mt-5 sm:text-base md:leading-8">
             Unity empowers us. We can work alone, but together we will win. Unity is strength, where there is team work and collaborations, wonderfull things can be achieved.
-          
-           
           </p>
-         
-          {/* <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {aboutHighlights.map(([title, Icon, text]) => (
-              <div key={title} className="rounded-lg bg-slate-50 p-4">
-                <Icon className="mb-3 text-brand" size={28} />
-                <h3 className="font-bold text-ink">{title}</h3>
-                <p className="mt-2 text-sm text-slate-500">{text}</p>
-              </div>
-            ))}
-          </div> */}
         </div>
-        <img
-          src={Eight}
-          alt="Printers Club of India Limited"
-          className="h-full max-h-[460px] w-full rounded-lg object-cover shadow-soft"
-        />
+        <div className="order-1 lg:order-2">
+          <img
+            src={Eight}
+            alt="Printers Club of India Limited"
+            loading="lazy"
+            className="h-full max-h-[340px] w-full rounded-lg object-cover shadow-soft sm:max-h-[400px] lg:max-h-[460px]"
+          />
+        </div>
       </div>
     </section>
   );

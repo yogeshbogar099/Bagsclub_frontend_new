@@ -11,7 +11,7 @@ export default function AssociateModuleLayout({ session, pathname, bootstrap, on
     <div className="min-h-screen bg-[#f5f6f8] text-[#333]">
       <AssociateModuleHeader session={session} headerData={headerData} onRefresh={onRefresh} />
       <AssociateModuleNav />
-      <main className="mx-auto min-w-0 w-full max-w-7xl px-4 py-5">{children}</main>
+      <main className="mx-auto min-w-0 w-full max-w-7xl px-4 py-5 sm:px-6 md:px-[2vw] lg:px-[2.5vw] xl:px-[2.5vw]">{children}</main>
       <AssociateModuleFooter footerData={footerData} />
     </div>
   );

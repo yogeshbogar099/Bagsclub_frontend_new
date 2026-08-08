@@ -10,7 +10,7 @@ import {
 export default function AssociateFooter() {
   return (
     <footer className="border-t-4 border-[#f4c400] bg-[linear-gradient(90deg,#071327,#0b1f44,#071327)] pt-[40px] text-white">
-      <div className="mx-auto grid w-[90%] max-w-[1400px] grid-cols-1 gap-[30px] pb-[40px] lg:grid-cols-[1.5fr_1fr_1.2fr] lg:gap-[60px]">
+      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-[30px] px-4 pb-[40px] sm:px-6 md:px-8 lg:grid-cols-[1.5fr_1fr_1.2fr] lg:gap-[60px]">
         <div>
           <h2 className="relative mb-[25px] pl-[18px] text-[20px] font-bold before:absolute before:left-0 before:top-[4px] before:h-[22px] before:w-[3px] before:rounded-full before:bg-[#f4c400] before:content-['']">
             Bagsclub Group
@@ -70,7 +70,7 @@ export default function AssociateFooter() {
               <h4 className="mb-1 text-[16px] font-semibold">Head Office:</h4>
 
               <p className="text-[14px] leading-[1.6] text-[#b6bfd3]">
-                Sandeep Printers, behind Godavari Hotel, Latur Maharashtra 413512
+                Near Godavari Bakery, Opp Pari Kids Wear, Champai Residency, Latur, Maharashtra-413512
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function AssociateFooter() {
       </div>
 
       <div className="border-t border-white/10 py-[20px]">
-        <div className="mx-auto flex w-[90%] max-w-[1400px] flex-col items-center justify-between gap-4 text-center text-[14px] md:flex-row md:text-left">
+        <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-4 px-4 text-center text-[14px] sm:px-6 md:px-8 md:flex-row md:text-left">
           <p className="text-[#8f9ab2]">
             Copyrights © 2026 | All Rights Reserved by{" "}
             <span className="font-semibold text-white">Bagsclub of India Limited</span>
