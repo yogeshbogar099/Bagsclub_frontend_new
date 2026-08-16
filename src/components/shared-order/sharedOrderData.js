@@ -6,6 +6,7 @@ import loopBagImage from "../../assets/images/Loop-Bag-Card.jpeg";
 import nonWovenBag from "../../assets/images/Non_Woven_Bag.png";
 import paperBag from "../../assets/images/Paper_Bag.png";
 import plasticBag from "../../assets/images/Plastic_Bag.png";
+import sampleImage from "../../assets/images/8.jpg";
 
 export const printingServiceCards = [
   { id: 1, title: "NON-WOVEN BAG", image: nonWovenBag },
@@ -18,7 +19,8 @@ export const printingServiceCards = [
 export const nonWovenBagCards = [
   { id: 1, title: "D-CUT BAG", slug: "d-cut-bag", image: dCutImage },
   { id: 2, title: "LOOP BAG", slug: "loop-bag", image: loopBagImage },
-  { id: 3, title: "BOX BAG", slug: "box-bag", image: boxBagImage }
+  { id: 3, title: "BOX BAG", slug: "box-bag", image: boxBagImage },
+  { id: 4, title: "SAMPLE FILE", slug: "sample-file", image: sampleImage, isSample: true }
 ];
 
 export const bagCatalog = {

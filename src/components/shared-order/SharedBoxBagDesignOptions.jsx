@@ -32,31 +32,58 @@ export default function SharedBoxBagDesignOptions({ basePath }) {
             </button>
           </div>
 
-          <h1
-            className="mb-2 text-3xl font-black uppercase tracking-tight text-black md:text-4xl"
-            style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}
-          >
-            Box Bag
-          </h1>
-
           <p className="mb-6 text-sm font-semibold text-gray-600">Choose your printing color option to continue.</p>
 
-          <div className="grid justify-items-center gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
-            {designOptions.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className="group w-full max-w-[260px] text-left"
-                onClick={() => navigate(`${basePath}/non-woven-bag/box-bag?design=${option.key}`)}
-                aria-label={option.title}
-              >
-                <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <div className="relative aspect-[2040/3061] w-full overflow-hidden">
-                    <img src={option.image} alt={option.title} className="absolute inset-0 block h-full w-full object-contain object-center" />
+          <div className="mb-14">
+            <h2 
+              className="mb-10 text-center text-3xl font-black uppercase tracking-tight text-black md:mb-12 md:text-4xl"
+              style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}
+            >
+              Box Bag 100 GSM
+            </h2>
+            <div className="grid justify-items-center gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+              {designOptions.slice(0, 3).map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className="group w-full max-w-[260px] text-left"
+                  onClick={() => navigate(`${basePath}/non-woven-bag/box-bag?design=${option.key}`)}
+                  aria-label={option.title}
+                >
+                  <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
+                    <div className="relative aspect-[2040/3061] w-full overflow-hidden">
+                      <img src={option.image} alt={option.title} className="absolute inset-0 block h-full w-full object-contain object-center" />
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 
+              className="mb-10 text-center text-3xl font-black uppercase tracking-tight text-black md:mb-12 md:text-4xl"
+              style={{ textShadow: "3px 4px 6px rgba(0, 0, 0, 0.25)" }}
+            >
+              Box Bag 120 GSM
+            </h2>
+            <div className="grid justify-items-center gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+              {designOptions.slice(3, 6).map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className="group w-full max-w-[260px] text-left"
+                  onClick={() => navigate(`${basePath}/non-woven-bag/box-bag?design=${option.key}`)}
+                  aria-label={option.title}
+                >
+                  <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
+                    <div className="relative aspect-[2040/3061] w-full overflow-hidden">
+                      <img src={option.image} alt={option.title} className="absolute inset-0 block h-full w-full object-contain object-center" />
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>

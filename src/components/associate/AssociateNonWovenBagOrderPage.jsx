@@ -53,10 +53,10 @@ export default function AssociateNonWovenBagOrderPage() {
   const sizeOptions = useMemo(() => bagSizeOptionsBySlug[bagSlug] || bagSizeOptionsBySlug["d-cut-bag"], [bagSlug]);
 
   const [formData, setFormData] = useState({
-    printingPress: "Direct Order",
+    printingPress: "",
     orderName: "",
     bagType: "",
-    quantity: String(MINIMUM_QUANTITY),
+    quantity: "",
     bagSize: "",
     bagColor: "",
     textColorType: "Single color",
@@ -68,7 +68,7 @@ export default function AssociateNonWovenBagOrderPage() {
     fileUrl: "",
     sellingPrice: 0,
     remark: "",
-    pressline: "Sandeep Printers"
+    pressline: user?.businessName || user?.ownerName || user?.name || "Sandeep Printers"
   });
 
   const designMode = useMemo(() => String(searchParams.get("design") || "").trim().toLowerCase(), [searchParams]);
@@ -317,7 +317,7 @@ export default function AssociateNonWovenBagOrderPage() {
           bagType: "",
           bagColor: "",
           textColorSelection: [],
-          quantity: String(MINIMUM_QUANTITY),
+          quantity: "",
           privacy: "Not Required",
           deliveryOption: "Dispatch By Transport",
           fileOption: "",
@@ -337,13 +337,13 @@ export default function AssociateNonWovenBagOrderPage() {
     let nextStatusMessage = null;
     setFormData((prev) => {
       if (prev.quantity === "") {
-        return { ...prev, quantity: String(MINIMUM_QUANTITY) };
+        return prev;
       }
       const parsedQuantity = Number(prev.quantity);
       if (!Number.isFinite(parsedQuantity)) {
-        return { ...prev, quantity: String(MINIMUM_QUANTITY) };
+        return { ...prev, quantity: "" };
       }
-      if (parsedQuantity < MINIMUM_QUANTITY) {
+      if (parsedQuantity > 0 && parsedQuantity < MINIMUM_QUANTITY) {
         nextStatusMessage = { type: "error", text: "Minimum quantity is 1000." };
         return { ...prev, quantity: String(MINIMUM_QUANTITY) };
       }
@@ -611,7 +611,7 @@ export default function AssociateNonWovenBagOrderPage() {
 
   return (
     <div className="min-h-screen w-full bg-[#eeeeef] py-6 font-sans text-[#222] px-4 sm:px-6 md:px-0 md:py-8">
-      <div className="mx-auto w-full max-w-[1040px] px-[2vw]">
+      <div className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-[96px]">
         <div className="mb-5 grid grid-cols-[auto_1fr_auto] items-center gap-4">
           <button
             type="button"
@@ -624,7 +624,7 @@ export default function AssociateNonWovenBagOrderPage() {
           <div className="w-[80px]" />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,470px)_minmax(0,1fr)] xl:gap-9">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-8 xl:gap-12">
           <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div className="rounded-[8px] border border-[#d3d7de] bg-white p-[18px] shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
               <div className="space-y-5">
@@ -648,7 +648,7 @@ export default function AssociateNonWovenBagOrderPage() {
                     onChange={handleInputChange}
                     className="h-[45px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                   >
-                    <option value="">Select Bag Size</option>
+                    <option value="">--- Select ---</option>
                     {sizeOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -678,7 +678,7 @@ export default function AssociateNonWovenBagOrderPage() {
                         onChange={handleInputChange}
                         className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                       >
-                        <option value="">Select printing side</option>
+                        <option value="">--- Select ---</option>
                         {bagTypeOptions.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.value === "Both sides" ? "Both Side" : "Single Side"}
@@ -702,7 +702,7 @@ export default function AssociateNonWovenBagOrderPage() {
                         value={formData.quantity}
                         onChange={handleInputChange}
                         onBlur={handleQuantityBlur}
-                        placeholder={`Enter Quantity (Minimum: ${MINIMUM_QUANTITY})`}
+                        placeholder="--- Select ---"
                         className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                       />
                     </div>
@@ -720,7 +720,7 @@ export default function AssociateNonWovenBagOrderPage() {
                         onChange={handleInputChange}
                         className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
                       >
-                        <option value="">Select Bag Color</option>
+                        <option value="">--- Select ---</option>
                         {availableBagColors.map((color) => (
                           <option key={color.value} value={color.value}>
                             {color.value}
@@ -781,7 +781,7 @@ export default function AssociateNonWovenBagOrderPage() {
                         >
                           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
                             {selectedPrintingColorObjects.length === 0 ? (
-                              <span className="text-slate-400">Select Printing Color</span>
+                              <span className="text-slate-400">--- Select ---</span>
                             ) : (
                               selectedPrintingColorObjects.map((color) => (
                                 <span

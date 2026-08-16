@@ -95,14 +95,14 @@ export default function SharedAutoWalletTopUpPage() {
 
   return (
     <section className="min-h-[calc(100vh-300px)] w-full bg-[#efefef] px-4 py-4 sm:px-6 md:py-5 md:px-0">
-      <div className="mx-auto max-w-[1280px] px-[4vw]">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-center text-[24px] font-bold uppercase tracking-wide text-[#2d58a5] md:text-[40px]">
           Enter Amount To Be Added
         </h1>
 
         {statusMessage.text ? (
           <div
-            className={`mx-auto mb-6 max-w-[980px] rounded-[8px] px-4 py-3 text-sm ${
+            className={`mx-auto mb-6 w-full max-w-5xl rounded-[8px] px-4 py-3 text-sm ${
               statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-blue-50 text-[#2d58a5]"
             }`}
           >
@@ -111,7 +111,7 @@ export default function SharedAutoWalletTopUpPage() {
         ) : null}
 
         <div
-          className={`mx-auto grid max-w-[980px] gap-6 ${
+          className={`mx-auto grid w-full max-w-5xl gap-6 ${
             qrSession ? "lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start" : ""
           }`}
         >

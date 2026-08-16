@@ -29,34 +29,41 @@ export default function SharedNonWovenBagSelection({ basePath, useDCutDesignOpti
             className="grid justify-items-center gap-x-6 gap-y-7"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
           >
-            {nonWovenBagCards.map((card) => (
-              <button
-                key={card.id}
-                type="button"
-                className="group w-full max-w-[220px] text-center"
-                onClick={() => {
-                  if (useDCutDesignOptions && card.slug === "d-cut-bag") {
-                    navigate(`${basePath}/non-woven-bag/d-cut-bag/design-options`);
-                    return;
-                  }
-                  if (useLoopDesignOptions && card.slug === "loop-bag") {
-                    navigate(`${basePath}/non-woven-bag/loop-bag/design-options`);
-                    return;
-                  }
-                  if (useBoxDesignOptions && card.slug === "box-bag") {
-                    navigate(`${basePath}/non-woven-bag/box-bag/design-options`);
-                    return;
-                  }
+            {nonWovenBagCards.map((card) => {
+              const CardWrapper = card.isSample ? "div" : "button";
+              return (
+                <CardWrapper
+                  key={card.id}
+                  type={card.isSample ? undefined : "button"}
+                  className={`group w-full max-w-[220px] text-center ${card.isSample ? "" : "cursor-pointer"}`}
+                  onClick={
+                    card.isSample
+                      ? undefined
+                      : () => {
+                          if (useDCutDesignOptions && card.slug === "d-cut-bag") {
+                            navigate(`${basePath}/non-woven-bag/d-cut-bag/design-options`);
+                            return;
+                          }
+                          if (useLoopDesignOptions && card.slug === "loop-bag") {
+                            navigate(`${basePath}/non-woven-bag/loop-bag/design-options`);
+                            return;
+                          }
+                          if (useBoxDesignOptions && card.slug === "box-bag") {
+                            navigate(`${basePath}/non-woven-bag/box-bag/design-options`);
+                            return;
+                          }
 
-                  navigate(`${basePath}/non-woven-bag/${card.slug}`);
-                }}
-              >
-                <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />
-                </div>
-                <div className="mt-2 text-[14px] font-bold uppercase leading-5 text-[#2d58a5] md:text-[15px]">{card.title}</div>
-              </button>
-            ))}
+                          navigate(`${basePath}/non-woven-bag/${card.slug}`);
+                        }
+                  }
+                >
+                  <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
+                    <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />
+                  </div>
+                  <div className="mt-2 text-[14px] font-bold uppercase leading-5 text-[#2d58a5] md:text-[15px]">{card.title}</div>
+                </CardWrapper>
+              );
+            })}
           </div>
         </div>
       </section>

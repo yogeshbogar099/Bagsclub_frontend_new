@@ -5,12 +5,12 @@ export default function SharedManualWalletTopUpPage({ basePath }) {
 
   return (
     <section className="min-h-[calc(100vh-300px)] w-full bg-[#efefef] px-4 py-4 sm:px-6 md:py-5 md:px-0">
-      <div className="mx-auto max-w-[1280px] px-[4vw]">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-6 text-center text-[24px] font-bold uppercase tracking-wide text-[#2d58a5] md:text-[40px]">
           To Add Money In Your Wallet
         </h1>
 
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
+        <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-2">
           <section>
             <h2 className="mb-2 text-[18px] font-bold text-[#343434] md:text-[21px]">Note Hindi :</h2>
             <ol className="space-y-1 text-[15px] leading-7 text-[#444] md:text-[17px]">
@@ -30,7 +30,7 @@ export default function SharedManualWalletTopUpPage({ basePath }) {
           </section>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-6xl gap-6 lg:grid-cols-[320px_1fr]">
+        <div className="mx-auto mt-8 grid w-full max-w-6xl gap-6 lg:grid-cols-[320px_1fr]">
           <section>
             <h2 className="mb-3 text-[18px] font-bold text-[#343434] md:text-[21px]">NEFT/RTGS/IMPS To Our Bank</h2>
             <div className="min-h-[250px] border border-[#dddddd] bg-[#f3f3f3] p-4 text-[15px] leading-8 text-[#555] md:text-[16px]">

@@ -3,6 +3,13 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
+      maxWidth: {
+        '5xl': '1280px',
+        '6xl': '1440px',
+        '7xl': '1600px',
+        '8xl': '1800px',
+        'screen-3xl': '1920px',
+      },
       colors: {
         primary: "#1abc9c",
         secondary: "#34495e",

@@ -25,12 +25,12 @@ export default function SharedAddMoneyPage({ basePath }) {
 
   return (
     <section className="min-h-[calc(100vh-220px)] w-full bg-[#efefef] px-4 py-4 sm:px-6 md:py-5 md:px-0">
-      <div className="mx-auto flex min-h-[calc(100vh-260px)] w-full max-w-[1320px] flex-col justify-start px-[4vw]">
+      <div className="mx-auto flex min-h-[calc(100vh-260px)] w-full max-w-7xl flex-col justify-start px-4 sm:px-6 lg:px-8">
         <h1 className="mb-10 text-center text-[24px] font-bold uppercase tracking-wide text-[#2d58a5] md:mb-12 md:text-[32px]">
           Select Payment Option
         </h1>
 
-        <div className="mx-auto grid w-full max-w-[1080px] gap-6 md:gap-8 lg:grid-cols-2 lg:gap-10">
+        <div className="mx-auto grid w-full max-w-5xl gap-6 md:gap-8 lg:grid-cols-2 lg:gap-10">
           {paymentOptions.map((option) => (
             <button
               key={option.id}

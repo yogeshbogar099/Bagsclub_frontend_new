@@ -9,7 +9,8 @@ import BoxBag from "../../assets/images/Box-Bag-Card.jpeg"
 const nonWovenBagCards = [
   { id: 1, title: "D-CUT BAG", slug: "d-cut-bag", image: D_Cut },
   { id: 2, title: "LOOP BAG", slug: "loop-bag", image: LoopBag },
-  { id: 3, title: "BOX BAG", slug: "box-bag", image: BoxBag }
+  { id: 3, title: "BOX BAG", slug: "box-bag", image: BoxBag },
+  { id: 4, title: "SAMPLE FILE", slug: "sample-file", image: sampleImage, isSample: true }
 ];
 
 export default function AssociateNonWovenBagPage() {
@@ -40,34 +41,41 @@ export default function AssociateNonWovenBagPage() {
             className="grid justify-items-center gap-x-6 gap-y-7"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
           >
-            {nonWovenBagCards.map((card) => (
-              <button
-                key={card.id}
-                type="button"
-                className="group w-full max-w-[220px] text-center"
-                onClick={() => {
-                  if (card.slug === "d-cut-bag") {
-                    navigate("/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag/design-options");
-                    return;
-                  }
-                  if (card.slug === "loop-bag") {
-                    navigate("/dashboard/associate-member/book-order/non-woven-bag/loop-bag/design-options");
-                    return;
-                  }
-                  if (card.slug === "box-bag") {
-                    navigate("/dashboard/associate-member/book-order/non-woven-bag/box-bag/design-options");
-                    return;
-                  }
+            {nonWovenBagCards.map((card) => {
+              const CardWrapper = card.isSample ? "div" : "button";
+              return (
+                <CardWrapper
+                  key={card.id}
+                  type={card.isSample ? undefined : "button"}
+                  className={`group w-full max-w-[220px] text-center ${card.isSample ? "" : "cursor-pointer"}`}
+                  onClick={
+                    card.isSample
+                      ? undefined
+                      : () => {
+                          if (card.slug === "d-cut-bag") {
+                            navigate("/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag/design-options");
+                            return;
+                          }
+                          if (card.slug === "loop-bag") {
+                            navigate("/dashboard/associate-member/book-order/non-woven-bag/loop-bag/design-options");
+                            return;
+                          }
+                          if (card.slug === "box-bag") {
+                            navigate("/dashboard/associate-member/book-order/non-woven-bag/box-bag/design-options");
+                            return;
+                          }
 
-                  navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`);
-                }}
-              >
-                <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
-                  <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />
-                </div>
-                <div className="mt-2 text-[14px] font-bold uppercase leading-5 text-[#2d58a5] md:text-[15px]">{card.title}</div>
-              </button>
-            ))}
+                          navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`);
+                        }
+                  }
+                >
+                  <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
+                    <img src={card.image} alt={card.title} className="h-[260px] w-full object-cover sm:h-[280px] md:h-[300px]" />
+                  </div>
+                  <div className="mt-2 text-[14px] font-bold uppercase leading-5 text-[#2d58a5] md:text-[15px]">{card.title}</div>
+                </CardWrapper>
+              );
+            })}
           </div>
         </div>
       </section>

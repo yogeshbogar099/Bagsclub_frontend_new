@@ -134,7 +134,7 @@ export default function AssociateAddOrderPage() {
 
             <div className={`${tableCardClassName} min-w-0`}>
               <div className={tableShellClassName}>
-              <table className={`${tableElementClassName} min-w-[980px] xl:min-w-[1100px]`}>
+              <table className={`${tableElementClassName} w-full min-w-max`}>
                 <thead>
                   <tr className={tableHeaderRowClassName}>
                     <th className={tableHeaderCellClassName}>Order No.</th>
