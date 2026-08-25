@@ -53,7 +53,6 @@ export default function AssociateNonWovenBagOrderPage() {
   const sizeOptions = useMemo(() => bagSizeOptionsBySlug[bagSlug] || bagSizeOptionsBySlug["d-cut-bag"], [bagSlug]);
 
   const [formData, setFormData] = useState({
-    printingPress: "",
     orderName: "",
     bagType: "",
     quantity: "",
@@ -94,7 +93,7 @@ export default function AssociateNonWovenBagOrderPage() {
             ? "Four color"
             : designMode === "mix" || designMode === "multi" || designMode === "multi-color"
               ? "Mix color"
-            : null;
+              : null;
 
     if (!nextTextColorType) return;
 
@@ -124,11 +123,11 @@ export default function AssociateNonWovenBagOrderPage() {
       !formData.bagSize
         ? 0
         :
-      getBagRate({
-        bagSlug,
-        bagSize: formData.bagSize,
-        textColorType: formData.textColorType
-      }),
+        getBagRate({
+          bagSlug,
+          bagSize: formData.bagSize,
+          textColorType: formData.textColorType
+        }),
     [bagSlug, formData.bagSize, formData.textColorType]
   );
 
@@ -284,7 +283,6 @@ export default function AssociateNonWovenBagOrderPage() {
       `Printing Color Type: ${formData.textColorType}`,
       `Printing Colors: ${colorSelection}`,
       `Delivery Option: ${formData.deliveryOption}`,
-      `Printing Press: ${formData.printingPress}`,
       `Final Payable: Rs. ${payableAmount.toFixed(2)}`
     ].join(" | ");
   }, [
@@ -296,7 +294,6 @@ export default function AssociateNonWovenBagOrderPage() {
     formData.textColorType,
     formData.textColorSelection,
     formData.deliveryOption,
-    formData.printingPress,
     payableAmount,
     uploadedDesignType
   ]);
@@ -484,10 +481,7 @@ export default function AssociateNonWovenBagOrderPage() {
     const sellingPrice = Number(formData.sellingPrice || 0);
     const selectedColorCount = formData.textColorSelection.length;
 
-    if (!formData.printingPress) {
-      setStatusMessage({ type: "error", text: "Printing press is required." });
-      return;
-    }
+
 
     if (!trimmedOrderName) {
       setStatusMessage({ type: "error", text: "Order name is required." });
@@ -568,7 +562,6 @@ export default function AssociateNonWovenBagOrderPage() {
         bagColor: formData.bagColor,
         textColorType: formData.textColorType,
         textColors: formData.textColorSelection,
-        printingPress: formData.printingPress,
         privacy: formData.privacy,
         deliveryOption: formData.deliveryOption,
         fileOption: formData.fileOption,
@@ -750,11 +743,10 @@ export default function AssociateNonWovenBagOrderPage() {
                                 }));
                               }}
                               disabled={isLockedPrintingType && !selected}
-                              className={`${selectableCardClassName} h-[36px] min-w-[102px] px-4 py-2 text-center ${
-                                selected
+                              className={`${selectableCardClassName} h-[36px] min-w-[102px] px-4 py-2 text-center ${selected
                                   ? "border-2 border-[#222] text-[#222] shadow-sm"
                                   : "border border-[#cfcfcf] text-slate-700 hover:border-[#999]"
-                              } ${isLockedPrintingType && !selected ? "cursor-not-allowed opacity-60" : ""}`}
+                                } ${isLockedPrintingType && !selected ? "cursor-not-allowed opacity-60" : ""}`}
                               aria-pressed={selected}
                             >
                               {type}
@@ -816,9 +808,8 @@ export default function AssociateNonWovenBagOrderPage() {
                                   <button
                                     type="button"
                                     onClick={() => handleColorSelect(color.value)}
-                                    className={`flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors ${
-                                      isSelected ? "bg-[#eef5ff]" : "hover:bg-slate-50"
-                                    }`}
+                                    className={`flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors ${isSelected ? "bg-[#eef5ff]" : "hover:bg-slate-50"
+                                      }`}
                                     role="option"
                                     aria-selected={isSelected}
                                   >
@@ -882,8 +873,8 @@ export default function AssociateNonWovenBagOrderPage() {
 
                   <div className="mb-2 rounded-[8px] bg-[#eaf1ff] px-4 py-2.5 text-center text-[12px] font-bold uppercase tracking-[0.06em] text-[#12286e] shadow-[0_1px_2px_rgba(18,40,110,0.08)] ring-1 ring-[#c9d9ff]">CONGRATULATIONS! ORDER'S ELIGIBLE FOR FREE DELIVERY</div>
 
-                    <div className="border-b border-[#ededed] p-4">
-                      <div className="mb-3 text-[15px] font-bold text-[#12286e]">Select File Option</div>
+                  <div className="border-b border-[#ededed] p-4">
+                    <div className="mb-3 text-[15px] font-bold text-[#12286e]">Select File Option</div>
                     <div className="grid gap-4 md:grid-cols-2">
                       <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
                         <input
@@ -913,9 +904,8 @@ export default function AssociateNonWovenBagOrderPage() {
 
                     {formData.fileOption === "Attach File Online" ? (
                       <div
-                        className={`mt-4 rounded-[8px] border-2 border-dashed p-4 text-center transition ${
-                          dragActive ? "border-[#1f73ff] bg-blue-50" : "border-[#d8d8d8] bg-[#fafafa]"
-                        }`}
+                        className={`mt-4 rounded-[8px] border-2 border-dashed p-4 text-center transition ${dragActive ? "border-[#1f73ff] bg-blue-50" : "border-[#d8d8d8] bg-[#fafafa]"
+                          }`}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}
@@ -985,9 +975,8 @@ export default function AssociateNonWovenBagOrderPage() {
                   <div className="p-4">
                     {statusMessage.text ? (
                       <div
-                        className={`mb-4 rounded-[8px] px-4 py-3 text-sm ${
-                          statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
-                        }`}
+                        className={`mb-4 rounded-[8px] px-4 py-3 text-sm ${statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+                          }`}
                       >
                         {statusMessage.text}
                       </div>

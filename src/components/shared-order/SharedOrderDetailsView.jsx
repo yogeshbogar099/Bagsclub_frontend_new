@@ -282,11 +282,29 @@ export default function SharedOrderDetailsView({
     [order?.assignedAdmin, order?.assignedAssociateMember]
   );
 
+  const invoiceNumber = useMemo(() => {
+    if (order?.invoiceNumber && order.invoiceNumber !== "--") {
+      return order.invoiceNumber;
+    }
+    if (order?.orderDateTime || order?.dateTime || order?.createdAt || order?.orderNumber) {
+      const dateSource = order?.orderDateTime || order?.dateTime || order?.createdAt;
+      const d = dateSource ? new Date(dateSource) : new Date();
+      const validDate = !Number.isNaN(d.getTime()) ? d : new Date();
+      const year = validDate.getFullYear();
+      const month = String(validDate.getMonth() + 1).padStart(2, "0");
+      const day = String(validDate.getDate()).padStart(2, "0");
+      const dateStr = `${year}${month}${day}`;
+      const num = order?.orderNumber ? String(order.orderNumber % 1000 || 1).padStart(3, "0") : "001";
+      return `INV-${dateStr}-${num}`;
+    }
+    return "--";
+  }, [order?.invoiceNumber, order?.orderDateTime, order?.dateTime, order?.createdAt, order?.orderNumber]);
+
   const specificationRows = useMemo(
     () => [
-      { label: "Created By", value: createdByLabel, accent: "text-[#7c3aed]" },
+      { label: "Order By", value: createdByLabel, accent: "text-[#7c3aed]" },
       {
-        label: "Assigned To",
+        label: "Order For",
         value: order?.assignedAdmin?.businessName || order?.assignedAdmin?.name || order?.assignedAssociateMember?.businessName || "Assignment Pending"
       },
       { label: "Delivery Type", value: order?.deliveryOption || "--" },
@@ -299,19 +317,18 @@ export default function SharedOrderDetailsView({
       { label: "Total Amount", value: formatCurrency(totalAmount), accent: "text-[#111827]" },
       { label: "Final Payable", value: formatCurrency(finalPayableAmount), accent: "text-[#10b981]" },
       { label: "Selling Price", value: formatCurrency(order?.sellingPrice || 0), accent: "text-[#111827]" },
-      { label: "Invoice Number", value: order?.invoiceNumber || order?.referenceNo || "--", accent: "text-[#5b67ea]" }
+      { label: "Invoice Number", value: invoiceNumber, accent: "text-[#5b67ea]" }
     ],
     [
       createdByLabel,
       finalPayableAmount,
+      invoiceNumber,
       isPdfDesign,
       order?.assignedAdmin,
       order?.assignedAssociateMember,
       order?.dateTime,
       order?.deliveryOption,
-      order?.invoiceNumber,
       order?.orderDateTime,
-      order?.referenceNo,
       order?.sellingPrice,
       totalAmount,
       validPdfDiscountLabel
@@ -356,9 +373,9 @@ export default function SharedOrderDetailsView({
     return (
       <div className="w-full bg-[#dfe3e8] px-4 py-10 sm:px-6 md:px-0">
         <div className="mx-auto max-w-7xl px-[2vw]">
-        <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
-          <div className="text-sm font-semibold text-slate-500">Loading order details...</div>
-        </div>
+          <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
+            <div className="text-sm font-semibold text-slate-500">Loading order details...</div>
+          </div>
         </div>
       </div>
     );
@@ -368,22 +385,22 @@ export default function SharedOrderDetailsView({
     return (
       <div className="w-full bg-[#dfe3e8] px-4 py-10 sm:px-6 md:px-0">
         <div className="mx-auto max-w-5xl px-[2vw]">
-        <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-black uppercase tracking-wide text-slate-900">Order Details</h1>
-              <p className="mt-2 text-sm text-slate-500">{`This order could not be found in the ${moduleLabel} list.`}</p>
+          <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-black uppercase tracking-wide text-slate-900">Order Details</h1>
+                <p className="mt-2 text-sm text-slate-500">{`This order could not be found in the ${moduleLabel} list.`}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleBack}
+                className="inline-flex items-center gap-2 rounded-full bg-[#2d58a5] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#244887]"
+              >
+                <ArrowLeft size={16} />
+                Back To Orders
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleBack}
-              className="inline-flex items-center gap-2 rounded-full bg-[#2d58a5] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#244887]"
-            >
-              <ArrowLeft size={16} />
-              Back To Orders
-            </button>
           </div>
-        </div>
         </div>
       </div>
     );
@@ -392,222 +409,233 @@ export default function SharedOrderDetailsView({
   return (
     <div className="w-full bg-[#dfe3e8] px-4 py-8 sm:px-6 md:px-0">
       <div className="mx-auto max-w-7xl px-[2vw]">
-      <div className="rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
-        <div className="px-5 py-5 sm:px-8 sm:py-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleBack}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6dbe8] bg-white text-[#2d58a5] transition hover:bg-[#eef4ff]"
-                aria-label="Back to orders"
-              >
-                <ArrowLeft size={18} />
-              </button>
-              <div className="flex flex-wrap items-baseline gap-2">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#71809b]">Order</div>
-                <h1 className="text-[28px] font-black text-[#1f2937] sm:text-[34px]">#{order.orderNumber}</h1>
+        <div className="rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
+          <div className="px-5 py-5 sm:px-8 sm:py-7">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6dbe8] bg-white text-[#2d58a5] transition hover:bg-[#eef4ff]"
+                  aria-label="Back to orders"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#71809b]">Order</div>
+                  <h1 className="text-[28px] font-black text-[#1f2937] sm:text-[34px]">#{order.orderNumber}</h1>
+                </div>
+              </div>
+              <div className={`rounded-full border px-7 py-3 text-sm font-black uppercase tracking-[0.14em] shadow-sm ${statusBadgeClass}`}>{displayStatus}</div>
+            </div>
+
+            <div className="mt-6 rounded-[16px] border border-[#efd4df] bg-[#f8eaf0] p-4 shadow-sm">
+              <div className="flex items-start gap-4 rounded-[14px] border border-[#efd4df] bg-[#f9eef3] px-3 py-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white text-[#d14b7c] shadow-sm">
+                  <Tag size={18} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#d14b7c]">Product & Details</div>
+                  <div className="mt-1 text-[18px] font-black text-[#1f2937]">{order.orderName || "--"}</div>
+                  <div className="mt-1 text-sm font-semibold text-[#4b5563]">{detailSummary}</div>
+                </div>
               </div>
             </div>
-            <div className={`rounded-full border px-7 py-3 text-sm font-black uppercase tracking-[0.14em] shadow-sm ${statusBadgeClass}`}>{displayStatus}</div>
-          </div>
 
-          <div className="mt-6 rounded-[16px] border border-[#efd4df] bg-[#f8eaf0] p-4 shadow-sm">
-            <div className="flex items-start gap-4 rounded-[14px] border border-[#efd4df] bg-[#f9eef3] px-3 py-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white text-[#d14b7c] shadow-sm">
-                <Tag size={18} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#d14b7c]">Product & Details</div>
-                <div className="mt-1 text-[18px] font-black text-[#1f2937]">{order.orderName || "--"}</div>
-                <div className="mt-1 text-sm font-semibold text-[#4b5563]">{detailSummary}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
-            <div className="space-y-6">
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-5 flex items-center gap-3">
-                  <Tag size={18} className="text-[#7c4dff]" />
-                  <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Information</h2>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{renderFieldList(orderInfoFields)}</div>
-              </section>
-
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-5 flex items-center gap-3">
-                  <UserRound size={18} className="text-[#7c4dff]" />
-                  <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Creator Information</h2>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">{renderFieldList(creatorInfoFields)}</div>
-              </section>
-
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-5 flex items-center gap-3">
-                  <Clock3 size={18} className="text-[#7c4dff]" />
-                  <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Status History</h2>
-                </div>
-                <div className="space-y-3">
-                  {(order?.statusHistory || []).length ? (
-                    order.statusHistory.map((entry) => (
-                      <div key={entry.id} className="flex items-start gap-3 rounded-[20px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4">
-                        <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#7c4dff] shadow-sm">
-                          <Clock3 size={16} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-black text-[#1f2937]">{entry.status}</span>
-                            <span className="text-xs font-semibold text-[#71809b]">{formatDateTime(entry.changedAt)}</span>
-                          </div>
-                          <p className="mt-1 text-sm text-[#475569]">{entry.note || "Status updated."}</p>
-                          <p className="mt-1 text-xs font-semibold text-[#71809b]">Updated by: {entry.changedByName || "System"}</p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-5 text-sm text-[#475569]">
-                      No status history is available for this order yet.
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              {(order?.dispatchHistory || []).length ? (
+            <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
+              <div className="space-y-6">
                 <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
                   <div className="mb-5 flex items-center gap-3">
-                    <ListOrdered size={18} className="text-[#7c4dff]" />
-                    <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Dispatch History</h2>
+                    <Tag size={18} className="text-[#7c4dff]" />
+                    <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Information</h2>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{renderFieldList(orderInfoFields)}</div>
+                </section>
+
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="mb-5 flex items-center gap-3">
+                    <UserRound size={18} className="text-[#7c4dff]" />
+                    <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Creator Information</h2>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">{renderFieldList(creatorInfoFields)}</div>
+                </section>
+
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="mb-5 flex items-center gap-3">
+                    <Clock3 size={18} className="text-[#7c4dff]" />
+                    <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Status History</h2>
                   </div>
                   <div className="space-y-3">
-                    {order.dispatchHistory.map((entry) => (
-                      <div key={entry.id} className="rounded-[20px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm font-black text-[#1f2937]">{entry.status}</span>
-                          <span className="text-xs font-semibold text-[#71809b]">{formatDateTime(entry.eventAt)}</span>
+                    {(order?.statusHistory || []).length ? (
+                      order.statusHistory.map((entry) => (
+                        <div key={entry.id} className="flex items-start gap-3 rounded-[20px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4">
+                          <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#7c4dff] shadow-sm">
+                            <Clock3 size={16} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-sm font-black text-[#1f2937]">{entry.status}</span>
+                              <span className="text-xs font-semibold text-[#71809b]">{formatDateTime(entry.changedAt)}</span>
+                            </div>
+                            <p className="mt-1 text-sm text-[#475569]">{entry.note || "Status updated."}</p>
+                            <p className="mt-1 text-xs font-semibold text-[#71809b]">Updated by: {entry.changedByName || "System"}</p>
+                          </div>
                         </div>
-                        <p className="mt-2 text-sm text-[#475569]">{entry.note || "Dispatch information updated."}</p>
-                        <p className="mt-2 text-xs text-[#71809b]">
-                          Courier: {entry.courierName || "Not provided"} | Tracking: {entry.courierTrackingNumber || "Not provided"} | Delivery Status:{" "}
-                          {entry.deliveryStatus || "Not provided"}
-                        </p>
-                        <p className="mt-1 text-xs font-semibold text-[#71809b]">Updated by: {entry.updatedByName || "System"}</p>
+                      ))
+                    ) : (
+                      <div className="rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-5 text-sm text-[#475569]">
+                        No status history is available for this order yet.
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                {(order?.dispatchHistory || []).length ? (
+                  <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                    <div className="mb-5 flex items-center gap-3">
+                      <ListOrdered size={18} className="text-[#7c4dff]" />
+                      <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Dispatch History</h2>
+                    </div>
+                    <div className="space-y-3">
+                      {order.dispatchHistory.map((entry) => (
+                        <div key={entry.id} className="rounded-[20px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm font-black text-[#1f2937]">{entry.status}</span>
+                            <span className="text-xs font-semibold text-[#71809b]">{formatDateTime(entry.eventAt)}</span>
+                          </div>
+                          <p className="mt-2 text-sm text-[#475569]">{entry.note || "Dispatch information updated."}</p>
+                          <p className="mt-2 text-xs text-[#71809b]">
+                            Courier: {entry.courierName || "Not provided"} | Tracking: {entry.courierTrackingNumber || "Not provided"} | Delivery Status:{" "}
+                            {entry.deliveryStatus || "Not provided"}
+                          </p>
+                          <p className="mt-1 text-xs font-semibold text-[#71809b]">Updated by: {entry.updatedByName || "System"}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+              </div>
+
+              <aside className="space-y-4">
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Specifications</div>
+                  <div className="overflow-hidden rounded-[24px] border border-[#dde3ee] bg-[#f8fafc] shadow-sm">
+                    {specificationRows.map((row, index) => (
+                      <div
+                        key={row.label}
+                        className={`grid grid-cols-1 gap-2 border-b border-[#e5eaf2] px-5 py-4 sm:grid-cols-[145px_1fr] sm:items-center ${index === specificationRows.length - 1 ? "border-b-0" : ""
+                          }`}
+                      >
+                        <div className="text-[13px] font-semibold text-[#71809b]">{row.label}</div>
+                        {row.label === "Invoice Number" && row.value !== "--" ? (
+                          <button
+                            type="button"
+                            onClick={() => navigateTo(`/dashboard/associate-member/book-order/details/${order?._id || orderId}/invoice`)}
+                            className="inline-flex items-center gap-1.5 font-extrabold text-[#5b67ea] underline underline-offset-2 transition hover:text-[#3f4bbf] focus:outline-none sm:ml-auto"
+                            title="Click to view Tax Invoice Page"
+                          >
+                            <span>{row.value}</span>
+                            <FileText size={15} />
+                          </button>
+                        ) : (
+                          <div className={`text-sm font-extrabold sm:text-right ${row.accent || "text-[#1f2937]"}`}>{row.value}</div>
+                        )}
                       </div>
                     ))}
                   </div>
                 </section>
-              ) : null}
-            </div>
 
-            <aside className="space-y-4">
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Specifications</div>
-                <div className="overflow-hidden rounded-[24px] border border-[#dde3ee] bg-[#f8fafc] shadow-sm">
-                  {specificationRows.map((row, index) => (
-                    <div
-                      key={row.label}
-                      className={`grid grid-cols-1 gap-2 border-b border-[#e5eaf2] px-5 py-4 sm:grid-cols-[145px_1fr] sm:items-center ${
-                        index === specificationRows.length - 1 ? "border-b-0" : ""
-                      }`}
-                    >
-                      <div className="text-[13px] font-semibold text-[#71809b]">{row.label}</div>
-                      <div className={`text-sm font-extrabold sm:text-right ${row.accent || "text-[#1f2937]"}`}>{row.value}</div>
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Assignment</div>
+                  <div className="space-y-3">{renderFieldList(assignmentFields)}</div>
+                </section>
+
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Status Management</div>
+                  <div className={`inline-flex rounded-full border px-5 py-2 text-xs font-black uppercase tracking-[0.14em] ${statusBadgeClass}`}>
+                    {displayStatus}
+                  </div>
+
+                  {statusOptions.length ? (
+                    <div className="mt-4 space-y-3">
+                      <select
+                        value={statusDraft}
+                        onChange={(event) => setStatusDraft(event.target.value)}
+                        className="h-11 w-full rounded-[16px] border border-[#d6dbe8] bg-white px-4 text-sm font-semibold text-[#1f2937] outline-none transition focus:border-[#7c4dff]"
+                      >
+                        <option value="">Select Status</option>
+                        {statusOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <textarea
+                        value={statusNote}
+                        onChange={(event) => setStatusNote(event.target.value)}
+                        rows={4}
+                        placeholder="Add status note"
+                        className="w-full rounded-[16px] border border-[#d6dbe8] bg-white px-4 py-3 text-sm text-[#1f2937] outline-none transition focus:border-[#7c4dff]"
+                      />
+                      {statusError ? <div className="rounded-[14px] bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{statusError}</div> : null}
+                      {statusMessage ? <div className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">{statusMessage}</div> : null}
+                      <button
+                        type="button"
+                        disabled={!statusDraft || statusSaving}
+                        onClick={handleStatusUpdate}
+                        className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#6d5efc] to-[#a855f7] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(139,92,246,0.24)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {statusSaving ? "Updating..." : "Update Status"}
+                      </button>
                     </div>
-                  ))}
-                </div>
-              </section>
+                  ) : (
+                    <div className="mt-4 rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4 text-sm font-semibold text-[#475569]">
+                      Status update actions are not available for this order.
+                    </div>
+                  )}
+                </section>
 
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Assignment</div>
-                <div className="space-y-3">{renderFieldList(assignmentFields)}</div>
-              </section>
-
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="mb-4 text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Order Status Management</div>
-                <div className={`inline-flex rounded-full border px-5 py-2 text-xs font-black uppercase tracking-[0.14em] ${statusBadgeClass}`}>
-                  {displayStatus}
-                </div>
-
-                {statusOptions.length ? (
-                  <div className="mt-4 space-y-3">
-                    <select
-                      value={statusDraft}
-                      onChange={(event) => setStatusDraft(event.target.value)}
-                      className="h-11 w-full rounded-[16px] border border-[#d6dbe8] bg-white px-4 text-sm font-semibold text-[#1f2937] outline-none transition focus:border-[#7c4dff]"
-                    >
-                      <option value="">Select Status</option>
-                      {statusOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <textarea
-                      value={statusNote}
-                      onChange={(event) => setStatusNote(event.target.value)}
-                      rows={4}
-                      placeholder="Add status note"
-                      className="w-full rounded-[16px] border border-[#d6dbe8] bg-white px-4 py-3 text-sm text-[#1f2937] outline-none transition focus:border-[#7c4dff]"
-                    />
-                    {statusError ? <div className="rounded-[14px] bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{statusError}</div> : null}
-                    {statusMessage ? <div className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">{statusMessage}</div> : null}
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Attached Assets</div>
+                  <div className="mt-4 space-y-3 text-sm text-[#475569]">
+                    <div className="flex items-center gap-2 rounded-[16px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
+                      {order.designFileSourceValue === "email" ? <Mail size={16} className="text-[#5b67ea]" /> : <FileText size={16} className="text-[#334155]" />}
+                      <span className="font-semibold">{order.designFileSource || "Uploaded Design File"}</span>
+                    </div>
+                    <div className="rounded-[16px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3 text-sm font-semibold text-[#1f2937]">
+                      File Name: {order.designFileName || "Not provided"}
+                    </div>
                     <button
                       type="button"
-                      disabled={!statusDraft || statusSaving}
-                      onClick={handleStatusUpdate}
-                      className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#6d5efc] to-[#a855f7] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(139,92,246,0.24)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={!canPreview}
+                      onClick={() => window.open(order.designFileUrl, "_blank", "noopener,noreferrer")}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#334155] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(51,65,85,0.24)] transition hover:bg-[#1f2937] disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {statusSaving ? "Updating..." : "Update Status"}
+                      {order.designFileSourceValue === "email" ? <Mail size={16} /> : <FileText size={16} />}
+                      File History
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!canDownload}
+                      onClick={() => downloadFile(order.designFileUrl, order.designFileName || "design-file")}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ef4444] to-[#dc2626] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(239,68,68,0.22)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Download size={16} />
+                      Download Complete PDF
                     </button>
                   </div>
-                ) : (
-                  <div className="mt-4 rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4 text-sm font-semibold text-[#475569]">
-                    Status update actions are not available for this order.
-                  </div>
-                )}
-              </section>
+                </section>
 
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Attached Assets</div>
-                <div className="mt-4 space-y-3 text-sm text-[#475569]">
-                  <div className="flex items-center gap-2 rounded-[16px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
-                    {order.designFileSourceValue === "email" ? <Mail size={16} className="text-[#5b67ea]" /> : <FileText size={16} className="text-[#334155]" />}
-                    <span className="font-semibold">{order.designFileSource || "Uploaded Design File"}</span>
+                <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
+                  <div className="text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Valid PDF</div>
+                  <div className="mt-4 rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4 text-center text-sm font-extrabold text-[#1f2937]">
+                    {validPdfDiscountLabel}
                   </div>
-                  <div className="rounded-[16px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3 text-sm font-semibold text-[#1f2937]">
-                    File Name: {order.designFileName || "Not provided"}
-                  </div>
-                  <button
-                    type="button"
-                    disabled={!canPreview}
-                    onClick={() => window.open(order.designFileUrl, "_blank", "noopener,noreferrer")}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#334155] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(51,65,85,0.24)] transition hover:bg-[#1f2937] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {order.designFileSourceValue === "email" ? <Mail size={16} /> : <FileText size={16} />}
-                    File History
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!canDownload}
-                    onClick={() => downloadFile(order.designFileUrl, order.designFileName || "design-file")}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ef4444] to-[#dc2626] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(239,68,68,0.22)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <Download size={16} />
-                    Download Complete PDF
-                  </button>
-                </div>
-              </section>
-
-              <section className="rounded-[24px] border border-[#dde3ee] bg-white p-6 shadow-sm">
-                <div className="text-[16px] font-black uppercase tracking-tight text-[#1f2937]">Valid PDF</div>
-                <div className="mt-4 rounded-[18px] border border-[#e2e8f0] bg-[#f8fafc] px-4 py-4 text-center text-sm font-extrabold text-[#1f2937]">
-                  {validPdfDiscountLabel}
-                </div>
-              </section>
-            </aside>
+                </section>
+              </aside>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );

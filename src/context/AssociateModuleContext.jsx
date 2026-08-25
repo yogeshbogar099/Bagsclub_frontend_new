@@ -43,12 +43,12 @@ export function AssociateModuleProvider({ children }) {
             session.user.mobile !== nextUser.mobile;
 
           if (hasChanged) {
-          saveAuthSession({
-            ...session,
-            user: nextUser
-          });
+            saveAuthSession({
+              ...session,
+              user: nextUser
+            });
+          }
         }
-      }
       }
 
       return data;
@@ -207,6 +207,48 @@ export function AssociateModuleProvider({ children }) {
     }
   }, []);
 
+  const fetchAccountTransactionsReport = useCallback(async (params = {}) => {
+    setSectionLoading(true);
+    setError("");
+
+    try {
+      const { data } = await apiClient.get("/associate-member-module/reports/account-transactions", {
+        params
+      });
+      return data;
+    } catch (requestError) {
+      const message =
+        requestError?.response?.data?.message ||
+        requestError.message ||
+        "Failed to load account transactions report.";
+      setError(message);
+      return null;
+    } finally {
+      setSectionLoading(false);
+    }
+  }, []);
+
+  const fetchInvoiceReport = useCallback(async (params = {}) => {
+    setSectionLoading(true);
+    setError("");
+
+    try {
+      const { data } = await apiClient.get("/associate-member-module/reports/invoice", {
+        params
+      });
+      return data;
+    } catch (requestError) {
+      const message =
+        requestError?.response?.data?.message ||
+        requestError.message ||
+        "Failed to load invoice report.";
+      setError(message);
+      return null;
+    } finally {
+      setSectionLoading(false);
+    }
+  }, []);
+
   const updateProfile = useCallback(async (payload) => {
     setSubmitting(true);
     setError("");
@@ -256,6 +298,8 @@ export function AssociateModuleProvider({ children }) {
       submitOrder,
       submitTopUp,
       fetchWalletHistory,
+      fetchAccountTransactionsReport,
+      fetchInvoiceReport,
       updateProfile,
       changePassword
     }),
@@ -275,6 +319,8 @@ export function AssociateModuleProvider({ children }) {
       submitOrder,
       submitTopUp,
       fetchWalletHistory,
+      fetchAccountTransactionsReport,
+      fetchInvoiceReport,
       updateProfile,
       changePassword
     ]

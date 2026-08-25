@@ -1,18 +1,52 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  BarChart3,
+  Bell,
+  Calendar,
+  CalendarRange,
   ChevronDown,
+  Clapperboard,
+  ClipboardList,
+  FileSpreadsheet,
+  FileText,
+  Hash,
+  Headphones,
   Home,
+  KeyRound,
+  Layers,
   LifeBuoy,
   Menu,
-  PackageSearch,
-  PlayCircle,
-  PlusCircle,
+  Receipt,
   Settings,
+  ShieldCheck,
+  ShoppingCart,
+  TrendingUp,
+  User,
   Wallet,
   X,
 } from "lucide-react";
+
+function MenuItemIcon({ item, isActive }) {
+  if (isActive && item.activeIcon) {
+    const ActiveIconComp = item.activeIcon;
+    return <ActiveIconComp size={14} className="shrink-0 text-white" />;
+  }
+  if (item.emoji) {
+    return (
+      <span
+        aria-hidden="true"
+        className="inline-flex shrink-0 items-center justify-center text-[14px] leading-none select-none"
+      >
+        {item.emoji}
+      </span>
+    );
+  }
+  if (item.icon) {
+    const IconComp = item.icon;
+    return <IconComp size={14} className={`shrink-0 ${isActive ? "text-white" : "text-[#d29a4c]"}`} />;
+  }
+  return null;
+}
 
 export default function AssociateNavbar() {
   const location = useLocation();
@@ -34,50 +68,78 @@ export default function AssociateNavbar() {
   const basePath = "/dashboard/associate-member";
 
   const menuItems = [
-    { id: "home", name: "Home", path: basePath, icon: Home },
-    { id: "add-money", name: "Add Money", path: `${basePath}/wallet`, icon: Wallet },
-    { id: "add-order", name: "Add Order", path: `${basePath}/book-order`, icon: PlusCircle },
+    {
+      id: "home",
+      name: "Home",
+      path: basePath,
+      emoji: "🏠",
+      activeIcon: Home,
+    },
+    {
+      id: "add-money",
+      name: "Add Money",
+      path: `${basePath}/wallet`,
+      emoji: "💰",
+      activeIcon: Wallet,
+    },
+    {
+      id: "add-order",
+      name: "Add Order",
+      path: `${basePath}/book-order`,
+      emoji: "🛒",
+      activeIcon: ShoppingCart,
+    },
     {
       id: "order-status",
       name: "Order Status",
-      icon: PackageSearch,
+      emoji: "📋",
+      activeIcon: ClipboardList,
       dropdown: [
-        { id: "os-order-number", name: "Search by Order Number", path: `${basePath}/orders/search/order-number` },
-        { id: "os-order-stage", name: "Search by Order Stage", path: `${basePath}/orders/search/order-stage` },
-        { id: "os-order-date", name: "Search by Order Date", path: `${basePath}/orders/search/order-date` }
+        { id: "os-order-number", name: "Search by Order Number", path: `${basePath}/orders/search/order-number`, emoji: "🔢", activeIcon: Hash },
+        { id: "os-order-stage", name: "Search by Order Stage", path: `${basePath}/orders/search/order-stage`, emoji: "🔄", activeIcon: Layers },
+        { id: "os-order-date", name: "Search by Order Date", path: `${basePath}/orders/search/order-date`, emoji: "📅", activeIcon: Calendar }
       ]
     },
     {
       id: "reports",
       name: "Reports",
-      icon: BarChart3,
+      emoji: "📈",
+      activeIcon: TrendingUp,
       dropdown: [
-        { id: "r-orders-monthly", name: "Orderwise - Monthly Summary", path: `${basePath}/reports/orderwise-monthly-summary` },
-        { id: "r-notes", name: "Notes Report", path: `${basePath}/reports/notes-report` },
-        { id: "r-account-tx", name: "Account Transactions Report", path: `${basePath}/reports/account-transactions` },
-        { id: "r-invoice", name: "Invoice Report", path: `${basePath}/reports/invoice-report` }
+        { id: "r-orders-monthly", name: "Orderwise - Monthly Summary", path: `${basePath}/reports/orderwise-monthly-summary`, emoji: "📊", activeIcon: CalendarRange },
+        { id: "r-notes", name: "Notes Report", path: `${basePath}/reports/notes-report`, emoji: "📝", activeIcon: FileText },
+        { id: "r-account-tx", name: "Account Transactions Report", path: `${basePath}/reports/account-transactions`, emoji: "💳", activeIcon: Receipt },
+        { id: "r-invoice", name: "Invoice Report", path: `${basePath}/reports/invoice-report`, emoji: "📑", activeIcon: FileSpreadsheet }
       ]
     },
     {
       id: "support",
       name: "Support",
-      icon: LifeBuoy,
+      emoji: "🆘",
+      activeIcon: LifeBuoy,
       dropdown: [
-        { id: "s-notifications", name: "Notifications", path: `${basePath}/support/notifications` },
-        { id: "s-help-desk", name: "Help Desk", path: `${basePath}/support/help` },
-        { id: "s-terms", name: "Terms & Conditions", path: `${basePath}/support/terms` }
+        { id: "s-notifications", name: "Notifications", path: `${basePath}/support/notifications`, emoji: "🔔", activeIcon: Bell },
+        { id: "s-help-desk", name: "Help Desk", path: `${basePath}/support/help`, emoji: "🎧", activeIcon: Headphones },
+        { id: "s-terms", name: "Terms & Conditions", path: `${basePath}/support/terms`, emoji: "📜", activeIcon: ShieldCheck }
       ]
     },
     {
       id: "setting",
       name: "Setting / Setup",
-      icon: Settings,
+      emoji: "⚙️",
+      activeIcon: Settings,
       dropdown: [
-        { id: "set-profile", name: "Profile", path: `${basePath}/settings/profile` },
-        { id: "set-change-password", name: "Change Password", path: `${basePath}/settings/change-password` }
+        { id: "set-profile", name: "Profile", path: `${basePath}/settings/profile`, emoji: "👤", activeIcon: User },
+        { id: "set-change-password", name: "Change Password", path: `${basePath}/settings/change-password`, emoji: "🔑", activeIcon: KeyRound }
       ]
     },
-    { id: "training-videos", name: "Instruction & Training Videos", path: `${basePath}/training-videos`, icon: PlayCircle }
+    {
+      id: "training-videos",
+      name: "Instruction & Training Videos",
+      path: `${basePath}/training-videos`,
+      emoji: "🎬",
+      activeIcon: Clapperboard,
+    }
   ];
 
   const isItemActive = (item) => {
@@ -110,7 +172,7 @@ export default function AssociateNavbar() {
             to="/"
             className="ml-4 sm:ml-6 md:ml-0 inline-flex items-center gap-2 text-[14px] leading-[1.42] font-bold text-[#4d4d4d] hover:text-[#a71a00] box-border md:hidden"
           >
-            <Home size={14} className="text-[#d29a4c]" />
+            <span aria-hidden="true" className="inline-flex shrink-0 items-center justify-center text-[14px] leading-none select-none">🏠</span>
             <span className="sr-only md:not-sr-only">Home</span>
           </Link>
 
@@ -130,7 +192,6 @@ export default function AssociateNavbar() {
               const isOpen = activeDropdown === index;
               const isActive = isItemActive(item);
               const buttonClass = isActive ? activeButtonClasses : inactiveButtonClasses;
-              const iconClass = isActive ? "text-white" : "text-[#d29a4c]";
               const chevronClass = isActive ? "text-white" : "text-[#7a7a7a]";
 
               if (!item.dropdown) {
@@ -138,10 +199,10 @@ export default function AssociateNavbar() {
                   <Link
                     key={item.id}
                     to={item.path}
-                    className={`inline-flex h-[30px] shrink-0 items-center gap-1.5 rounded border px-3 text-[14px] leading-[1.42] transition-all box-border ${buttonClass}`}
+                    className={`inline-flex h-[30px] shrink-0 items-center gap-1.5 rounded border px-3 text-[14px] leading-[1.42] transition-colors duration-300 ease-in-out box-border ${buttonClass}`}
                   >
-                    {item.icon ? <item.icon size={14} className={iconClass} /> : null}
-                    {item.name}
+                    <MenuItemIcon item={item} isActive={isActive} />
+                    <span>{item.name}</span>
                   </Link>
                 );
               }
@@ -153,27 +214,33 @@ export default function AssociateNavbar() {
                   onMouseEnter={() => setActiveDropdown(index)}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  <div className={`flex h-[30px] items-center gap-1.5 rounded border px-3 whitespace-nowrap transition-all box-border ${buttonClass}`}>
-                    {item.icon ? <item.icon size={14} className={iconClass} /> : null}
-                    <span className="cursor-default">{item.name}</span>
-                    <ChevronDown size={14} className={`${chevronClass} ${isOpen ? "rotate-180 transition" : "transition"}`} />
+                  <div className={`flex h-[30px] items-center gap-1.5 rounded border px-3 whitespace-nowrap transition-colors duration-300 ease-in-out box-border cursor-pointer ${buttonClass}`}>
+                    <MenuItemIcon item={item} isActive={isActive} />
+                    <span className="cursor-pointer">{item.name}</span>
+                    <ChevronDown size={14} className={`${chevronClass} shrink-0 transition-transform duration-300 ease-in-out ${isOpen ? "rotate-180" : ""}`} />
                   </div>
 
-                  {isOpen ? (
-                    <div className="absolute left-0 top-full z-50 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)] sm:w-64 box-border">
-                      {item.dropdown.map((subItem) => (
+                  <div
+                    className={`absolute left-0 top-full z-50 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)] sm:w-64 box-border before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-[''] transition-all duration-[350ms] ease-out origin-top ${isOpen
+                      ? "opacity-100 translate-y-0 scale-100 pointer-events-auto visible"
+                      : "opacity-0 -translate-y-2 scale-[0.97] pointer-events-none invisible"
+                      }`}
+                  >
+                    {item.dropdown.map((subItem) => {
+                      const isSubActive = location.pathname.startsWith(subItem.path);
+                      return (
                         <Link
                           key={subItem.id}
                           to={subItem.path}
-                          className={`block px-4 py-2 text-[14px] leading-[1.42] text-[#5f6673] transition-colors hover:bg-[#faf6f4] hover:text-[#a71a00] box-border ${
-                            location.pathname.startsWith(subItem.path) ? "bg-[#faf6f4] font-bold text-[#a71a00]" : ""
-                          }`}
+                          className={`flex items-center gap-2 px-4 py-2 text-[14px] leading-[1.42] transition-all duration-[400ms] ease-out hover:bg-[#faf6f4] hover:text-[#a71a00] box-border ${isSubActive ? "bg-[#faf6f4] font-bold text-[#a71a00]" : "text-[#5f6673]"
+                            }`}
                         >
-                          {subItem.name}
+                          <MenuItemIcon item={subItem} isActive={isSubActive} />
+                          <span>{subItem.name}</span>
                         </Link>
-                      ))}
-                    </div>
-                  ) : null}
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
@@ -183,16 +250,14 @@ export default function AssociateNavbar() {
 
       <div
         id="associate-mobile-nav"
-        className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${
-          mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="border-t border-[#e7eaec] bg-white px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)] sm:px-6 box-border">
           <div className="space-y-1 text-[14px] leading-[1.42] font-bold text-[#4d4d4d] box-border">
             {menuItems.map((item) => {
               const isActive = isItemActive(item);
               const buttonClass = isActive ? activeButtonClasses : inactiveButtonClasses;
-              const iconClass = isActive ? "text-white" : "text-[#d29a4c]";
               const chevronClass = isActive ? "text-white" : "text-[#7a7a7a]";
 
               if (!item.dropdown) {
@@ -203,8 +268,8 @@ export default function AssociateNavbar() {
                     onClick={() => setMobileNavOpen(false)}
                     className={`flex min-h-[44px] w-full items-center gap-2 rounded border px-4 text-left transition-all box-border ${buttonClass}`}
                   >
-                    {item.icon ? <item.icon size={14} className={iconClass} /> : null}
-                    {item.name}
+                    <MenuItemIcon item={item} isActive={isActive} />
+                    <span>{item.name}</span>
                   </Link>
                 );
               }
@@ -218,53 +283,53 @@ export default function AssociateNavbar() {
                       type="button"
                       onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
                       aria-expanded={expanded}
-                      className={`flex min-h-[44px] flex-1 items-center gap-2 px-4 text-left transition-all box-border ${
-                        isActive
-                          ? "bg-[#b7370c] font-bold text-white"
-                          : "bg-white text-[#4d4d4d] hover:bg-[#faf6f4] hover:text-[#a71a00]"
-                      }`}
+                      className={`flex min-h-[44px] flex-1 items-center gap-2 px-4 text-left transition-all box-border ${isActive
+                        ? "bg-[#b7370c] font-bold text-white"
+                        : "bg-white text-[#4d4d4d] hover:bg-[#faf6f4] hover:text-[#a71a00]"
+                        }`}
                     >
-                      {item.icon ? <item.icon size={14} className={iconClass} /> : null}
-                      {item.name}
+                      <MenuItemIcon item={item} isActive={isActive} />
+                      <span>{item.name}</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
                       aria-expanded={expanded}
                       aria-label={`Toggle ${item.name} mobile submenu`}
-                      className={`inline-flex min-h-[44px] w-12 shrink-0 items-center justify-center border-l transition box-border ${
-                        isActive
-                          ? "border-[#7e2405] bg-[#b7370c] text-white"
-                          : "border-[#e7eaec] bg-white text-[#7a7a7a] hover:bg-[#faf6f4] hover:text-[#a71a00]"
-                      }`}
+                      className={`inline-flex min-h-[44px] w-12 shrink-0 items-center justify-center border-l transition box-border ${isActive
+                        ? "border-[#7e2405] bg-[#b7370c] text-white"
+                        : "border-[#e7eaec] bg-white text-[#7a7a7a] hover:bg-[#faf6f4] hover:text-[#a71a00]"
+                        }`}
                     >
-                      <ChevronDown size={14} className={`${chevronClass} ${expanded ? "rotate-180 transition" : "transition"}`} />
+                      <ChevronDown size={14} className={`${chevronClass} shrink-0 ${expanded ? "rotate-180 transition" : "transition"}`} />
                     </button>
                   </div>
 
                   <div
-                    className={`overflow-hidden rounded border border-[#e7eaec] bg-[#faf6f4] transition-[max-height] duration-300 ease-in-out box-border ${
-                      expanded ? "max-h-[9999px]" : "max-h-0"
-                    }`}
+                    className={`overflow-hidden rounded border border-[#e7eaec] bg-[#faf6f4] transition-[max-height] duration-300 ease-in-out box-border ${expanded ? "max-h-[9999px]" : "max-h-0"
+                      }`}
                   >
                     <div className="space-y-0.5 py-1 pl-4 box-border">
-                      {item.dropdown.map((subItem) => (
-                        <Link
-                          key={subItem.id}
-                          to={subItem.path}
-                          onClick={() => {
-                            setMobileNavOpen(false);
-                            setMobileExpandedId(null);
-                          }}
-                          className={`flex min-h-[44px] w-full items-center rounded px-4 text-left text-[14px] leading-[1.42] transition box-border ${
-                            location.pathname.startsWith(subItem.path)
+                      {item.dropdown.map((subItem) => {
+                        const isSubActive = location.pathname.startsWith(subItem.path);
+                        return (
+                          <Link
+                            key={subItem.id}
+                            to={subItem.path}
+                            onClick={() => {
+                              setMobileNavOpen(false);
+                              setMobileExpandedId(null);
+                            }}
+                            className={`flex min-h-[44px] w-full items-center gap-2 rounded px-4 text-left text-[14px] leading-[1.42] transition-all duration-[350ms] ease-out box-border ${isSubActive
                               ? "bg-[#b7370c] font-bold text-white"
                               : "bg-white text-[#5f6673] hover:bg-[#faf6f4] hover:text-[#a71a00]"
-                          }`}
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
+                              }`}
+                          >
+                            <MenuItemIcon item={subItem} isActive={isSubActive} />
+                            <span>{subItem.name}</span>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

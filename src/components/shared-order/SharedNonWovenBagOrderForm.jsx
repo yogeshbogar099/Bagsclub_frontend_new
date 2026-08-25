@@ -259,7 +259,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
   const displayedPayableAmount = useMemo(() => (isCostSummaryReady ? payableAmount : 0), [isCostSummaryReady, payableAmount]);
   const derivedOrderDetails = useMemo(() => {
     const colorSelection = formData.textColorSelection.length ? formData.textColorSelection.join(", ") : "Not selected";
-    return [
+    const details = [
       `Product: ${product.title}`,
       `Bag Type: ${formData.bagType}`,
       `Quantity: ${formData.quantity}`,
@@ -267,10 +267,13 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
       `Bag Color: ${formData.bagColor}`,
       `Printing Color Type: ${formData.textColorType}`,
       `Printing Colors: ${colorSelection}`,
-      `Delivery Option: ${formData.deliveryOption}`,
-      `Printing Press: ${formData.printingPress}`,
-      `Final Payable: Rs. ${payableAmount.toFixed(2)}`
-    ].join(" | ");
+      `Delivery Option: ${formData.deliveryOption}`
+    ];
+    if (formData.printingPress) {
+      details.push(`Printing Press: ${formData.printingPress}`);
+    }
+    details.push(`Final Payable: Rs. ${payableAmount.toFixed(2)}`);
+    return details.join(" | ");
   }, [
     formData.bagType,
     formData.bagColor,
@@ -468,10 +471,7 @@ export default function SharedNonWovenBagOrderForm({ bagSlug, basePath, submitOr
     const sellingPrice = Number(formData.sellingPrice || 0);
     const selectedColorCount = formData.textColorSelection.length;
 
-    if (!formData.printingPress) {
-      setStatusMessage({ type: "error", text: "Printing press is required." });
-      return;
-    }
+
     if (!trimmedOrderName) {
       setStatusMessage({ type: "error", text: "Order name is required." });
       return;

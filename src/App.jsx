@@ -13,9 +13,12 @@ import AssociateLoopBagDesignOptionsPage from "./components/associate/AssociateL
 import AssociateNonWovenBagPage from "./components/associate/AssociateNonWovenBagPage.jsx";
 import AssociateNonWovenBagOrderPage from "./components/associate/AssociateNonWovenBagOrderPage.jsx";
 import AssociateOrderDetailsPage from "./components/associate/AssociateOrderDetailsPage.jsx";
+import AssociateInvoicePage from "./components/associate/AssociateInvoicePage.jsx";
 import AssociateOrderProductionLogPage from "./components/associate/AssociateOrderProductionLogPage.jsx";
 import AssociateOrderStatusSearchPage from "./components/associate/AssociateOrderStatusSearchPage.jsx";
 import AssociateMyProfilePage from "./components/associate/AssociateMyProfilePage.jsx";
+import AssociateAccountTransactionReportsPage from "./components/associate/AssociateAccountTransactionReportsPage.jsx";
+import AssociateInvoiceReportPage from "./components/associate/AssociateInvoiceReportPage.jsx";
 import LoginPage from "./components/pages/LoginPage/LoginPage.jsx";
 import RegisterPage from "./components/pages/RegisterPage/RegisterPage.jsx";
 import RoleModulePage from "./components/pages/RoleModulePage/RoleModulePage.jsx";
@@ -136,11 +139,17 @@ export default function App() {
         <Route path="settings/profile" element={<AssociateMyProfilePage />} />
         <Route path="book-order" element={<AssociateAddOrderPage />} />
         <Route path="book-order/details/:orderId" element={<AssociateOrderDetailsPage />} />
+        <Route path="book-order/details/:orderId/invoice" element={<AssociateInvoicePage />} />
+        <Route path="orders/invoice/:orderId" element={<AssociateInvoicePage />} />
         <Route path="book-order/details/:orderId/production-log" element={<AssociateOrderProductionLogPage />} />
         <Route path="book-order/non-woven-bag" element={<AssociateNonWovenBagPage />} />
         <Route path="book-order/non-woven-bag/d-cut-bag/design-options" element={<AssociateDCutBagDesignOptionsPage />} />
         <Route path="book-order/non-woven-bag/loop-bag/design-options" element={<AssociateLoopBagDesignOptionsPage />} />
         <Route path="book-order/non-woven-bag/box-bag/design-options" element={<AssociateBoxBagDesignOptionsPage />} />
+        <Route path="reports/account-transactions" element={<AssociateAccountTransactionReportsPage />} />
+        <Route path="reports/account-transactions-report" element={<AssociateAccountTransactionReportsPage />} />
+        <Route path="reports/invoice" element={<AssociateInvoiceReportPage />} />
+        <Route path="reports/invoice-report" element={<AssociateInvoiceReportPage />} />
         <Route path="book-order/non-woven-bag/:bagSlug" element={<AssociateNonWovenBagOrderPage />} />
         <Route path="*" element={<></>} />
       </Route>

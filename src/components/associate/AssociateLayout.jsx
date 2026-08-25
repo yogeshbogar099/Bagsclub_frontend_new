@@ -32,24 +32,60 @@ export default function AssociateLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <header className="w-full bg-white">
-        <div className="container mx-auto flex items-start justify-between px-4 py-4 sm:px-6 md:px-8">
-          <div className="flex items-center gap-3">
+      <header className="w-full bg-white print:hidden">
+        <div className="container mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-4 px-4 py-4 sm:px-6 md:px-8">
+          <div className="flex items-center gap-3 shrink-0">
             <img src={logo} alt="BAGSCLUB" className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16" />
           </div>
 
-          <div className="flex flex-col items-end space-y-1 text-sm text-gray-700">
-            <div className="font-semibold text-gray-900">Hi, Mr/Mrs {userName}</div>
-            <div>
-              Member ID: <span className="font-medium">{memberId}</span>
+          <div className="flex flex-col items-center justify-center text-center my-1 md:my-0">
+            <div className="space-y-0.5">
+              <p className="text-[14px] sm:text-[15px] font-bold text-gray-900 leading-tight">
+                Printing Services Division
+              </p>
+              <p className="text-[13px] text-gray-700 leading-tight">
+                Go to{" "}
+                <button
+                  type="button"
+                  onClick={() => navigate("/")}
+                  className="font-bold text-[#0044cc] hover:text-[#a71a00] hover:underline transition-colors"
+                >
+                  All Services
+                </button>
+              </p>
+              <div className="flex flex-col items-center justify-center gap-0.5 pt-0.5">
+                <p className="text-[12px] text-gray-700 leading-tight flex flex-wrap items-center justify-center gap-1">
+                  <span>Printers Registered with Us (India):</span>{" "}
+                  <span className="bg-[#fce8e6] text-[#b30000] px-1.5 py-0 rounded text-[12px] font-bold">
+                    45389
+                  </span>{" "}
+                  <span>& increasing...</span>
+                </p>
+                <p className="text-[12px] text-gray-700 leading-tight flex flex-wrap items-center justify-center gap-1">
+                  <span>Printers Registered with Us (Outside India):</span>{" "}
+                  <span className="bg-[#fce8e6] text-[#b30000] px-1.5 py-0 rounded text-[12px] font-bold">
+                    0
+                  </span>{" "}
+                  <span>& increasing...</span>
+                </p>
+              </div>
             </div>
-            <div>
-              A/C Balance: <span className="font-bold text-green-600">₹ {balance}</span>
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <div className="flex flex-col items-start space-y-0.5 text-xs sm:text-sm text-gray-700">
+              <div className="font-semibold text-gray-900">Hi, Mr/Mrs {userName}</div>
+              <div>
+                Member ID: <span className="font-medium">{memberId}</span>
+              </div>
+              <div>
+                A/C Balance: <span className="font-bold text-green-600">₹ {balance}</span>
+              </div>
             </div>
             <button
               type="button"
               onClick={handleSignOut}
-              className="mt-1 rounded border border-red-200 px-3 py-1 text-xs font-medium uppercase tracking-wide text-red-500 transition-colors hover:bg-red-50 hover:text-red-700"
+              className="shrink-0 rounded border border-red-200 px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-red-500 transition-colors hover:bg-red-50 hover:text-red-700"
             >
               Sign Out
             </button>
@@ -65,13 +101,15 @@ export default function AssociateLayout() {
         </div>
       </header>
 
-      <main className={isFullWidth ? "w-full" : "container mx-auto px-4 py-8 sm:px-6 md:px-[2vw] lg:px-[2.5vw] xl:px-[2.5vw]"}>
+      <main className={isFullWidth ? "w-full print:p-0" : "container mx-auto px-4 py-8 sm:px-6 md:px-[2vw] lg:px-[2.5vw] xl:px-[2.5vw] print:p-0 print:m-0 print:max-w-none"}>
         <AssociateModuleProvider>
           <Outlet />
         </AssociateModuleProvider>
       </main>
 
-      <AssociateFooter />
+      <div className="print:hidden">
+        <AssociateFooter />
+      </div>
     </div>
   );
 }

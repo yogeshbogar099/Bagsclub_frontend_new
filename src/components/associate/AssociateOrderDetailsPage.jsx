@@ -13,6 +13,57 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAssociateModule } from "../../context/AssociateModuleContext.jsx";
 import AssociateProductionLogTimeline from "./AssociateProductionLogTimeline.jsx";
 
+const DETAIL_CARD_COLOR_SCHEMES = [
+  {
+    bg: "bg-blue-50/90 hover:bg-blue-50",
+    border: "border-blue-200/90",
+    label: "text-blue-700",
+    value: "text-blue-950"
+  },
+  {
+    bg: "bg-emerald-50/90 hover:bg-emerald-50",
+    border: "border-emerald-200/90",
+    label: "text-emerald-700",
+    value: "text-emerald-950"
+  },
+  {
+    bg: "bg-purple-50/90 hover:bg-purple-50",
+    border: "border-purple-200/90",
+    label: "text-purple-700",
+    value: "text-purple-950"
+  },
+  {
+    bg: "bg-amber-50/90 hover:bg-amber-50",
+    border: "border-amber-200/90",
+    label: "text-amber-800",
+    value: "text-amber-950"
+  },
+  {
+    bg: "bg-rose-50/90 hover:bg-rose-50",
+    border: "border-rose-200/90",
+    label: "text-rose-700",
+    value: "text-rose-950"
+  },
+  {
+    bg: "bg-cyan-50/90 hover:bg-cyan-50",
+    border: "border-cyan-200/90",
+    label: "text-cyan-800",
+    value: "text-cyan-950"
+  },
+  {
+    bg: "bg-indigo-50/90 hover:bg-indigo-50",
+    border: "border-indigo-200/90",
+    label: "text-indigo-700",
+    value: "text-indigo-950"
+  },
+  {
+    bg: "bg-orange-50/90 hover:bg-orange-50",
+    border: "border-orange-200/90",
+    label: "text-orange-800",
+    value: "text-orange-950"
+  }
+];
+
 function isLikelyImageUrl(url = "") {
   const safe = String(url);
   if (safe.startsWith("data:image/")) return true;
@@ -180,7 +231,23 @@ export default function AssociateOrderDetailsPage() {
     return 0;
   }, [discountAmount, order?.walletDebitAmount, totalAmount]);
   const validPdfDiscountLabel = useMemo(() => `₹${formatCurrency(discountAmount)} Discount`, [discountAmount]);
-  const invoiceNumber = useMemo(() => order?.invoiceNumber || "--", [order?.invoiceNumber]);
+  const invoiceNumber = useMemo(() => {
+    if (order?.invoiceNumber && order.invoiceNumber !== "--") {
+      return order.invoiceNumber;
+    }
+    if (order?.orderDateTime || order?.dateTime || order?.createdAt || order?.orderNumber) {
+      const dateSource = order?.orderDateTime || order?.dateTime || order?.createdAt;
+      const d = dateSource ? new Date(dateSource) : new Date();
+      const validDate = !Number.isNaN(d.getTime()) ? d : new Date();
+      const year = validDate.getFullYear();
+      const month = String(validDate.getMonth() + 1).padStart(2, "0");
+      const day = String(validDate.getDate()).padStart(2, "0");
+      const dateStr = `${year}${month}${day}`;
+      const num = order?.orderNumber ? String(order.orderNumber % 1000 || 1).padStart(3, "0") : "001";
+      return `INV-${dateStr}-${num}`;
+    }
+    return "--";
+  }, [order?.invoiceNumber, order?.orderDateTime, order?.dateTime, order?.createdAt, order?.orderNumber]);
   const orderInfoRows = useMemo(
     () => [
       { label: "Bag Type", value: order?.bagName || "--" },
@@ -230,22 +297,22 @@ export default function AssociateOrderDetailsPage() {
     return (
       <div className="w-full bg-[#dfe3e8] px-4 py-10 sm:px-6 md:px-0">
         <div className="mx-auto max-w-5xl px-[2vw]">
-        <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-black uppercase tracking-wide text-slate-900">Order Details</h1>
-              <p className="mt-2 text-sm text-slate-500">This order could not be found in the recent associate member orders list.</p>
+          <div className="rounded-[28px] bg-white p-8 shadow-[0_14px_40px_rgba(15,23,42,0.12)]">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-black uppercase tracking-wide text-slate-900">Order Details</h1>
+                <p className="mt-2 text-sm text-slate-500">This order could not be found in the recent associate member orders list.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard/associate-member/book-order")}
+                className="inline-flex items-center gap-2 rounded-full bg-[#2d58a5] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#244887]"
+              >
+                <ArrowLeft size={16} />
+                Back To Orders
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard/associate-member/book-order")}
-              className="inline-flex items-center gap-2 rounded-full bg-[#2d58a5] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#244887]"
-            >
-              <ArrowLeft size={16} />
-              Back To Orders
-            </button>
           </div>
-        </div>
         </div>
       </div>
     );
@@ -256,109 +323,126 @@ export default function AssociateOrderDetailsPage() {
       <div className="mx-auto max-w-7xl px-[2vw]">
         <div className="rounded-[28px] bg-[#eef1f5] shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
           <div className="px-5 py-5 sm:px-8 sm:py-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate("/dashboard/associate-member/book-order")}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6dbe8] bg-white text-[#2d58a5] transition hover:bg-[#eef4ff]"
-                aria-label="Back to orders"
-              >
-                <ArrowLeft size={18} />
-              </button>
-              <div className="flex flex-wrap items-baseline gap-2">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#71809b]">Order</div>
-                <h1 className="text-[28px] font-black text-[#1f2937] sm:text-[34px]">#{order.orderNumber}</h1>
-              </div>
-            </div>
-            <div className={`rounded-full border px-7 py-3 text-sm font-black uppercase tracking-[0.14em] shadow-sm ${statusBadgeClass}`}>{displayStatus}</div>
-          </div>
-
-          <div className="mt-6 rounded-[16px] border border-[#efd4df] bg-[#f8eaf0] p-4 shadow-sm">
-            <div className="flex items-start gap-4 rounded-[14px] border border-[#efd4df] bg-[#f9eef3] px-3 py-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white text-[#d14b7c] shadow-sm">
-                <Tag size={18} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#d14b7c]">Product &amp; Details</p>
-                <p className="mt-1 text-sm font-extrabold leading-7 text-[#8b1e4b] sm:text-[17px]">{detailSummary}</p>
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {orderInfoRows.map((row) => (
-                <div key={row.label} className="rounded-[14px] border border-[#f1d7e1] bg-white/90 px-4 py-3">
-                  <div className="text-[11px] font-black uppercase tracking-[0.12em] text-[#b45372]">{row.label}</div>
-                  <div className="mt-1 text-sm font-extrabold leading-6 text-[#1f2937]">{row.value}</div>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/dashboard/associate-member/book-order")}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d6dbe8] bg-white text-[#2d58a5] transition hover:bg-[#eef4ff]"
+                  aria-label="Back to orders"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#71809b]">Order</div>
+                  <h1 className="text-[28px] font-black text-[#1f2937] sm:text-[34px]">#{order.orderNumber}</h1>
                 </div>
-              ))}
+              </div>
+              <div className={`rounded-full border px-7 py-3 text-sm font-black uppercase tracking-[0.14em] shadow-sm ${statusBadgeClass}`}>{displayStatus}</div>
             </div>
-          </div>
 
-          <div className="mt-10 grid gap-8 xl:grid-cols-[1.35fr_0.9fr] xl:items-start">
-            <div className="min-h-[420px]">
-              <div className="mb-5 flex items-center gap-3">
-                <FolderOpen size={18} className="text-[#7c4dff]" />
-                <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Attached Assets</h2>
+            <div className="mt-6 rounded-[16px] border border-[#efd4df] bg-[#f8eaf0] p-4 shadow-sm">
+              <div className="flex items-start gap-4 rounded-[14px] border border-[#efd4df] bg-[#f9eef3] px-3 py-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white text-[#d14b7c] shadow-sm">
+                  <Tag size={18} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#d14b7c]">Product &amp; Details</p>
+                  <p className="mt-1 text-sm font-extrabold leading-7 text-[#8b1e4b] sm:text-[17px]">{detailSummary}</p>
+                </div>
               </div>
 
-              <div className="rounded-[24px] border border-[#dde3ee] bg-[#f4f6fa] p-5 shadow-sm">
-                <div className="flex flex-wrap items-center gap-3 pb-4">
-                  <span className="rounded-full bg-[#eef4ff] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#2d58a5]">
-                    {fileSourceLabel}
-                  </span>
-                  <span className="rounded-full bg-[#f4f6fa] px-3 py-1 text-xs font-semibold text-slate-600">
-                    {order.designFileName || order.designFileType || "No file name available"}
-                  </span>
-                </div>
-
-                <div className="mt-2 flex min-h-[420px] items-center justify-center rounded-[20px] bg-[#f4f6fa] p-2">
-                  {canPreview && isLikelyImageUrl(order.designFileUrl) ? (
-                    <img
-                      src={order.designFileUrl}
-                      alt={order.designFileName || "Design preview"}
-                      className="max-h-[520px] w-full rounded-[18px] object-contain"
-                    />
-                  ) : null}
-
-                  {canPreview && isLikelyPdfUrl(order.designFileUrl) ? (
-                    <iframe title="Design preview" src={order.designFileUrl} className="h-[520px] w-full rounded-[18px] border border-[#dbe4f0] bg-white" />
-                  ) : null}
-
-                  {!canPreview ? (
-                    <div className="flex h-full min-h-[360px] w-full flex-col items-center justify-center rounded-[18px] border border-dashed border-[#cfd7e3] text-center text-slate-500">
-                      <FileImage size={46} className="text-[#c3cede]" />
-                      <p className="mt-4 text-base font-semibold text-slate-700">No attached asset available</p>
-                      <p className="mt-2 max-w-md text-sm leading-6">
-                        Upload preview is not available for this order yet.
-                      </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {orderInfoRows.map((row, index) => {
+                  const scheme = DETAIL_CARD_COLOR_SCHEMES[index % DETAIL_CARD_COLOR_SCHEMES.length];
+                  return (
+                    <div
+                      key={row.label}
+                      className={`rounded-[14px] border ${scheme.border} ${scheme.bg} px-4 py-3 shadow-xs transition-colors`}
+                    >
+                      <div className={`text-[11px] font-black uppercase tracking-[0.12em] ${scheme.label}`}>{row.label}</div>
+                      <div className={`mt-1 text-sm font-extrabold leading-6 ${scheme.value}`}>{row.value}</div>
                     </div>
-                  ) : null}
-                </div>
+                  );
+                })}
               </div>
             </div>
 
-            <aside className="flex flex-col">
-              <div className="mb-5 flex items-center gap-3">
-                <ListOrdered size={18} className="text-[#7c4dff]" />
-                <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Specifications</h2>
-              </div>
+            <div className="mt-10 grid gap-8 xl:grid-cols-[1.35fr_0.9fr] xl:items-start">
+              <div className="min-h-[420px]">
+                <div className="mb-5 flex items-center gap-3">
+                  <FolderOpen size={18} className="text-[#7c4dff]" />
+                  <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Attached Assets</h2>
+                </div>
 
-              <div className="overflow-hidden rounded-[24px] border border-[#dde3ee] bg-[#f8fafc] shadow-sm">
-                {specificationRows.map((row, index) => (
-                  <div
-                    key={row.label}
-                    className={`grid grid-cols-1 gap-2 border-b border-[#e5eaf2] px-5 py-4 sm:grid-cols-[145px_1fr] sm:items-center ${
-                      index === specificationRows.length - 1 ? "border-b-0" : ""
-                    }`}
-                  >
-                    <div className="text-[13px] font-semibold text-[#71809b]">{row.label}</div>
-                    <div className={`text-sm font-extrabold sm:text-right ${row.accent || "text-[#1f2937]"}`}>{row.value}</div>
+                <div className="rounded-[24px] border border-[#dde3ee] bg-[#f4f6fa] p-5 shadow-sm">
+                  <div className="flex flex-wrap items-center gap-3 pb-4">
+                    <span className="rounded-full bg-[#eef4ff] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#2d58a5]">
+                      {fileSourceLabel}
+                    </span>
+                    <span className="rounded-full bg-[#f4f6fa] px-3 py-1 text-xs font-semibold text-slate-600">
+                      {order.designFileName || order.designFileType || "No file name available"}
+                    </span>
                   </div>
-                ))}
+
+                  <div className="mt-2 flex min-h-[420px] items-center justify-center rounded-[20px] bg-[#f4f6fa] p-2">
+                    {canPreview && isLikelyImageUrl(order.designFileUrl) ? (
+                      <img
+                        src={order.designFileUrl}
+                        alt={order.designFileName || "Design preview"}
+                        className="max-h-[520px] w-full rounded-[18px] object-contain"
+                      />
+                    ) : null}
+
+                    {canPreview && isLikelyPdfUrl(order.designFileUrl) ? (
+                      <iframe title="Design preview" src={order.designFileUrl} className="h-[520px] w-full rounded-[18px] border border-[#dbe4f0] bg-white" />
+                    ) : null}
+
+                    {!canPreview ? (
+                      <div className="flex h-full min-h-[360px] w-full flex-col items-center justify-center rounded-[18px] border border-dashed border-[#cfd7e3] text-center text-slate-500">
+                        <FileImage size={46} className="text-[#c3cede]" />
+                        <p className="mt-4 text-base font-semibold text-slate-700">No attached asset available</p>
+                        <p className="mt-2 max-w-md text-sm leading-6">
+                          Upload preview is not available for this order yet.
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <aside className="flex flex-col">
+                <div className="mb-5 flex items-center gap-3">
+                  <ListOrdered size={18} className="text-[#7c4dff]" />
+                  <h2 className="text-[18px] font-black uppercase tracking-tight text-[#1f2937]">Order Specifications</h2>
+                </div>
+
+                <div className="overflow-hidden rounded-[24px] border border-[#dde3ee] bg-[#f8fafc] shadow-sm">
+                  {specificationRows.map((row, index) => (
+                    <div
+                      key={row.label}
+                      className={`grid grid-cols-1 gap-2 border-b border-[#e5eaf2] px-5 py-4 sm:grid-cols-[145px_1fr] sm:items-center ${index === specificationRows.length - 1 ? "border-b-0" : ""
+                        }`}
+                    >
+                      <div className="text-[13px] font-semibold text-[#71809b]">{row.label}</div>
+                      {row.label === "Invoice Number" && row.value !== "--" ? (
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/dashboard/associate-member/book-order/details/${orderId}/invoice`, { state: { order } })}
+                          className="inline-flex items-center gap-1.5 font-extrabold text-[#5b67ea] underline underline-offset-2 transition hover:text-[#3f4bbf] focus:outline-none sm:ml-auto"
+                          title="Click to view Tax Invoice Page"
+                        >
+                          <span>{row.value}</span>
+                          <FileText size={15} />
+                        </button>
+                      ) : (
+                        <div className={`text-sm font-extrabold sm:text-right ${row.accent || "text-[#1f2937]"}`}>{row.value}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   <button
                     type="button"
                     onClick={() => navigate(`/dashboard/associate-member/book-order/details/${orderId}/production-log`, { state: { order } })}
@@ -386,10 +470,10 @@ export default function AssociateOrderDetailsPage() {
                     Download Complete PDF
                   </button>
                 </div>
-            </aside>
+              </aside>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
