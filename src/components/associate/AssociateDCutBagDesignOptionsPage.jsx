@@ -32,7 +32,7 @@ export default function AssociateDCutBagDesignOptionsPage() {
           >
             D-Cut Bag
           </h1>
-          
+
           <p className="mb-6 text-sm font-semibold text-gray-600">Choose your design color option to continue.</p>
 
           <div className="grid justify-items-center gap-x-6 gap-y-7" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>

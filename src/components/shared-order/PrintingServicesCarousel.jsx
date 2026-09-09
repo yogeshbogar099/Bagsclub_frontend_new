@@ -144,11 +144,10 @@ export default function PrintingServicesCarousel({ cards = [], onSelectCard, ini
                 key={`${card.id}-${slot}-${index}`}
                 type="button"
                 onClick={() => handleCardClick(card, index)}
-                className={`group absolute left-1/2 top-1/2 w-fit max-w-[82vw] overflow-hidden rounded-[28px] border transition-[transform,opacity,box-shadow,border-color] duration-[520ms] ease-in-out sm:max-w-[76vw] md:max-w-[70vw] lg:max-w-[64vw] xl:max-w-[58vw] ${
-                  isActive
+                className={`group absolute left-1/2 top-1/2 w-fit max-w-[82vw] overflow-hidden rounded-[28px] border transition-[transform,opacity,box-shadow,border-color] duration-[520ms] ease-in-out sm:max-w-[76vw] md:max-w-[70vw] lg:max-w-[64vw] xl:max-w-[58vw] ${isActive
                     ? "border-[#c8d4e4] bg-[#edf1f6] shadow-[0_24px_48px_rgba(148,163,184,0.32)] ring-2 ring-[#2d58a5]/18"
                     : "border-white/70 bg-[#f4f6fa] shadow-[0_14px_30px_rgba(148,163,184,0.18)]"
-                } ${slot === "hiddenLeft" || slot === "hiddenRight" ? "pointer-events-none" : ""}`}
+                  } ${slot === "hiddenLeft" || slot === "hiddenRight" ? "pointer-events-none" : ""}`}
                 style={{
                   transform: `translate(calc(-50% + ${visual.offset}), -50%) scale(${visual.scale})`,
                   opacity: visual.opacity,
@@ -180,12 +179,18 @@ export default function PrintingServicesCarousel({ cards = [], onSelectCard, ini
                             return { ...current, [card.id]: true };
                           });
                         }}
-                        className={`block h-auto max-h-[220px] w-auto max-w-[82vw] object-contain object-center transition-transform duration-[520ms] ease-in-out sm:max-h-[260px] sm:max-w-[76vw] md:max-h-[300px] md:max-w-[70vw] lg:max-h-[340px] lg:max-w-[64vw] xl:max-w-[58vw] ${
-                          isActive ? "scale-100" : "scale-[0.96]"
-                        }`}
+                        className={`block h-auto max-h-[220px] w-auto max-w-[82vw] object-contain object-center transition-transform duration-[520ms] ease-in-out sm:max-h-[260px] sm:max-w-[76vw] md:max-h-[300px] md:max-w-[70vw] lg:max-h-[340px] lg:max-w-[64vw] xl:max-w-[58vw] ${isActive ? "scale-100" : "scale-[0.96]"
+                          }`}
                       />
                     )}
                   </div>
+                  {card.title === "NON-WOVEN BAG" ? (
+                    <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 -translate-x-1/2 sm:bottom-4 md:bottom-5 lg:bottom-6">
+                      <span className="animate-add-order-cta inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#ef4444] via-[#dc2626] to-[#b91c1c] px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wider text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-hover:shadow-[0_0_30px_rgba(220,38,38,0.95),0_8px_24px_rgba(220,38,38,0.65)] sm:px-5 sm:py-2 sm:text-xs md:px-6 md:py-2.5 md:text-sm lg:px-7 lg:py-3 lg:text-base whitespace-nowrap">
+                        ADD ORDER NOW
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
               </button>
             );

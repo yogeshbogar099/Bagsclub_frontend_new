@@ -352,9 +352,8 @@ export default function AssociateAccountTransactionReportsPage() {
                 return (
                   <tr
                     key={tx.id || idx}
-                    className={`border-t border-black transition-colors ${
-                      isEven ? "bg-white" : "bg-[#f9fafb]"
-                    } hover:bg-[#f0f4f9] print:bg-white`}
+                    className={`border-t border-black transition-colors ${isEven ? "bg-white" : "bg-[#f9fafb]"
+                      } hover:bg-[#f0f4f9] print:bg-white`}
                   >
                     {/* DATE */}
                     <td className="border-r border-black py-2 px-3 text-center text-[12.5px] font-medium whitespace-nowrap">

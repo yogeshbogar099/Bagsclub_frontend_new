@@ -50,6 +50,8 @@ import {
   tableHeaderCellCenterClassName,
   tableHeaderCellClassName,
   tableHeaderRowClassName,
+  tablePaginationBarClassName,
+  tablePaginationButtonClassName,
   tableShellClassName
 } from "../../shared-table/tableStyles.js";
 
@@ -65,24 +67,137 @@ const iconLookup = {
   profile: UserCircle2
 };
 
+const cardAccentPalettes = [
+  {
+    topBorder: "border-t-cyan-500",
+    badgeBg: "from-cyan-500/25 to-cyan-500/10 border-cyan-500/40 text-cyan-400",
+    hoverBorder: "hover:border-cyan-500/50",
+    valueText: "text-[#38bdf8]",
+    subtleBorder: "border-cyan-950/60 hover:border-cyan-500/40"
+  },
+  {
+    topBorder: "border-t-emerald-500",
+    badgeBg: "from-emerald-500/25 to-emerald-500/10 border-emerald-500/40 text-emerald-400",
+    hoverBorder: "hover:border-emerald-500/50",
+    valueText: "text-[#34d399]",
+    subtleBorder: "border-emerald-950/60 hover:border-emerald-500/40"
+  },
+  {
+    topBorder: "border-t-orange-500",
+    badgeBg: "from-orange-500/25 to-orange-500/10 border-orange-500/40 text-orange-400",
+    hoverBorder: "hover:border-orange-500/50",
+    valueText: "text-[#fb923c]",
+    subtleBorder: "border-orange-950/60 hover:border-orange-500/40"
+  },
+  {
+    topBorder: "border-t-purple-500",
+    badgeBg: "from-purple-500/25 to-purple-500/10 border-purple-500/40 text-purple-400",
+    hoverBorder: "hover:border-purple-500/50",
+    valueText: "text-[#c084fc]",
+    subtleBorder: "border-purple-950/60 hover:border-purple-500/40"
+  },
+  {
+    topBorder: "border-t-pink-500",
+    badgeBg: "from-pink-500/25 to-pink-500/10 border-pink-500/40 text-pink-400",
+    hoverBorder: "hover:border-pink-500/50",
+    valueText: "text-[#f472b6]",
+    subtleBorder: "border-pink-950/60 hover:border-pink-500/40"
+  },
+  {
+    topBorder: "border-t-sky-500",
+    badgeBg: "from-sky-500/25 to-sky-500/10 border-sky-500/40 text-sky-400",
+    hoverBorder: "hover:border-sky-500/50",
+    valueText: "text-[#38bdf8]",
+    subtleBorder: "border-sky-950/60 hover:border-sky-500/40"
+  },
+  {
+    topBorder: "border-t-lime-500",
+    badgeBg: "from-lime-500/25 to-lime-500/10 border-lime-500/40 text-lime-400",
+    hoverBorder: "hover:border-lime-500/50",
+    valueText: "text-[#a3e635]",
+    subtleBorder: "border-lime-950/60 hover:border-lime-500/40"
+  },
+  {
+    topBorder: "border-t-rose-500",
+    badgeBg: "from-rose-500/25 to-rose-500/10 border-rose-500/40 text-rose-400",
+    hoverBorder: "hover:border-rose-500/50",
+    valueText: "text-[#fb7185]",
+    subtleBorder: "border-rose-950/60 hover:border-rose-500/40"
+  }
+];
+
+export function getCardRedirectPath(card) {
+  if (card?.path) return card.path;
+  const title = String(card?.title || "").toLowerCase().trim();
+
+  if (title.includes("user") || title.includes("member")) {
+    if (title.includes("active")) return `${ADMIN_BASE_PATH}/associate-members/active`;
+    if (title.includes("inactive")) return `${ADMIN_BASE_PATH}/associate-members/inactive`;
+    if (title.includes("assigned")) return `${ADMIN_BASE_PATH}/associate-members/assigned`;
+    return `${ADMIN_BASE_PATH}/associate-members/all`;
+  }
+
+  if (title.includes("wallet") || title.includes("top-up") || title.includes("transaction")) {
+    if (title.includes("pending") || title.includes("request")) return `${ADMIN_BASE_PATH}/wallet/top-up-requests`;
+    if (title.includes("approved")) return `${ADMIN_BASE_PATH}/wallet/approved-requests`;
+    if (title.includes("rejected")) return `${ADMIN_BASE_PATH}/wallet/rejected-requests`;
+    return `${ADMIN_BASE_PATH}/wallet/transactions`;
+  }
+
+  if (title.includes("order") || title.includes("task")) {
+    if (title.includes("pending")) return `${ADMIN_BASE_PATH}/orders/pending`;
+    if (title.includes("new")) return `${ADMIN_BASE_PATH}/orders/new`;
+    if (title.includes("print")) return `${ADMIN_BASE_PATH}/orders/printing`;
+    if (title.includes("pack")) return `${ADMIN_BASE_PATH}/orders/packaging`;
+    if (title.includes("dispatch")) return `${ADMIN_BASE_PATH}/orders/dispatch`;
+    if (title.includes("complete")) return `${ADMIN_BASE_PATH}/orders/completed`;
+    if (title.includes("improper")) return `${ADMIN_BASE_PATH}/orders/improper`;
+    if (title.includes("cancel")) return `${ADMIN_BASE_PATH}/orders/cancelled`;
+    if (title.includes("reject")) return `${ADMIN_BASE_PATH}/orders/rejected`;
+    return `${ADMIN_BASE_PATH}/orders/all`;
+  }
+
+  return `${ADMIN_BASE_PATH}/orders/all`;
+}
+
 function DashboardCards({ cards = [] }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card) => {
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {cards.map((card, index) => {
         const Icon = iconLookup[card.iconKey] || LayoutDashboard;
+        const palette = cardAccentPalettes[index % cardAccentPalettes.length];
+        const targetPath = getCardRedirectPath(card);
 
         return (
-          <article key={card.title} className="rounded border border-slate-300 bg-white p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{card.title}</p>
-                <p className="mt-2 text-3xl font-bold text-slate-900">{card.value}</p>
+          <article
+            key={card.title}
+            role="button"
+            tabIndex={0}
+            onClick={() => navigateTo(targetPath)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigateTo(targetPath);
+              }
+            }}
+            aria-label={`View ${card.title} records`}
+            className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-xl border ${palette.subtleBorder} border-t-4 ${palette.topBorder} bg-slate-900/90 p-5 shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-2xl hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-cyan-500/50`}
+          >
+            <div>
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">{card.title}</p>
+                <div className={`rounded-xl border bg-gradient-to-br p-3 shadow-inner transition-transform duration-300 group-hover:scale-110 ${palette.badgeBg}`}>
+                  <Icon size={22} />
+                </div>
               </div>
-              <div className="rounded-full bg-[#a71a00]/10 p-3 text-[#a71a00]">
-                <Icon size={22} />
-              </div>
+              <p className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">{card.value}</p>
             </div>
-            <p className="mt-3 text-xs text-slate-500">{card.note}</p>
+            <div className="mt-4 flex items-center justify-between border-t border-slate-800/80 pt-3">
+              <p className="text-xs font-medium text-slate-400">{card.note}</p>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                View →
+              </span>
+            </div>
           </article>
         );
       })}
@@ -94,8 +209,17 @@ function isPendingTask(statusValue = "") {
   return ["pending", "pending-review"].includes(String(statusValue || "").trim().toLowerCase());
 }
 
-function getDashboardStatusClassName(statusValue = "") {
+function getDashboardStatusClassName(statusValue = "", isDark = false) {
   const normalized = String(statusValue || "").trim().toLowerCase();
+  if (isDark) {
+    if (["pending", "pending-review"].includes(normalized)) return "border border-pink-500/40 bg-pink-500/15 text-pink-300 font-bold";
+    if (normalized === "printing") return "border border-cyan-500/40 bg-cyan-500/15 text-cyan-300 font-bold";
+    if (normalized === "packaging") return "border border-purple-500/40 bg-purple-500/15 text-purple-300 font-bold";
+    if (normalized === "dispatched") return "border border-orange-500/40 bg-orange-500/15 text-orange-300 font-bold";
+    if (normalized === "completed" || normalized === "approved" || normalized === "active") return "border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 font-bold";
+    if (normalized === "suspended" || normalized === "rejected" || normalized === "cancelled" || normalized === "improper") return "border border-rose-500/40 bg-rose-500/15 text-rose-300 font-bold";
+    return "border border-slate-700 bg-slate-800 text-slate-300 font-bold";
+  }
   if (["pending", "pending-review"].includes(normalized)) return "border border-rose-200 bg-rose-50 text-rose-700";
   if (normalized === "printing") return "border border-blue-200 bg-blue-50 text-blue-700";
   if (normalized === "packaging") return "border border-violet-200 bg-violet-50 text-violet-700";
@@ -140,18 +264,16 @@ function RecentTasksSection({ tasks = [] }) {
                   navigateTo(task.path);
                 }
               }}
-              className={`block w-full px-4 py-4 text-left transition ${
-                pendingTask ? "bg-rose-50 hover:bg-rose-100" : "hover:bg-slate-50"
-              }`}
+              className={`block w-full px-4 py-4 text-left transition ${pendingTask ? "bg-rose-50 hover:bg-rose-100" : "hover:bg-slate-50"
+                }`}
             >
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{task.module}</span>
                     <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                        pendingTask ? "bg-rose-600 text-white" : "bg-slate-100 text-slate-700"
-                      }`}
+                      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${pendingTask ? "bg-rose-600 text-white" : "bg-slate-100 text-slate-700"
+                        }`}
                     >
                       {task.statusLabel}
                     </span>
@@ -169,6 +291,100 @@ function RecentTasksSection({ tasks = [] }) {
   );
 }
 
+function TablePagination({
+  currentPage,
+  totalPages,
+  pageSize,
+  totalItems,
+  onPageChange,
+  onPageSizeChange
+}) {
+  if (totalItems <= 0) return null;
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  return (
+    <div className={tablePaginationBarClassName}>
+      <div className="flex flex-wrap items-center gap-3">
+        <span>
+          Showing <span className="font-bold text-slate-900">{startItem}</span> to{" "}
+          <span className="font-bold text-slate-900">{endItem}</span> of{" "}
+          <span className="font-bold text-slate-900">{totalItems}</span> records
+        </span>
+        <div className="flex items-center gap-1.5">
+          <label htmlFor="generic-table-page-size" className="text-slate-500">Per page:</label>
+          <select
+            id="generic-table-page-size"
+            value={pageSize}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-bold text-slate-700 outline-none focus:border-blue-500"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          disabled={currentPage <= 1}
+          onClick={() => onPageChange(currentPage - 1)}
+          className={tablePaginationButtonClassName}
+        >
+          Previous
+        </button>
+        <span className="px-2 font-bold text-slate-800">
+          Page {currentPage} of {totalPages || 1}
+        </span>
+        <button
+          type="button"
+          disabled={currentPage >= totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          className={tablePaginationButtonClassName}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function renderStatusBadge(statusValue) {
+  const normalized = String(statusValue || "").toLowerCase().trim();
+  let badgeStyle = "border-slate-300 bg-slate-100 text-slate-700";
+  let dotStyle = "bg-slate-500";
+
+  if (["active", "completed", "approved"].includes(normalized)) {
+    badgeStyle = "border-emerald-200 bg-emerald-50 text-emerald-700";
+    dotStyle = "bg-emerald-500";
+  } else if (normalized.includes("print")) {
+    badgeStyle = "border-blue-200 bg-blue-50 text-blue-700";
+    dotStyle = "bg-blue-500";
+  } else if (normalized.includes("pack")) {
+    badgeStyle = "border-indigo-200 bg-indigo-50 text-indigo-700";
+    dotStyle = "bg-indigo-500";
+  } else if (normalized.includes("dispatch")) {
+    badgeStyle = "border-purple-200 bg-purple-50 text-purple-700";
+    dotStyle = "bg-purple-500";
+  } else if (["pending", "pending-review", "pending-verification"].includes(normalized)) {
+    badgeStyle = "border-amber-200 bg-amber-50 text-amber-700";
+    dotStyle = "bg-amber-500 animate-pulse";
+  } else if (["suspended", "rejected", "cancelled", "improper", "inactive"].includes(normalized)) {
+    badgeStyle = "border-rose-200 bg-rose-50 text-rose-700";
+    dotStyle = "bg-rose-500";
+  }
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${badgeStyle}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${dotStyle}`} />
+      {statusValue || "--"}
+    </span>
+  );
+}
+
 function DataTable({
   columns = [],
   items = [],
@@ -177,12 +393,27 @@ function DataTable({
   emptyMessage = "No records available for this section yet.",
   renderCell,
   getRowClassName,
-  getActionLabel
+  getActionLabel,
+  isDark = false
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [items, pageSize]);
+
+  const totalPages = Math.ceil(items.length / pageSize) || 1;
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+  const paginatedItems = useMemo(
+    () => items.slice((safePage - 1) * pageSize, safePage * pageSize),
+    [items, safePage, pageSize]
+  );
+
   if (!items.length) {
     return (
-      <div className={tableCardClassName}>
-        <div className="px-4 py-8 text-center text-sm text-slate-500">
+      <div className={isDark ? "rounded-xl border border-slate-800 bg-slate-900/90 shadow-lg" : tableCardClassName}>
+        <div className={`px-4 py-8 text-center text-sm font-semibold ${isDark ? "text-slate-400" : "text-slate-500"}`}>
           {emptyMessage}
         </div>
       </div>
@@ -190,42 +421,63 @@ function DataTable({
   }
 
   return (
-    <div className={tableCardClassName}>
+    <div className={isDark ? "overflow-hidden rounded-xl border border-slate-800 bg-slate-900/90 shadow-lg" : tableCardClassName}>
       <div className={tableShellClassName}>
-      <table className={`${tableElementClassName} min-w-full`}>
-        <thead>
-          <tr className={tableHeaderRowClassName}>
-            {columns.map((column) => (
-              <th key={column.key} className={tableHeaderCellClassName}>
-                {column.label}
-              </th>
-            ))}
-            {onAction ? <th className={tableHeaderCellCenterClassName}>{actionLabel}</th> : null}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item, index) => (
-            <tr
-              key={item.id || `${item.title || "row"}-${index}`}
-              className={getRowClassName ? getRowClassName(item, index) : getTableBodyRowClassName(index)}
-            >
+        <table className={`${tableElementClassName} min-w-full`}>
+          <thead>
+            <tr className={isDark ? "border-b border-slate-800 bg-slate-950/80 text-xs font-bold uppercase tracking-wider text-slate-400" : tableHeaderRowClassName}>
               {columns.map((column) => (
-                <td key={column.key} className={tableBodyCellClassName}>
-                  {renderCell ? renderCell(item, column) : item[column.key] ?? "--"}
-                </td>
+                <th key={column.key} className={isDark ? "px-4 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-slate-400" : tableHeaderCellClassName}>
+                  {column.label}
+                </th>
               ))}
-              {onAction ? (
-                <td className={tableBodyCellCenterClassName}>
-                  <button type="button" onClick={() => onAction(item)} className={`${tableActionButtonClassName} italic`}>
-                    {getActionLabel ? getActionLabel(item) : actionLabel}
-                  </button>
-                </td>
-              ) : null}
+              {onAction ? <th className={isDark ? "px-4 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-slate-400" : tableHeaderCellCenterClassName}>{actionLabel}</th> : null}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className={isDark ? "divide-y divide-slate-800/60" : ""}>
+            {paginatedItems.map((item, index) => (
+              <tr
+                key={item.id || `${item.title || "row"}-${index}`}
+                className={getRowClassName ? getRowClassName(item, index) : isDark ? "border-b border-slate-800/60 text-slate-200 transition hover:bg-slate-800/50" : getTableBodyRowClassName(index)}
+              >
+                {columns.map((column) => (
+                  <td key={column.key} className={isDark ? "px-4 py-3.5 text-xs font-medium text-slate-300" : tableBodyCellClassName}>
+                    {renderCell
+                      ? renderCell(item, column)
+                      : column.key === "status"
+                        ? renderStatusBadge(item.status)
+                        : item[column.key] ?? "--"}
+                  </td>
+                ))}
+                {onAction ? (
+                  <td className={isDark ? "px-4 py-3.5 text-center" : tableBodyCellCenterClassName}>
+                    <button
+                      type="button"
+                      onClick={() => onAction(item)}
+                      className={
+                        isDark
+                          ? "inline-flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 shadow-sm transition hover:border-[#a71a00] hover:bg-[#a71a00] hover:text-white"
+                          : `${tableActionButtonClassName} italic`
+                      }
+                    >
+                      {getActionLabel ? getActionLabel(item) : actionLabel}
+                    </button>
+                  </td>
+                ) : null}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
+      <TablePagination
+        currentPage={safePage}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        totalItems={items.length}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   );
 }
@@ -875,22 +1127,24 @@ function AdminModuleScreen({ session, pathname }) {
 
   return (
     <AdminModuleLayout session={session} pathname={pathname} bootstrap={bootstrap} onRefresh={loadBootstrap}>
-      <section className="mb-6 rounded border border-slate-300 border-l-4 border-l-[#a71a00] bg-white px-4 py-4 shadow-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">{pageTitle}</h1>
-            <p className="mt-1 text-xs text-slate-500">{pageDescription}</p>
-          </div>
-          <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-            <div className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
-              Role: <span className="font-semibold text-slate-900">Admin</span>
+      {currentRoute.section !== "dashboard" ? (
+        <section className="mb-6 rounded border border-slate-300 border-l-4 border-l-[#a71a00] bg-white px-4 py-4 shadow-sm">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">{pageTitle}</h1>
+              <p className="mt-1 text-xs text-slate-500">{pageDescription}</p>
             </div>
-            <div className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
-              Records: <span className="font-semibold text-slate-900">{sectionData?.summary?.total ?? items.length}</span>
+            <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+              <div className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
+                Role: <span className="font-semibold text-slate-900">Admin</span>
+              </div>
+              <div className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
+                Records: <span className="font-semibold text-slate-900">{sectionData?.summary?.total ?? items.length}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {error ? <div className="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div> : null}
 
@@ -942,12 +1196,12 @@ function AdminModuleScreen({ session, pathname }) {
               title: "Assigned Admin Details",
               fields: selectedAssociateMember?.assignedAdmin
                 ? [
-                    { label: "Admin Name", value: selectedAssociateMember.assignedAdmin.adminName },
-                    { label: "Mobile Number", value: selectedAssociateMember.assignedAdmin.mobileNumber },
-                    { label: "Email", value: selectedAssociateMember.assignedAdmin.email },
-                    { label: "Business/Firm Name", value: selectedAssociateMember.assignedAdmin.businessName },
-                    { label: "Status", value: selectedAssociateMember.assignedAdmin.status }
-                  ]
+                  { label: "Admin Name", value: selectedAssociateMember.assignedAdmin.adminName },
+                  { label: "Mobile Number", value: selectedAssociateMember.assignedAdmin.mobileNumber },
+                  { label: "Email", value: selectedAssociateMember.assignedAdmin.email },
+                  { label: "Business/Firm Name", value: selectedAssociateMember.assignedAdmin.businessName },
+                  { label: "Status", value: selectedAssociateMember.assignedAdmin.status }
+                ]
                 : [{ label: "Assignment Status", value: "No Admin is currently assigned to this Associate Member.", span: 2 }]
             }
           ]}
@@ -980,20 +1234,20 @@ function AdminModuleScreen({ session, pathname }) {
               title: "Requester Information",
               fields: selectedWalletRequest?.requester
                 ? [
-                    { label: "User Name", value: selectedWalletRequest.requester.name },
-                    { label: "Mobile Number", value: selectedWalletRequest.requester.mobileNumber },
-                    { label: "Email", value: selectedWalletRequest.requester.email },
-                    { label: "Business/Firm Name", value: selectedWalletRequest.requester.businessName },
-                    { label: "Country", value: selectedWalletRequest.requester.country },
-                    { label: "State", value: selectedWalletRequest.requester.state },
-                    { label: "District", value: selectedWalletRequest.requester.district },
-                    { label: "City", value: selectedWalletRequest.requester.city },
-                    { label: "PIN Code", value: selectedWalletRequest.requester.pinCode },
-                    { label: "GST Number", value: selectedWalletRequest.requester.gstNumber },
-                    { label: "Account Status", value: selectedWalletRequest.requester.status },
-                    { label: "Registration Date", value: selectedWalletRequest.requester.registrationDate },
-                    { label: "Address", value: selectedWalletRequest.requester.address, span: 2 }
-                  ]
+                  { label: "User Name", value: selectedWalletRequest.requester.name },
+                  { label: "Mobile Number", value: selectedWalletRequest.requester.mobileNumber },
+                  { label: "Email", value: selectedWalletRequest.requester.email },
+                  { label: "Business/Firm Name", value: selectedWalletRequest.requester.businessName },
+                  { label: "Country", value: selectedWalletRequest.requester.country },
+                  { label: "State", value: selectedWalletRequest.requester.state },
+                  { label: "District", value: selectedWalletRequest.requester.district },
+                  { label: "City", value: selectedWalletRequest.requester.city },
+                  { label: "PIN Code", value: selectedWalletRequest.requester.pinCode },
+                  { label: "GST Number", value: selectedWalletRequest.requester.gstNumber },
+                  { label: "Account Status", value: selectedWalletRequest.requester.status },
+                  { label: "Registration Date", value: selectedWalletRequest.requester.registrationDate },
+                  { label: "Address", value: selectedWalletRequest.requester.address, span: 2 }
+                ]
                 : [{ label: "Requester", value: "No linked member profile is available for this wallet request.", span: 2 }]
             }
           ]}
@@ -1040,139 +1294,39 @@ function AdminModuleScreen({ session, pathname }) {
       ) : isAutoTopUpRoute ? (
         <AdminAutoWalletTopUpView />
       ) : currentRoute.section === "dashboard" ? (
-        <div className="space-y-6">
-          <DashboardCards cards={cards} />
-          <section className="grid gap-6 xl:grid-cols-2">
-            <article className="overflow-hidden rounded border border-slate-300 bg-white shadow-sm">
-              <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-                <h2 className="text-sm font-bold text-slate-800">Recent User Activities</h2>
+        <div className="-mx-4 -my-5 space-y-6 rounded-xl bg-[#0b0f19] px-4 py-6 text-slate-100 shadow-2xl min-h-screen sm:px-6 sm:py-8 lg:px-8">
+          <section className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/90 p-5 shadow-xl backdrop-blur-md sm:rounded-2xl sm:p-6">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-emerald-400 via-orange-500 via-purple-500 to-pink-500"></div>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-center gap-3.5">
+                <div className="rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/20 to-purple-500/10 p-3 text-cyan-400 shadow-inner">
+                  <LayoutDashboard size={26} />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{pageTitle}</h1>
+                  <p className="mt-1 text-xs font-medium text-slate-400 sm:text-sm">{pageDescription}</p>
+                </div>
               </div>
-              <DataTable
-                columns={recentUserColumns}
-                items={recentActivities.users}
-                actionLabel="Details"
-                emptyMessage="No recent user activities are available yet."
-                renderCell={(item, column) =>
-                  column.key === "status" ? (
-                    <span className={`inline-flex rounded px-2 py-1 text-xs font-bold ${getDashboardStatusClassName(item.statusValue)}`}>
-                      {item.status}
-                    </span>
-                  ) : (
-                    item[column.key] ?? "--"
-                  )
-                }
-                getActionLabel={(item) => (item.detailsPath ? "Details" : "View")}
-                onAction={(item) => {
-                  if (item?.detailsPath) {
-                    navigateTo(item.detailsPath);
-                  } else {
-                    navigateTo(`${ADMIN_BASE_PATH}/profile`);
-                  }
-                }}
-              />
-            </article>
-
-            <article className="overflow-hidden rounded border border-slate-300 bg-white shadow-sm">
-              <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-                <h2 className="text-sm font-bold text-slate-800">Recent Orders</h2>
+              <div className="flex flex-wrap gap-3 text-xs">
+                <div className="flex items-center gap-2 rounded-xl border border-pink-500/30 bg-pink-500/10 px-4 py-2.5 font-semibold text-slate-300 shadow-inner">
+                  <span className="font-medium text-slate-400">Role:</span>
+                  <span className="font-extrabold uppercase tracking-wider text-pink-400">Admin</span>
+                </div>
+                {bootstrap?.dashboardOverview?.accountBalance !== undefined ? (
+                  <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 font-semibold text-slate-300 shadow-inner">
+                    <span className="font-medium text-slate-400">Wallet Balance:</span>
+                    <span className="font-extrabold text-emerald-400">Rs. {bootstrap.dashboardOverview.accountBalance}</span>
+                  </div>
+                ) : null}
+                <div className="flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-2.5 font-semibold text-slate-300 shadow-inner">
+                  <span className="font-medium text-slate-400">Records:</span>
+                  <span className="font-extrabold text-cyan-300">{sectionData?.summary?.total ?? items.length}</span>
+                </div>
               </div>
-              <DataTable
-                columns={recentOrderColumns}
-                items={recentActivities.orders}
-                actionLabel="Details"
-                emptyMessage="No recent orders are available yet."
-                renderCell={(item, column) =>
-                  column.key === "status" ? (
-                    <span className={`inline-flex rounded px-2 py-1 text-xs font-bold ${getDashboardStatusClassName(item.statusValue)}`}>
-                      {item.status}
-                    </span>
-                  ) : (
-                    item[column.key] ?? "--"
-                  )
-                }
-                onAction={(item) => {
-                  if (item?.detailsPath) {
-                    navigateTo(item.detailsPath);
-                  }
-                }}
-              />
-            </article>
+            </div>
           </section>
 
-          <article className="overflow-hidden rounded border border-slate-300 bg-white shadow-sm">
-            <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-              <h2 className="text-sm font-bold text-slate-800">Recent Wallet Transactions</h2>
-            </div>
-            <DataTable
-              columns={recentWalletColumns}
-              items={recentActivities.walletTransactions}
-              actionLabel="Details"
-              emptyMessage="No recent wallet transactions are available yet."
-              renderCell={(item, column) => {
-                if (column.key === "status") {
-                  return (
-                    <span className={`inline-flex rounded px-2 py-1 text-xs font-bold ${getDashboardStatusClassName(item.statusValue)}`}>
-                      {item.status}
-                    </span>
-                  );
-                }
-                if (column.key === "type") {
-                  return (
-                    <span
-                      className={`inline-flex rounded px-2 py-1 text-xs font-bold ${
-                        String(item.type || "").toLowerCase() === "credit"
-                          ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                          : "border border-rose-200 bg-rose-50 text-rose-700"
-                      }`}
-                    >
-                      {item.type}
-                    </span>
-                  );
-                }
-                if (column.key === "amount") {
-                  return formatCurrency(item.amount);
-                }
-                return item[column.key] ?? "--";
-              }}
-              onAction={(item) => {
-                if (item?.detailsPath) {
-                  navigateTo(item.detailsPath);
-                }
-              }}
-            />
-          </article>
-
-          <article className="overflow-hidden rounded border border-rose-200 bg-white shadow-sm">
-            <div className="border-b border-rose-200 bg-rose-50 px-4 py-3">
-              <h2 className="text-sm font-bold text-rose-700">Pending Tasks</h2>
-            </div>
-            <DataTable
-              columns={pendingTaskColumns}
-              items={pendingTasks}
-              actionLabel="Review"
-              emptyMessage="No pending tasks are waiting for action."
-              getRowClassName={(item) =>
-                isPendingTask(item.statusValue)
-                  ? "border-b border-rose-100 bg-rose-50/60 transition"
-                  : getTableBodyRowClassName(0)
-              }
-              renderCell={(item, column) =>
-                column.key === "status" ? (
-                  <span className={`inline-flex rounded px-2 py-1 text-xs font-bold ${getDashboardStatusClassName(item.statusValue)}`}>
-                    {item.status}
-                  </span>
-                ) : (
-                  item[column.key] ?? "--"
-                )
-              }
-              getActionLabel={(item) => item.actionLabel || "Review"}
-              onAction={(item) => {
-                if (item?.path) {
-                  navigateTo(item.path);
-                }
-              }}
-            />
-          </article>
+          <DashboardCards cards={cards} />
         </div>
       ) : (
         <div className="space-y-6">

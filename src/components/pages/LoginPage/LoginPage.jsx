@@ -337,7 +337,7 @@ function Header() {
 
 function LoginPanel() {
   const [form, setForm] = useState({
-    country: "",
+    country: "India",
     mobileNumber: "",
     password: ""
   });
@@ -357,6 +357,10 @@ function LoginPanel() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
 
     if (!form.country || !form.mobileNumber || !form.password) {
       setStatus("Please select a country, enter mobile number, and enter password.");
@@ -383,9 +387,7 @@ function LoginPanel() {
         user: data.user
       });
       setStatus(data.message || "Login successful.");
-      window.setTimeout(() => {
-        navigateTo(getDashboardPath(data.user.role));
-      }, 800);
+      navigateTo(getDashboardPath(data.user.role));
     } catch (error) {
       setStatus(error.message || "Login failed.");
     } finally {
@@ -549,8 +551,8 @@ function Footer() {
               <br />
               Sandeep Printers, Behind Godavari Hotel , Latur-413512,
               <br />
-             
-        Maharashtra, India
+
+              Maharashtra, India
             </address>
           </div>
           <div>

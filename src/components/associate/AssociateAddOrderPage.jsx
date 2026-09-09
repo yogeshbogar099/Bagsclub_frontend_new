@@ -1,28 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { FileText, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAssociateModule } from "../../context/AssociateModuleContext.jsx";
 import OrderCarousel from "./OrderCarousel.jsx";
 import PrintingServicesCarousel from "../shared-order/PrintingServicesCarousel.jsx";
+import RecentOrdersTable from "../shared-order/RecentOrdersTable.jsx";
 import NonWoven from "../../assets/images/Non_Woven_Bag.png";
 import PlasticBag from "../../assets/images/Plastic_Bag.png";
 import HDPE from "../../assets/images/HDPE_Bag.png";
 import PaperBag from "../../assets/images/Paper_Bag.png";
 import CanvasBag from "../../assets/images/Canvas_Bag.png";
-import {
-  getTableBodyRowClassName,
-  tableActionButtonClassName,
-  tableBodyCellClassName,
-  tableBodyCellCenterClassName,
-  tableCardClassName,
-  tableElementClassName,
-  tableEmptyCellClassName,
-  tableHeaderCellCenterClassName,
-  tableHeaderCellClassName,
-  tableHeaderRowClassName,
-  tableShellClassName
-} from "../shared-table/tableStyles.js";
-
 
 const printingServiceCards = [
   { id: 1, title: "NON-WOVEN BAG", image: NonWoven },
@@ -30,7 +16,6 @@ const printingServiceCards = [
   { id: 3, title: "PLASTIC BAG", image: PlasticBag },
   { id: 4, title: "HDPE BAG", image: HDPE },
   { id: 5, title: "CANVAS BAG", image: CanvasBag }
-  
 ];
 
 export default function AssociateAddOrderPage() {
@@ -77,6 +62,13 @@ export default function AssociateAddOrderPage() {
     setSelectedServiceIndex(index);
   }, []);
 
+  const handleOpenDetails = useCallback(
+    (row) => {
+      navigate(`/dashboard/associate-member/book-order/details/${row.id}`, { state: { order: row } });
+    },
+    [navigate]
+  );
+
   return (
     <div className="w-full bg-[#e8e8e8] pb-10">
       <OrderCarousel aspectRatio="706 / 170" />
@@ -100,16 +92,14 @@ export default function AssociateAddOrderPage() {
                     key={card.id}
                     type="button"
                     onClick={() => handleServiceNavClick(index)}
-                    className={`group relative bg-transparent px-0 pb-3 text-sm font-normal tracking-normal transition-colors duration-300 sm:text-[15px] ${
-                      isActive ? "text-[#305CA7]" : "text-[#5f6673] hover:text-[#305CA7]"
-                    }`}
+                    className={`group relative bg-transparent px-0 pb-3 text-sm font-normal tracking-normal transition-colors duration-300 sm:text-[15px] ${isActive ? "text-[#305CA7]" : "text-[#5f6673] hover:text-[#305CA7]"
+                      }`}
                   >
                     {card.title}
                     <span
                       aria-hidden="true"
-                      className={`absolute bottom-0 left-0 h-[2px] w-full origin-center rounded-full transition-all duration-300 ease-in-out ${
-                        isActive ? "bg-[#305CA7] opacity-100 h-[3px]" : "bg-[#cbd5e1] opacity-100 group-hover:bg-[#94a3b8]"
-                      }`}
+                      className={`absolute bottom-0 left-0 h-[2px] w-full origin-center rounded-full transition-all duration-300 ease-in-out ${isActive ? "bg-[#305CA7] opacity-100 h-[3px]" : "bg-[#cbd5e1] opacity-100 group-hover:bg-[#94a3b8]"
+                        }`}
                     />
                   </button>
                 );
@@ -128,71 +118,15 @@ export default function AssociateAddOrderPage() {
           </div>
 
           <section className="mt-10">
-            <div className="bg-white px-4 py-4 shadow-sm sm:px-6">
-              <h2 className="text-center text-2xl font-extrabold uppercase tracking-wide text-[#2d58a5] sm:text-3xl">Recent Orders</h2>
-            </div>
-
-            <div className={`${tableCardClassName} min-w-0`}>
-              <div className={tableShellClassName}>
-              <table className={`${tableElementClassName} w-full min-w-max`}>
-                <thead>
-                  <tr className={tableHeaderRowClassName}>
-                    <th className={tableHeaderCellClassName}>Order No.</th>
-                    <th className={tableHeaderCellClassName}>Date &amp; Time</th>
-                    <th className={tableHeaderCellClassName}>Order Name</th>
-                    <th className={tableHeaderCellClassName}>Order Summary</th>
-                    <th className={tableHeaderCellClassName}>Current Status</th>
-                    <th className={tableHeaderCellCenterClassName}>File Type</th>
-                    <th className={tableHeaderCellCenterClassName}>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map((row, idx) => (
-                    <tr key={row.id} className={getTableBodyRowClassName(idx)}>
-                      <td className={`${tableBodyCellClassName} font-semibold`}>{row.orderNumber}</td>
-                      <td className={tableBodyCellClassName}>{row.dateTime}</td>
-                      <td className={tableBodyCellClassName}>{row.orderName}</td>
-                      <td className={tableBodyCellClassName}>{row.orderDetail}</td>
-                      <td className={tableBodyCellClassName}>{row.status}</td>
-                      <td className={tableBodyCellCenterClassName}>
-                        {row.fileType === "email" ? (
-                          <Mail className="mx-auto" size={30} color="#d93025" />
-                        ) : (
-                          <div className="flex items-center justify-center gap-2 text-sm font-bold text-slate-700">
-                            <FileText size={22} color="#6b7280" />
-                            <span>{row.fileType}</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className={tableBodyCellCenterClassName}>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/dashboard/associate-member/book-order/details/${row.id}`, { state: { order: row } })}
-                          className={`${tableActionButtonClassName} italic`}
-                        >
-                          Details
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {sectionLoading && !recentOrders.length ? (
-                    <tr>
-                      <td colSpan={7} className={tableEmptyCellClassName}>
-                        Loading...
-                      </td>
-                    </tr>
-                  ) : null}
-                  {!sectionLoading && !recentOrders.length ? (
-                    <tr>
-                      <td colSpan={7} className={tableEmptyCellClassName}>
-                        No recent orders found.
-                      </td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-              </div>
-            </div>
+            <RecentOrdersTable
+              orders={recentOrders}
+              loading={sectionLoading}
+              showTitle={true}
+              showShowMore={true}
+              basePath="/dashboard/associate-member/book-order"
+              onOpenDetails={handleOpenDetails}
+              onShowMore={() => navigate("/dashboard/associate-member/orders/search/order-date")}
+            />
           </section>
         </div>
       </section>

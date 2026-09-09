@@ -40,21 +40,21 @@ export default function SharedNonWovenBagSelection({ basePath, useDCutDesignOpti
                     card.isSample
                       ? undefined
                       : () => {
-                          if (useDCutDesignOptions && card.slug === "d-cut-bag") {
-                            navigate(`${basePath}/non-woven-bag/d-cut-bag/design-options`);
-                            return;
-                          }
-                          if (useLoopDesignOptions && card.slug === "loop-bag") {
-                            navigate(`${basePath}/non-woven-bag/loop-bag/design-options`);
-                            return;
-                          }
-                          if (useBoxDesignOptions && card.slug === "box-bag") {
-                            navigate(`${basePath}/non-woven-bag/box-bag/design-options`);
-                            return;
-                          }
-
-                          navigate(`${basePath}/non-woven-bag/${card.slug}`);
+                        if (useDCutDesignOptions && card.slug === "d-cut-bag") {
+                          navigate(`${basePath}/non-woven-bag/d-cut-bag/design-options`);
+                          return;
                         }
+                        if (useLoopDesignOptions && card.slug === "loop-bag") {
+                          navigate(`${basePath}/non-woven-bag/loop-bag/design-options`);
+                          return;
+                        }
+                        if (useBoxDesignOptions && card.slug === "box-bag") {
+                          navigate(`${basePath}/non-woven-bag/box-bag/design-options`);
+                          return;
+                        }
+
+                        navigate(`${basePath}/non-woven-bag/${card.slug}`);
+                      }
                   }
                 >
                   <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">

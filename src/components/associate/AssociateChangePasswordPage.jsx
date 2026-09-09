@@ -121,9 +121,8 @@ export default function AssociateChangePasswordPage() {
 
           {statusMessage.text ? (
             <div
-              className={`border-b border-[#d7d7d7] px-4 py-3 text-sm ${
-                statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
-              }`}
+              className={`border-b border-[#d7d7d7] px-4 py-3 text-sm ${statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+                }`}
             >
               {statusMessage.text}
             </div>

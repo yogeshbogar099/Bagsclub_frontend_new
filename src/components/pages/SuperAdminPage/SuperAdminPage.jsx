@@ -751,57 +751,56 @@ function renderActivityTable(records) {
   return (
     <div className={tableCardClassName}>
       <div className={tableShellClassName}>
-      <table className={`${tableElementClassName} min-w-full`}>
-        <caption className="sr-only">Administrative records for the selected Super Admin route.</caption>
-        <thead>
-          <tr className={tableHeaderRowClassName}>
-            <th className={tableHeaderCellClassName}>Ref No.</th>
-            <th className={tableHeaderCellClassName}>Module</th>
-            <th className={tableHeaderCellClassName}>User / Order</th>
-            <th className={tableHeaderCellClassName}>Status</th>
-            <th className={tableHeaderCellClassName}>Updated By</th>
-            <th className={tableHeaderCellClassName}>Updated On</th>
-            <th className={tableHeaderCellCenterClassName}>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.length > 0 ? (
-            records.map((record, index) => (
-              <tr key={record.refNo} className={getTableBodyRowClassName(index)}>
-                <td className={tableBodyCellClassName}>{record.refNo}</td>
-                <td className={tableBodyCellClassName}>{record.module}</td>
-                <td className={tableBodyCellClassName}>{record.userOrder}</td>
-                <td className={tableBodyCellClassName}>
-                  <span
-                    className={`inline-flex rounded px-2 py-1 text-xs font-bold capitalize ${
-                      statusClassNames[record.status]
-                    }`}
-                  >
-                    {record.statusLabel || record.status}
-                  </span>
-                </td>
-                <td className={tableBodyCellClassName}>{record.updatedBy}</td>
-                <td className={tableBodyCellClassName}>{record.updatedOn}</td>
-                <td className={tableBodyCellCenterClassName}>
-                  <button
-                    type="button"
-                    onClick={() => navigateTo(record.detailsPath || record.routePath)}
-                    className={tableActionButtonClassName}
-                  >
-                    {record.detailsPath ? "Details" : "View"}
-                  </button>
+        <table className={`${tableElementClassName} min-w-full`}>
+          <caption className="sr-only">Administrative records for the selected Super Admin route.</caption>
+          <thead>
+            <tr className={tableHeaderRowClassName}>
+              <th className={tableHeaderCellClassName}>Ref No.</th>
+              <th className={tableHeaderCellClassName}>Module</th>
+              <th className={tableHeaderCellClassName}>User / Order</th>
+              <th className={tableHeaderCellClassName}>Status</th>
+              <th className={tableHeaderCellClassName}>Updated By</th>
+              <th className={tableHeaderCellClassName}>Updated On</th>
+              <th className={tableHeaderCellCenterClassName}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.length > 0 ? (
+              records.map((record, index) => (
+                <tr key={record.refNo} className={getTableBodyRowClassName(index)}>
+                  <td className={tableBodyCellClassName}>{record.refNo}</td>
+                  <td className={tableBodyCellClassName}>{record.module}</td>
+                  <td className={tableBodyCellClassName}>{record.userOrder}</td>
+                  <td className={tableBodyCellClassName}>
+                    <span
+                      className={`inline-flex rounded px-2 py-1 text-xs font-bold capitalize ${statusClassNames[record.status]
+                        }`}
+                    >
+                      {record.statusLabel || record.status}
+                    </span>
+                  </td>
+                  <td className={tableBodyCellClassName}>{record.updatedBy}</td>
+                  <td className={tableBodyCellClassName}>{record.updatedOn}</td>
+                  <td className={tableBodyCellCenterClassName}>
+                    <button
+                      type="button"
+                      onClick={() => navigateTo(record.detailsPath || record.routePath)}
+                      className={tableActionButtonClassName}
+                    >
+                      {record.detailsPath ? "Details" : "View"}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className={tableEmptyCellClassName}>
+                  No activity records are available for this page yet.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" className={tableEmptyCellClassName}>
-                No activity records are available for this page yet.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -1204,57 +1203,57 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
   );
   const scopedOrderRouteConfig = isPendingOrdersRoute
     ? {
-        apiBasePath: "/api/super-admin/orders/pending",
-        recordsTitle: "Pending Order Records",
-        exportBaseName: "pending-orders"
-      }
+      apiBasePath: "/api/super-admin/orders/pending",
+      recordsTitle: "Pending Order Records",
+      exportBaseName: "pending-orders"
+    }
     : isPrintingOrdersRoute
       ? {
-          apiBasePath: "/api/super-admin/orders/printing",
-          recordsTitle: "Printing Order Records",
-          exportBaseName: "printing-orders"
-        }
+        apiBasePath: "/api/super-admin/orders/printing",
+        recordsTitle: "Printing Order Records",
+        exportBaseName: "printing-orders"
+      }
       : isPackagingOrdersRoute
         ? {
-            apiBasePath: "/api/super-admin/orders/packaging",
-            recordsTitle: "Packaging Order Records",
-            exportBaseName: "packaging-orders"
-          }
+          apiBasePath: "/api/super-admin/orders/packaging",
+          recordsTitle: "Packaging Order Records",
+          exportBaseName: "packaging-orders"
+        }
         : isDispatchedOrdersRoute
           ? {
-              apiBasePath: "/api/super-admin/orders/dispatched",
-              recordsTitle: "Dispatched Order Records",
-              exportBaseName: "dispatched-orders"
-            }
+            apiBasePath: "/api/super-admin/orders/dispatched",
+            recordsTitle: "Dispatched Order Records",
+            exportBaseName: "dispatched-orders"
+          }
           : isCompletedOrdersRoute
             ? {
-                apiBasePath: "/api/super-admin/orders/completed",
-                recordsTitle: "Completed Order Records",
-                exportBaseName: "completed-orders"
-              }
+              apiBasePath: "/api/super-admin/orders/completed",
+              recordsTitle: "Completed Order Records",
+              exportBaseName: "completed-orders"
+            }
             : isImproperOrdersRoute
               ? {
-                  apiBasePath: "/api/super-admin/orders/improper",
-                  recordsTitle: "Improper Order Records",
-                  exportBaseName: "improper-orders"
-                }
+                apiBasePath: "/api/super-admin/orders/improper",
+                recordsTitle: "Improper Order Records",
+                exportBaseName: "improper-orders"
+              }
               : isCancelledOrdersRoute
                 ? {
-                    apiBasePath: "/api/super-admin/orders/cancelled",
-                    recordsTitle: "Cancelled Order Records",
-                    exportBaseName: "cancelled-orders"
-                  }
+                  apiBasePath: "/api/super-admin/orders/cancelled",
+                  recordsTitle: "Cancelled Order Records",
+                  exportBaseName: "cancelled-orders"
+                }
                 : isRejectedOrdersRoute
                   ? {
-                      apiBasePath: "/api/super-admin/orders/rejected",
-                      recordsTitle: "Rejected Order Records",
-                      exportBaseName: "rejected-orders"
-                    }
+                    apiBasePath: "/api/super-admin/orders/rejected",
+                    recordsTitle: "Rejected Order Records",
+                    exportBaseName: "rejected-orders"
+                  }
                   : {
-                      apiBasePath: "/api/super-admin/orders",
-                      recordsTitle: "All Order Records",
-                      exportBaseName: "all-orders"
-                    };
+                    apiBasePath: "/api/super-admin/orders",
+                    recordsTitle: "All Order Records",
+                    exportBaseName: "all-orders"
+                  };
   const orderApiBasePath = scopedOrderRouteConfig.apiBasePath;
   const orderRecordsTitle = scopedOrderRouteConfig.recordsTitle;
   const orderExportBaseName = scopedOrderRouteConfig.exportBaseName;
@@ -1398,11 +1397,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
               status: selectedAssociateDetails.statusValue === "active" ? "deactive" : "active"
             })
           }
-          className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${
-            selectedAssociateDetails.statusValue === "active"
-              ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
-              : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
-          }`}
+          className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${selectedAssociateDetails.statusValue === "active"
+            ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
+            : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
+            }`}
         >
           {selectedAssociateDetails.statusValue === "active" ? "Deactivate Associate Member" : "Activate Associate Member"}
         </button>
@@ -1473,11 +1471,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
               status: selectedAdminDetails.statusValue === "active" ? "deactive" : "active"
             })
           }
-          className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${
-            selectedAdminDetails.statusValue === "active"
-              ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
-              : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
-          }`}
+          className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${selectedAdminDetails.statusValue === "active"
+            ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
+            : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
+            }`}
         >
           {selectedAdminDetails.statusValue === "active" ? "Deactivate Admin" : "Activate Admin"}
         </button>
@@ -1915,11 +1912,11 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
             data?.summary && typeof data.summary === "object"
               ? data.summary
               : {
-                  total: 0,
-                  pending: 0,
-                  approved: 0,
-                  rejected: 0
-                },
+                total: 0,
+                pending: 0,
+                approved: 0,
+                rejected: 0
+              },
           isLoading: false,
           errorMessage: ""
         });
@@ -2256,12 +2253,12 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
         setSelectedAssociateDetails((current) =>
           current
             ? {
-                ...current,
-                role: "admin",
-                assignedAdminId: "",
-                assignedAdminName: "Not Assigned",
-                assignedAdmin: null
-              }
+              ...current,
+              role: "admin",
+              assignedAdminId: "",
+              assignedAdminName: "Not Assigned",
+              assignedAdmin: null
+            }
             : current
         );
         setSelectedAssociateAdminId("");
@@ -2269,22 +2266,22 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
         setSelectedAssociateDetails((current) =>
           current
             ? {
-                ...current,
-                role: "associate-member",
-                assignedAdminId: payload?.adminId || "",
-                assignedAdminName:
-                  adminOptions.find((option) => option.id === payload?.adminId)?.name || "Not Assigned",
-                assignedAdmin: payload?.adminId
-                  ? {
-                      id: payload.adminId,
-                      adminName: adminOptions.find((option) => option.id === payload.adminId)?.name || "Not Assigned",
-                      mobileNumber: adminOptions.find((option) => option.id === payload.adminId)?.mobileNumber || "",
-                      email: "",
-                      businessName: "",
-                      status: adminOptions.find((option) => option.id === payload.adminId)?.status || ""
-                    }
-                  : null
-              }
+              ...current,
+              role: "associate-member",
+              assignedAdminId: payload?.adminId || "",
+              assignedAdminName:
+                adminOptions.find((option) => option.id === payload?.adminId)?.name || "Not Assigned",
+              assignedAdmin: payload?.adminId
+                ? {
+                  id: payload.adminId,
+                  adminName: adminOptions.find((option) => option.id === payload.adminId)?.name || "Not Assigned",
+                  mobileNumber: adminOptions.find((option) => option.id === payload.adminId)?.mobileNumber || "",
+                  email: "",
+                  businessName: "",
+                  status: adminOptions.find((option) => option.id === payload.adminId)?.status || ""
+                }
+                : null
+            }
             : current
         );
       }
@@ -2527,71 +2524,71 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f6f8] text-[#333]">
       <header className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] rounded">
-        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 box-border">
-          <div className="grid gap-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)_280px] lg:items-center box-border">
-          <div className="flex justify-center lg:justify-start box-border">
-            <div id="ctl00_imgLogo" className="flex items-center box-border">
-              <img
-                src={logo}
-                alt="BAGSCLUB"
-                className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16 box-border"
-              />
+        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:px-[0.2%] box-border">
+          <div className="grid gap-4 py-4 grid-cols-1 lg:grid-cols-3 lg:items-center box-border">
+            <div className="flex justify-center lg:justify-start box-border lg:ml-[0.2%]">
+              <div id="ctl00_imgLogo" className="flex items-center box-border">
+                <img
+                  src={logo}
+                  alt="BAGSCLUB"
+                  className="block h-12 w-auto shrink-0 object-contain sm:h-14 md:h-16 box-border"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="min-w-0 text-center box-border">
-            <div id="partnerTypeContainer" className="space-y-1 box-border">
-              <p className="text-[14px] leading-[1.42] font-bold text-[#333] box-border">Super Admin Module</p>
-              <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
-                Go to{" "}
-                <button
-                  type="button"
-                  onClick={() => handleNavigate("/dashboard/super-admin")}
-                  className="font-bold text-blue-700 underline-offset-2 transition hover:text-[#a71a00] hover:underline box-border"
-                >
-                  Dashboard
-                </button>
-              </p>
-              <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
-                Centralized control panel for users, orders, wallets, reports, and audit activity.
-              </p>
-            </div>
-          </div>
-
-          <div className="min-w-0 text-center lg:text-right box-border">
-            <div id="ctl00_divUserInfo" className="space-y-1 text-[14px] leading-[1.42] box-border">
-              <p className="font-bold box-border">
-                Hi, <span id="lbLoginUserName" className="box-border">{session.user.name || "Super Admin"}</span>
-              </p>
-              <div id="ctl00_lbDistAccountDetails" className="text-[14px] leading-[1.42] font-bold text-[#a71a00] box-border">
-                <p className="box-border">Role - {normalizeRole(session.user.role)}</p>
-                <p className="box-border">
-                  A/C Balance :{" "}
+            <div className="min-w-0 text-center box-border flex flex-col items-center justify-center">
+              <div id="partnerTypeContainer" className="space-y-1 box-border">
+                <p className="text-[14px] leading-[1.42] font-bold text-[#333] box-border">Super Admin Module</p>
+                <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
+                  Go to{" "}
                   <button
                     type="button"
-                    onClick={() => handleNavigate("/dashboard/super-admin/wallet-management/add-money")}
-                    className="text-blue-700 transition hover:text-[#a71a00] box-border"
+                    onClick={() => handleNavigate("/dashboard/super-admin")}
+                    className="font-bold text-blue-700 underline-offset-2 transition hover:text-[#a71a00] hover:underline box-border"
                   >
-                    {accountBalance}
+                    Dashboard
                   </button>
                 </p>
-                <p className="box-border">
-                  Session :{" "}
-                  <span id="spnBalance" className="cursor-pointer text-blue-700 box-border">
-                    Active
-                  </span>
+                <p className="text-[14px] leading-[1.42] text-[#a71a00] box-border">
+                  Centralized control panel for users, orders, wallets, reports, and audit activity.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex items-center gap-2 text-[14px] leading-[1.42] font-bold text-blue-700 transition hover:text-[#a71a00] box-border"
-              >
-                <LogOut size={14} />
-                Sign Out
-              </button>
             </div>
-          </div>
+
+            <div className="min-w-0 text-center lg:text-right box-border flex flex-col items-center lg:items-end justify-center lg:mr-[0.2%]">
+              <div id="ctl00_divUserInfo" className="space-y-1 text-[14px] leading-[1.42] box-border">
+                <p className="font-bold box-border">
+                  Hi, <span id="lbLoginUserName" className="box-border">{session.user.name || "Super Admin"}</span>
+                </p>
+                <div id="ctl00_lbDistAccountDetails" className="text-[14px] leading-[1.42] font-bold text-[#a71a00] box-border">
+                  <p className="box-border">Role - {normalizeRole(session.user.role)}</p>
+                  <p className="box-border">
+                    A/C Balance :{" "}
+                    <button
+                      type="button"
+                      onClick={() => handleNavigate("/dashboard/super-admin/wallet-management/add-money")}
+                      className="text-blue-700 transition hover:text-[#a71a00] box-border"
+                    >
+                      {accountBalance}
+                    </button>
+                  </p>
+                  <p className="box-border">
+                    Session :{" "}
+                    <span id="spnBalance" className="cursor-pointer text-blue-700 box-border">
+                      Active
+                    </span>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 text-[14px] leading-[1.42] font-bold text-blue-700 transition hover:text-[#a71a00] box-border"
+                >
+                  <LogOut size={14} />
+                  Sign Out
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -2602,7 +2599,7 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
         aria-label="Super Admin primary navigation"
         className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] min-h-[34px] rounded"
       >
-        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 box-border">
+        <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 md:px-8 lg:pl-[0.5%] lg:pr-4 box-border">
           <div className="flex h-[34px] w-full items-center justify-between box-border">
             <button
               type="button"
@@ -2657,11 +2654,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                           clearMenuHoverTimeout();
                           setOpenMenuId((current) => (current === item.id ? null : item.id));
                         }}
-                        className={`inline-flex items-center border-l px-3 transition box-border ${
-                          isActive
-                            ? "border-[#841400] bg-[#a71a00] text-white"
-                            : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
-                        }`}
+                        className={`inline-flex items-center border-l px-3 transition box-border ${isActive
+                          ? "border-[#841400] bg-[#a71a00] text-white"
+                          : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                          }`}
                         aria-label={`Toggle ${item.label} submenu`}
                       >
                         <ChevronDown size={14} className={isOpen ? "rotate-180 transition" : "transition"} />
@@ -2689,11 +2685,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                               key={child.id}
                               type="button"
                               onClick={() => handleNavigate(child.path)}
-                              className={`block w-full border-b px-4 py-2.5 text-left text-[14px] leading-[1.42] transition last:border-b-0 box-border ${
-                                isChildActive
-                                  ? "border-slate-200 bg-[#a71a00] font-bold text-white"
-                                  : "border-slate-100 text-slate-700 hover:bg-rose-50 hover:pl-5 hover:text-[#a71a00]"
-                              }`}
+                              className={`block w-full border-b px-4 py-2.5 text-left text-[14px] leading-[1.42] transition last:border-b-0 box-border ${isChildActive
+                                ? "border-slate-200 bg-[#a71a00] font-bold text-white"
+                                : "border-slate-100 text-slate-700 hover:bg-rose-50 hover:pl-5 hover:text-[#a71a00]"
+                                }`}
                             >
                               {child.label}
                             </button>
@@ -2710,9 +2705,8 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
 
         <div
           id="super-admin-mobile-nav"
-          className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${
-            mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <div className="border-t border-[#e7eaec] bg-white px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)] sm:px-6 box-border">
             <div className="space-y-1 text-[14px] leading-[1.42] font-bold text-slate-700 box-border">
@@ -2730,9 +2724,8 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                         setMobileNavOpen(false);
                         handleNavigate(item.path);
                       }}
-                      className={`flex min-h-[44px] w-full items-center rounded border px-4 text-left transition box-border ${
-                        isActive ? activeBtn : inactiveBtn
-                      }`}
+                      className={`flex min-h-[44px] w-full items-center rounded border px-4 text-left transition box-border ${isActive ? activeBtn : inactiveBtn
+                        }`}
                     >
                       {item.label}
                     </button>
@@ -2748,11 +2741,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                         type="button"
                         onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
                         aria-expanded={expanded}
-                        className={`flex min-h-[44px] flex-1 items-center px-4 text-left transition box-border ${
-                          isActive
-                            ? "bg-[#a71a00] text-white"
-                            : "bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
-                        }`}
+                        className={`flex min-h-[44px] flex-1 items-center px-4 text-left transition box-border ${isActive
+                          ? "bg-[#a71a00] text-white"
+                          : "bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                          }`}
                       >
                         {item.label}
                       </button>
@@ -2761,20 +2753,18 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                         onClick={() => setMobileExpandedId((current) => (current === item.id ? null : item.id))}
                         aria-expanded={expanded}
                         aria-label={`Toggle ${item.label} mobile submenu`}
-                        className={`inline-flex min-h-[44px] w-12 shrink-0 items-center justify-center border-l transition box-border ${
-                          isActive
-                            ? "border-[#841400] bg-[#a71a00] text-white"
-                            : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
-                        }`}
+                        className={`inline-flex min-h-[44px] w-12 shrink-0 items-center justify-center border-l transition box-border ${isActive
+                          ? "border-[#841400] bg-[#a71a00] text-white"
+                          : "border-[#e7eaec] bg-white text-slate-700 hover:bg-slate-50 hover:text-[#a71a00]"
+                          }`}
                       >
                         <ChevronDown size={14} className={expanded ? "rotate-180 transition" : "transition"} />
                       </button>
                     </div>
 
                     <div
-                      className={`overflow-hidden rounded border border-[#e7eaec] bg-slate-50 transition-[max-height] duration-300 ease-in-out box-border ${
-                        expanded ? "max-h-[9999px]" : "max-h-0"
-                      }`}
+                      className={`overflow-hidden rounded border border-[#e7eaec] bg-slate-50 transition-[max-height] duration-300 ease-in-out box-border ${expanded ? "max-h-[9999px]" : "max-h-0"
+                        }`}
                     >
                       <div className="space-y-0.5 py-1 pl-4 box-border">
                         {item.children.map((child) => {
@@ -2800,11 +2790,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                                 setMobileExpandedId(null);
                                 handleNavigate(child.path);
                               }}
-                              className={`flex min-h-[44px] w-full items-center rounded px-4 text-left transition box-border ${
-                                isChildActive
-                                  ? "bg-[#a71a00] font-bold text-white"
-                                  : "bg-white text-slate-700 hover:bg-rose-50 hover:text-[#a71a00]"
-                              }`}
+                              className={`flex min-h-[44px] w-full items-center rounded px-4 text-left transition box-border ${isChildActive
+                                ? "bg-[#a71a00] font-bold text-white"
+                                : "bg-white text-slate-700 hover:bg-rose-50 hover:text-[#a71a00]"
+                                }`}
                             >
                               {child.label}
                             </button>
@@ -3011,12 +3000,12 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                 title: "Assigned Admin Details",
                 fields: selectedAssociateDetails?.assignedAdmin
                   ? [
-                      { label: "Admin Name", value: selectedAssociateDetails.assignedAdmin.adminName },
-                      { label: "Mobile Number", value: selectedAssociateDetails.assignedAdmin.mobileNumber },
-                      { label: "Email", value: selectedAssociateDetails.assignedAdmin.email },
-                      { label: "Business/Firm Name", value: selectedAssociateDetails.assignedAdmin.businessName },
-                      { label: "Status", value: selectedAssociateDetails.assignedAdmin.status }
-                    ]
+                    { label: "Admin Name", value: selectedAssociateDetails.assignedAdmin.adminName },
+                    { label: "Mobile Number", value: selectedAssociateDetails.assignedAdmin.mobileNumber },
+                    { label: "Email", value: selectedAssociateDetails.assignedAdmin.email },
+                    { label: "Business/Firm Name", value: selectedAssociateDetails.assignedAdmin.businessName },
+                    { label: "Status", value: selectedAssociateDetails.assignedAdmin.status }
+                  ]
                   : [{ label: "Assignment Status", value: "No Admin is currently assigned to this Associate Member.", span: 2 }]
               }
             ]}
@@ -3106,20 +3095,20 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                 title: "Requester Information",
                 fields: selectedWalletDetails?.requester
                   ? [
-                      { label: "User Name", value: selectedWalletDetails.requester.name },
-                      { label: "Mobile Number", value: selectedWalletDetails.requester.mobileNumber },
-                      { label: "Email", value: selectedWalletDetails.requester.email },
-                      { label: "Business/Firm Name", value: selectedWalletDetails.requester.businessName },
-                      { label: "Country", value: selectedWalletDetails.requester.country },
-                      { label: "State", value: selectedWalletDetails.requester.state },
-                      { label: "District", value: selectedWalletDetails.requester.district },
-                      { label: "City", value: selectedWalletDetails.requester.city },
-                      { label: "PIN Code", value: selectedWalletDetails.requester.pinCode },
-                      { label: "GST Number", value: selectedWalletDetails.requester.gstNumber },
-                      { label: "Account Status", value: selectedWalletDetails.requester.status },
-                      { label: "Registration Date", value: selectedWalletDetails.requester.registrationDate },
-                      { label: "Address", value: selectedWalletDetails.requester.address, span: 2 }
-                    ]
+                    { label: "User Name", value: selectedWalletDetails.requester.name },
+                    { label: "Mobile Number", value: selectedWalletDetails.requester.mobileNumber },
+                    { label: "Email", value: selectedWalletDetails.requester.email },
+                    { label: "Business/Firm Name", value: selectedWalletDetails.requester.businessName },
+                    { label: "Country", value: selectedWalletDetails.requester.country },
+                    { label: "State", value: selectedWalletDetails.requester.state },
+                    { label: "District", value: selectedWalletDetails.requester.district },
+                    { label: "City", value: selectedWalletDetails.requester.city },
+                    { label: "PIN Code", value: selectedWalletDetails.requester.pinCode },
+                    { label: "GST Number", value: selectedWalletDetails.requester.gstNumber },
+                    { label: "Account Status", value: selectedWalletDetails.requester.status },
+                    { label: "Registration Date", value: selectedWalletDetails.requester.registrationDate },
+                    { label: "Address", value: selectedWalletDetails.requester.address, span: 2 }
+                  ]
                   : [{ label: "Requester", value: "No linked user profile is available for this wallet request.", span: 2 }]
               }
             ]}
@@ -3658,161 +3647,160 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
           </section>
 
           <section className="space-y-6">
-              {(associateManagement.errorMessage || associateManagement.actionMessage) && (
-                <article className="rounded border border-slate-300 bg-white p-4 shadow-sm">
-                  <p
-                    className={`text-sm font-medium ${
-                      associateManagement.errorMessage ? "text-red-600" : "text-emerald-600"
+            {(associateManagement.errorMessage || associateManagement.actionMessage) && (
+              <article className="rounded border border-slate-300 bg-white p-4 shadow-sm">
+                <p
+                  className={`text-sm font-medium ${associateManagement.errorMessage ? "text-red-600" : "text-emerald-600"
                     }`}
-                  >
-                    {associateManagement.errorMessage || associateManagement.actionMessage}
-                  </p>
-                </article>
-              )}
-
-              <article className={tableCardClassName}>
-                <div className={tableSectionHeaderClassName}>
-                  <h2 className="text-sm font-bold text-slate-800">Associate Member Records</h2>
-                  <div className={tableSectionCountClassName}>
-                    Showing {filteredAssociateTableItems.length} of {associateManagement.pagination.totalRecords} Associate
-                    Member records
-                  </div>
-                </div>
-                <div className="border-b border-slate-200 px-4 py-4">
-                  <SharedOrderTableToolbar
-                    searchValue={associateQuickSearch}
-                    onSearchChange={setAssociateQuickSearch}
-                    onDownloadPdf={handleDownloadAssociatePdf}
-                    onDownloadExcel={handleDownloadAssociateExcel}
-                    filteredCount={filteredAssociateTableItems.length}
-                    totalCount={associateManagement.items.length}
-                    label="Search Associate Members"
-                    placeholder="Search by associate member ID, firm name, user name, mobile number, or district"
-                  />
-                </div>
-                <div className={tableShellClassName}>
-                  <table className={`${tableElementClassName} min-w-full text-left`}>
-                    <thead>
-                      <tr>
-                        {[
-                          { label: "Associate Member ID", sortBy: "associateMemberId" },
-                          { label: "Firm Name", sortBy: "businessName" },
-                          { label: "User Name", sortBy: "name" },
-                          { label: "WhatsApp Number", sortBy: "mobile" },
-                          { label: "District Name", sortBy: "district" },
-                          { label: "Action", sortBy: "" }
-                        ].map((column) => (
-                          <th key={column.label} className={tableHeaderCellClassName}>
-                            {column.sortBy ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const nextSortOrder =
-                                    associateFilters.sortBy === column.sortBy && associateFilters.sortOrder === "asc"
-                                      ? "desc"
-                                      : "asc";
-                                  setAssociateFilters((current) => ({
-                                    ...current,
-                                    sortBy: column.sortBy,
-                                    sortOrder: nextSortOrder,
-                                    page: 1
-                                  }));
-                                }}
-                                className="inline-flex items-center gap-1 transition hover:text-[#d9d9d9]"
-                              >
-                                {column.label}
-                                <span className="text-[10px] text-slate-400">
-                                  {associateFilters.sortBy === column.sortBy
-                                    ? associateFilters.sortOrder === "asc"
-                                      ? "▲"
-                                      : "▼"
-                                    : "↕"}
-                                </span>
-                              </button>
-                            ) : (
-                              column.label
-                            )}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {associateManagement.isLoading ? (
-                        <tr>
-                          <td colSpan="6" className={tableEmptyCellClassName}>
-                            Loading Associate Member records...
-                          </td>
-                        </tr>
-                      ) : filteredAssociateTableItems.length > 0 ? (
-                        filteredAssociateTableItems.map((associateMember, index) => (
-                          <tr key={associateMember.id} className={getTableBodyRowClassName(index)}>
-                            <td className={`${tableBodyCellClassName} whitespace-nowrap font-semibold`}>
-                              {associateMember.associateMemberId}
-                            </td>
-                            <td className={`${tableBodyCellClassName} font-medium`}>
-                              {associateMember.businessName || "--"}
-                            </td>
-                            <td className={tableBodyCellClassName}>{associateMember.associateMemberName}</td>
-                            <td className={`${tableBodyCellClassName} whitespace-nowrap`}>
-                              {associateMember.mobileNumber}
-                            </td>
-                            <td className={`${tableBodyCellClassName} whitespace-nowrap`}>
-                              {associateMember.district || "--"}
-                            </td>
-                            <td className={tableBodyCellCenterClassName}>
-                              <button
-                                type="button"
-                                onClick={() => navigateTo(`/dashboard/super-admin/user-management/associate-member-management/details/${associateMember.id}`)}
-                                className={tableActionButtonClassName}
-                              >
-                                <Eye size={14} />
-                                Details
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="6" className={tableEmptyCellClassName}>
-                            No Associate Member records are available for the selected filters.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <div className={tablePaginationBarClassName}>
-                  <span>
-                    Page {associateManagement.pagination.page} of {associateManagement.pagination.totalPages}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={associateManagement.pagination.page <= 1}
-                      onClick={() => updateAssociateFilter("page", Math.max(associateManagement.pagination.page - 1, 1))}
-                      className={tablePaginationButtonClassName}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      type="button"
-                      disabled={associateManagement.pagination.page >= associateManagement.pagination.totalPages}
-                      onClick={() =>
-                        updateAssociateFilter(
-                          "page",
-                          Math.min(
-                            associateManagement.pagination.page + 1,
-                            associateManagement.pagination.totalPages
-                          )
-                        )
-                      }
-                      className={tablePaginationButtonClassName}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
+                >
+                  {associateManagement.errorMessage || associateManagement.actionMessage}
+                </p>
               </article>
+            )}
+
+            <article className={tableCardClassName}>
+              <div className={tableSectionHeaderClassName}>
+                <h2 className="text-sm font-bold text-slate-800">Associate Member Records</h2>
+                <div className={tableSectionCountClassName}>
+                  Showing {filteredAssociateTableItems.length} of {associateManagement.pagination.totalRecords} Associate
+                  Member records
+                </div>
+              </div>
+              <div className="border-b border-slate-200 px-4 py-4">
+                <SharedOrderTableToolbar
+                  searchValue={associateQuickSearch}
+                  onSearchChange={setAssociateQuickSearch}
+                  onDownloadPdf={handleDownloadAssociatePdf}
+                  onDownloadExcel={handleDownloadAssociateExcel}
+                  filteredCount={filteredAssociateTableItems.length}
+                  totalCount={associateManagement.items.length}
+                  label="Search Associate Members"
+                  placeholder="Search by associate member ID, firm name, user name, mobile number, or district"
+                />
+              </div>
+              <div className={tableShellClassName}>
+                <table className={`${tableElementClassName} min-w-full text-left`}>
+                  <thead>
+                    <tr>
+                      {[
+                        { label: "Associate Member ID", sortBy: "associateMemberId" },
+                        { label: "Firm Name", sortBy: "businessName" },
+                        { label: "User Name", sortBy: "name" },
+                        { label: "WhatsApp Number", sortBy: "mobile" },
+                        { label: "District Name", sortBy: "district" },
+                        { label: "Action", sortBy: "" }
+                      ].map((column) => (
+                        <th key={column.label} className={tableHeaderCellClassName}>
+                          {column.sortBy ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const nextSortOrder =
+                                  associateFilters.sortBy === column.sortBy && associateFilters.sortOrder === "asc"
+                                    ? "desc"
+                                    : "asc";
+                                setAssociateFilters((current) => ({
+                                  ...current,
+                                  sortBy: column.sortBy,
+                                  sortOrder: nextSortOrder,
+                                  page: 1
+                                }));
+                              }}
+                              className="inline-flex items-center gap-1 transition hover:text-[#d9d9d9]"
+                            >
+                              {column.label}
+                              <span className="text-[10px] text-slate-400">
+                                {associateFilters.sortBy === column.sortBy
+                                  ? associateFilters.sortOrder === "asc"
+                                    ? "▲"
+                                    : "▼"
+                                  : "↕"}
+                              </span>
+                            </button>
+                          ) : (
+                            column.label
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {associateManagement.isLoading ? (
+                      <tr>
+                        <td colSpan="6" className={tableEmptyCellClassName}>
+                          Loading Associate Member records...
+                        </td>
+                      </tr>
+                    ) : filteredAssociateTableItems.length > 0 ? (
+                      filteredAssociateTableItems.map((associateMember, index) => (
+                        <tr key={associateMember.id} className={getTableBodyRowClassName(index)}>
+                          <td className={`${tableBodyCellClassName} whitespace-nowrap font-semibold`}>
+                            {associateMember.associateMemberId}
+                          </td>
+                          <td className={`${tableBodyCellClassName} font-medium`}>
+                            {associateMember.businessName || "--"}
+                          </td>
+                          <td className={tableBodyCellClassName}>{associateMember.associateMemberName}</td>
+                          <td className={`${tableBodyCellClassName} whitespace-nowrap`}>
+                            {associateMember.mobileNumber}
+                          </td>
+                          <td className={`${tableBodyCellClassName} whitespace-nowrap`}>
+                            {associateMember.district || "--"}
+                          </td>
+                          <td className={tableBodyCellCenterClassName}>
+                            <button
+                              type="button"
+                              onClick={() => navigateTo(`/dashboard/super-admin/user-management/associate-member-management/details/${associateMember.id}`)}
+                              className={tableActionButtonClassName}
+                            >
+                              <Eye size={14} />
+                              Details
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className={tableEmptyCellClassName}>
+                          No Associate Member records are available for the selected filters.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className={tablePaginationBarClassName}>
+                <span>
+                  Page {associateManagement.pagination.page} of {associateManagement.pagination.totalPages}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={associateManagement.pagination.page <= 1}
+                    onClick={() => updateAssociateFilter("page", Math.max(associateManagement.pagination.page - 1, 1))}
+                    className={tablePaginationButtonClassName}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    disabled={associateManagement.pagination.page >= associateManagement.pagination.totalPages}
+                    onClick={() =>
+                      updateAssociateFilter(
+                        "page",
+                        Math.min(
+                          associateManagement.pagination.page + 1,
+                          associateManagement.pagination.totalPages
+                        )
+                      )
+                    }
+                    className={tablePaginationButtonClassName}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </article>
           </section>
 
           {(selectedAssociateDetails || isAssociateDetailsLoading) && (
@@ -3939,11 +3927,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                                   status: selectedAssociateDetails.statusValue === "active" ? "deactive" : "active"
                                 })
                               }
-                              className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${
-                                selectedAssociateDetails.statusValue === "active"
-                                  ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
-                                  : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
-                              }`}
+                              className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${selectedAssociateDetails.statusValue === "active"
+                                ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
+                                : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
+                                }`}
                             >
                               {selectedAssociateDetails.statusValue === "active"
                                 ? "Deactivate Associate Member"
@@ -4041,158 +4028,156 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
           </section>
 
           <section className="space-y-6">
-              {(adminManagement.errorMessage || adminManagement.actionMessage) && (
-                <article className="rounded border border-slate-300 bg-white p-4 shadow-sm">
-                  <p className={`text-sm font-medium ${adminManagement.errorMessage ? "text-red-600" : "text-emerald-600"}`}>
-                    {adminManagement.errorMessage || adminManagement.actionMessage}
-                  </p>
-                </article>
-              )}
-
-              <article className={tableCardClassName}>
-                <div className={tableSectionHeaderClassName}>
-                  <h2 className="text-sm font-bold text-slate-800">Admin Records</h2>
-                  <div className={tableSectionCountClassName}>Showing {filteredAdminTableItems.length} of {adminManagement.pagination.totalRecords} Admin records</div>
-                </div>
-                <div className="border-b border-slate-200 px-4 py-4">
-                  <SharedOrderTableToolbar
-                    searchValue={adminQuickSearch}
-                    onSearchChange={setAdminQuickSearch}
-                    onDownloadPdf={handleDownloadAdminPdf}
-                    onDownloadExcel={handleDownloadAdminExcel}
-                    filteredCount={filteredAdminTableItems.length}
-                    totalCount={adminManagement.items.length}
-                    label="Search Admin Records"
-                    placeholder="Search by admin ID, admin name, mobile number, address, business name, or status"
-                  />
-                </div>
-                <div className={tableShellClassName}>
-                  <table className={`${tableElementClassName} min-w-full text-left`}>
-                    <thead>
-                      <tr>
-                        {[
-                          { label: "Admin ID", sortBy: "adminId" },
-                          { label: "Admin Name", sortBy: "name" },
-                          { label: "Mobile Number", sortBy: "mobile" },
-                          { label: "Admin Address", sortBy: "address" },
-                          { label: "Business/Firm Name", sortBy: "businessName" },
-                          { label: "Status", sortBy: "status" },
-                          { label: "Associate Member Access Status", sortBy: "associateAccess" },
-                          { label: "Actions", sortBy: "" }
-                        ].map((column) => (
-                          <th key={column.label} className={tableHeaderCellClassName}>
-                            {column.sortBy ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const nextSortOrder =
-                                    adminFilters.sortBy === column.sortBy && adminFilters.sortOrder === "asc" ? "desc" : "asc";
-                                  setAdminFilters((current) => ({
-                                    ...current,
-                                    sortBy: column.sortBy,
-                                    sortOrder: nextSortOrder,
-                                    page: 1
-                                  }));
-                                }}
-                                className="inline-flex items-center gap-1 transition hover:text-[#d9d9d9]"
-                              >
-                                {column.label}
-                                <span className="text-[10px] text-slate-400">
-                                  {adminFilters.sortBy === column.sortBy ? (adminFilters.sortOrder === "asc" ? "▲" : "▼") : "↕"}
-                                </span>
-                              </button>
-                            ) : (
-                              column.label
-                            )}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {adminManagement.isLoading ? (
-                        <tr>
-                          <td colSpan="8" className={tableEmptyCellClassName}>
-                            Loading Admin records...
-                          </td>
-                        </tr>
-                      ) : filteredAdminTableItems.length > 0 ? (
-                        filteredAdminTableItems.map((admin, index) => (
-                          <tr key={admin.id} className={getTableBodyRowClassName(index)}>
-                            <td className={`${tableBodyCellClassName} font-semibold`}>{admin.adminId}</td>
-                            <td className={tableBodyCellClassName}>{admin.adminName}</td>
-                            <td className={tableBodyCellClassName}>{admin.mobileNumber}</td>
-                            <td className={tableBodyCellMutedClassName}>{admin.adminAddress}</td>
-                            <td className={tableBodyCellClassName}>{admin.businessName}</td>
-                            <td className={tableBodyCellClassName}>
-                              <span
-                                className={`inline-flex rounded px-2 py-1 text-xs font-bold ${
-                                  admin.statusValue === "active" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
-                                }`}
-                              >
-                                {admin.status}
-                              </span>
-                            </td>
-                            <td className={tableBodyCellClassName}>
-                              <span
-                                className={`inline-flex rounded px-2 py-1 text-xs font-bold ${
-                                  admin.associateMemberAccessEnabled
-                                    ? "bg-blue-100 text-blue-700"
-                                    : "bg-slate-200 text-slate-700"
-                                }`}
-                              >
-                                {admin.associateMemberAccessStatus}
-                              </span>
-                            </td>
-                            <td className={tableBodyCellCenterClassName}>
-                              <button
-                                type="button"
-                                onClick={() => navigateTo(`/dashboard/super-admin/user-management/admin-management/details/${admin.id}`)}
-                                className={tableActionButtonClassName}
-                              >
-                                Details
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="8" className={tableEmptyCellClassName}>
-                            No Admin records are available for the selected filters.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <div className={tablePaginationBarClassName}>
-                  <span>
-                    Page {adminManagement.pagination.page} of {adminManagement.pagination.totalPages}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={adminManagement.pagination.page <= 1}
-                      onClick={() => updateAdminFilter("page", Math.max(adminManagement.pagination.page - 1, 1))}
-                      className={tablePaginationButtonClassName}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      type="button"
-                      disabled={adminManagement.pagination.page >= adminManagement.pagination.totalPages}
-                      onClick={() =>
-                        updateAdminFilter(
-                          "page",
-                          Math.min(adminManagement.pagination.page + 1, adminManagement.pagination.totalPages)
-                        )
-                      }
-                      className={tablePaginationButtonClassName}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
+            {(adminManagement.errorMessage || adminManagement.actionMessage) && (
+              <article className="rounded border border-slate-300 bg-white p-4 shadow-sm">
+                <p className={`text-sm font-medium ${adminManagement.errorMessage ? "text-red-600" : "text-emerald-600"}`}>
+                  {adminManagement.errorMessage || adminManagement.actionMessage}
+                </p>
               </article>
+            )}
+
+            <article className={tableCardClassName}>
+              <div className={tableSectionHeaderClassName}>
+                <h2 className="text-sm font-bold text-slate-800">Admin Records</h2>
+                <div className={tableSectionCountClassName}>Showing {filteredAdminTableItems.length} of {adminManagement.pagination.totalRecords} Admin records</div>
+              </div>
+              <div className="border-b border-slate-200 px-4 py-4">
+                <SharedOrderTableToolbar
+                  searchValue={adminQuickSearch}
+                  onSearchChange={setAdminQuickSearch}
+                  onDownloadPdf={handleDownloadAdminPdf}
+                  onDownloadExcel={handleDownloadAdminExcel}
+                  filteredCount={filteredAdminTableItems.length}
+                  totalCount={adminManagement.items.length}
+                  label="Search Admin Records"
+                  placeholder="Search by admin ID, admin name, mobile number, address, business name, or status"
+                />
+              </div>
+              <div className={tableShellClassName}>
+                <table className={`${tableElementClassName} min-w-full text-left`}>
+                  <thead>
+                    <tr>
+                      {[
+                        { label: "Admin ID", sortBy: "adminId" },
+                        { label: "Admin Name", sortBy: "name" },
+                        { label: "Mobile Number", sortBy: "mobile" },
+                        { label: "Admin Address", sortBy: "address" },
+                        { label: "Business/Firm Name", sortBy: "businessName" },
+                        { label: "Status", sortBy: "status" },
+                        { label: "Associate Member Access Status", sortBy: "associateAccess" },
+                        { label: "Actions", sortBy: "" }
+                      ].map((column) => (
+                        <th key={column.label} className={tableHeaderCellClassName}>
+                          {column.sortBy ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const nextSortOrder =
+                                  adminFilters.sortBy === column.sortBy && adminFilters.sortOrder === "asc" ? "desc" : "asc";
+                                setAdminFilters((current) => ({
+                                  ...current,
+                                  sortBy: column.sortBy,
+                                  sortOrder: nextSortOrder,
+                                  page: 1
+                                }));
+                              }}
+                              className="inline-flex items-center gap-1 transition hover:text-[#d9d9d9]"
+                            >
+                              {column.label}
+                              <span className="text-[10px] text-slate-400">
+                                {adminFilters.sortBy === column.sortBy ? (adminFilters.sortOrder === "asc" ? "▲" : "▼") : "↕"}
+                              </span>
+                            </button>
+                          ) : (
+                            column.label
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {adminManagement.isLoading ? (
+                      <tr>
+                        <td colSpan="8" className={tableEmptyCellClassName}>
+                          Loading Admin records...
+                        </td>
+                      </tr>
+                    ) : filteredAdminTableItems.length > 0 ? (
+                      filteredAdminTableItems.map((admin, index) => (
+                        <tr key={admin.id} className={getTableBodyRowClassName(index)}>
+                          <td className={`${tableBodyCellClassName} font-semibold`}>{admin.adminId}</td>
+                          <td className={tableBodyCellClassName}>{admin.adminName}</td>
+                          <td className={tableBodyCellClassName}>{admin.mobileNumber}</td>
+                          <td className={tableBodyCellMutedClassName}>{admin.adminAddress}</td>
+                          <td className={tableBodyCellClassName}>{admin.businessName}</td>
+                          <td className={tableBodyCellClassName}>
+                            <span
+                              className={`inline-flex rounded px-2 py-1 text-xs font-bold ${admin.statusValue === "active" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+                                }`}
+                            >
+                              {admin.status}
+                            </span>
+                          </td>
+                          <td className={tableBodyCellClassName}>
+                            <span
+                              className={`inline-flex rounded px-2 py-1 text-xs font-bold ${admin.associateMemberAccessEnabled
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-slate-200 text-slate-700"
+                                }`}
+                            >
+                              {admin.associateMemberAccessStatus}
+                            </span>
+                          </td>
+                          <td className={tableBodyCellCenterClassName}>
+                            <button
+                              type="button"
+                              onClick={() => navigateTo(`/dashboard/super-admin/user-management/admin-management/details/${admin.id}`)}
+                              className={tableActionButtonClassName}
+                            >
+                              Details
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="8" className={tableEmptyCellClassName}>
+                          No Admin records are available for the selected filters.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className={tablePaginationBarClassName}>
+                <span>
+                  Page {adminManagement.pagination.page} of {adminManagement.pagination.totalPages}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={adminManagement.pagination.page <= 1}
+                    onClick={() => updateAdminFilter("page", Math.max(adminManagement.pagination.page - 1, 1))}
+                    className={tablePaginationButtonClassName}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    disabled={adminManagement.pagination.page >= adminManagement.pagination.totalPages}
+                    onClick={() =>
+                      updateAdminFilter(
+                        "page",
+                        Math.min(adminManagement.pagination.page + 1, adminManagement.pagination.totalPages)
+                      )
+                    }
+                    className={tablePaginationButtonClassName}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </article>
           </section>
 
           {(selectedAdminDetails || isAdminDetailsLoading) && (
@@ -4272,11 +4257,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                                   status: selectedAdminDetails.statusValue === "active" ? "deactive" : "active"
                                 })
                               }
-                              className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${
-                                selectedAdminDetails.statusValue === "active"
-                                  ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
-                                  : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
-                              }`}
+                              className={`w-full rounded border px-4 py-2 text-sm font-semibold text-white transition ${selectedAdminDetails.statusValue === "active"
+                                ? "border-[#a71a00] bg-[#a71a00] hover:bg-[#841400]"
+                                : "border-emerald-600 bg-emerald-600 hover:bg-emerald-700"
+                                }`}
                             >
                               {selectedAdminDetails.statusValue === "active" ? "Deactivate Admin" : "Activate Admin"}
                             </button>
@@ -4464,11 +4448,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                     if (column.key === "type") {
                       return (
                         <span
-                          className={`inline-flex rounded px-2 py-1 text-xs font-bold ${
-                            String(record.type || "").toLowerCase() === "credit"
-                              ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                              : "border border-rose-200 bg-rose-50 text-rose-700"
-                          }`}
+                          className={`inline-flex rounded px-2 py-1 text-xs font-bold ${String(record.type || "").toLowerCase() === "credit"
+                            ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+                            : "border border-rose-200 bg-rose-50 text-rose-700"
+                            }`}
                         >
                           {record.type}
                         </span>
@@ -4576,11 +4559,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                     <button
                       type="button"
                       onClick={() => handleNavigate(currentParentItem.path)}
-                      className={`block w-full rounded border px-3 py-2 text-left text-sm font-semibold transition ${
-                        pathname === currentParentItem.path
-                          ? "border-[#a71a00] bg-[#a71a00] text-white"
-                          : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
-                      }`}
+                      className={`block w-full rounded border px-3 py-2 text-left text-sm font-semibold transition ${pathname === currentParentItem.path
+                        ? "border-[#a71a00] bg-[#a71a00] text-white"
+                        : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                        }`}
                     >
                       {currentParentItem.label}
                     </button>
@@ -4589,11 +4571,10 @@ export default function SuperAdminPage({ session, pathname = "/dashboard/super-a
                         key={route.id}
                         type="button"
                         onClick={() => handleNavigate(route.path)}
-                        className={`block w-full rounded border px-3 py-2 text-left text-sm font-semibold transition ${
-                          pathname === route.path
-                            ? "border-[#a71a00] bg-[#a71a00] text-white"
-                            : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
-                        }`}
+                        className={`block w-full rounded border px-3 py-2 text-left text-sm font-semibold transition ${pathname === route.path
+                          ? "border-[#a71a00] bg-[#a71a00] text-white"
+                          : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                          }`}
                       >
                         {route.label}
                       </button>

@@ -1,22 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { FileText, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import OrderCarousel from "../associate/OrderCarousel.jsx";
 import PrintingServicesCarousel from "./PrintingServicesCarousel.jsx";
+import RecentOrdersTable from "./RecentOrdersTable.jsx";
 import { printingServiceCards } from "./sharedOrderData.js";
-import {
-  getTableBodyRowClassName,
-  tableActionButtonClassName,
-  tableBodyCellClassName,
-  tableBodyCellCenterClassName,
-  tableCardClassName,
-  tableElementClassName,
-  tableEmptyCellClassName,
-  tableHeaderCellCenterClassName,
-  tableHeaderCellClassName,
-  tableHeaderRowClassName,
-  tableShellClassName
-} from "../shared-table/tableStyles.js";
 
 export default function SharedAddOrderLanding({ basePath, loadRecentOrders, onOpenDetails }) {
   const navigate = useNavigate();
@@ -119,71 +106,14 @@ export default function SharedAddOrderLanding({ basePath, loadRecentOrders, onOp
           </div>
 
           <section className="mt-10">
-            <div className="bg-white px-4 py-4 shadow-sm sm:px-6">
-              <h2 className="text-center text-2xl font-extrabold uppercase tracking-wide text-[#2d58a5] sm:text-3xl">Recent Orders</h2>
-            </div>
-
-            <div className={`${tableCardClassName} min-w-0`}>
-              <div className={`${tableShellClassName} w-full`}>
-              <table className={`${tableElementClassName} w-full min-w-max`}>
-                <thead>
-                  <tr className={tableHeaderRowClassName}>
-                    <th className={tableHeaderCellClassName}>Order No.</th>
-                    <th className={tableHeaderCellClassName}>Date &amp; Time</th>
-                    <th className={tableHeaderCellClassName}>Order Name</th>
-                    <th className={tableHeaderCellClassName}>Order Summary</th>
-                    <th className={tableHeaderCellClassName}>Current Status</th>
-                    <th className={tableHeaderCellCenterClassName}>File Type</th>
-                    <th className={tableHeaderCellCenterClassName}>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map((row, idx) => (
-                    <tr key={row.id} className={getTableBodyRowClassName(idx)}>
-                      <td className={`${tableBodyCellClassName} font-semibold`}>{row.orderNumber}</td>
-                      <td className={tableBodyCellClassName}>{row.dateTime}</td>
-                      <td className={tableBodyCellClassName}>{row.orderName}</td>
-                      <td className={tableBodyCellClassName}>{row.orderDetail}</td>
-                      <td className={tableBodyCellClassName}>{row.status}</td>
-                      <td className={tableBodyCellCenterClassName}>
-                        {row.fileType === "email" ? (
-                          <Mail className="mx-auto" size={30} color="#d93025" />
-                        ) : (
-                          <div className="flex items-center justify-center gap-2 text-sm font-bold text-slate-700">
-                            <FileText size={22} color="#6b7280" />
-                            <span>{row.fileType}</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className={tableBodyCellCenterClassName}>
-                        <button
-                          type="button"
-                          onClick={() => onOpenDetails?.(row)}
-                          className={`${tableActionButtonClassName} italic`}
-                        >
-                          Details
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {loading && !recentOrders.length ? (
-                    <tr>
-                      <td colSpan={7} className={tableEmptyCellClassName}>
-                        Loading...
-                      </td>
-                    </tr>
-                  ) : null}
-                  {!loading && !recentOrders.length ? (
-                    <tr>
-                      <td colSpan={7} className={tableEmptyCellClassName}>
-                        No recent orders found.
-                      </td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-              </div>
-            </div>
+            <RecentOrdersTable
+              orders={recentOrders}
+              loading={loading}
+              showTitle={true}
+              showShowMore={true}
+              basePath={basePath}
+              onOpenDetails={onOpenDetails}
+            />
           </section>
         </div>
       </section>

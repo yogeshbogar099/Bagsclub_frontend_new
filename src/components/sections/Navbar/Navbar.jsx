@@ -128,7 +128,7 @@ export default function Navbar() {
           <button
             type="button"
             className={[
-              "touch-target flex h-11 w-11 items-center justify-center rounded-md p-2 transition-colors duration-300 sm:hidden sm:h-12 sm:w-12 lg:hidden",
+              "touch-target flex h-11 w-11 items-center justify-center rounded-md p-2 transition-colors duration-300 sm:h-12 sm:w-12 lg:hidden",
               isScrolled ? "border border-slate-200 text-ink" : "border border-white/30 text-white"
             ].join(" ")}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -141,9 +141,8 @@ export default function Navbar() {
       </div>
 
       <div
-        className={`fixed inset-0 z-40 bg-ink/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
-          mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        className={`fixed inset-0 z-40 bg-ink/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${mobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
         aria-hidden="true"
       />
 

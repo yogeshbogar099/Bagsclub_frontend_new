@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Bell,
@@ -53,6 +53,45 @@ export default function AssociateNavbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileExpandedId, setMobileExpandedId] = useState(null);
+
+  const openTimerRef = useRef(null);
+  const closeTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    setActiveDropdown(null);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (openTimerRef.current) clearTimeout(openTimerRef.current);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
+  const handleMouseEnter = (index) => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    if (openTimerRef.current) {
+      clearTimeout(openTimerRef.current);
+    }
+    openTimerRef.current = setTimeout(() => {
+      setActiveDropdown(index);
+    }, 400);
+  };
+
+  const handleMouseLeave = () => {
+    if (openTimerRef.current) {
+      clearTimeout(openTimerRef.current);
+      openTimerRef.current = null;
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 180);
+  };
 
   useEffect(() => {
     if (mobileNavOpen) {
@@ -164,42 +203,45 @@ export default function AssociateNavbar() {
   return (
     <nav
       aria-label="Associate Member primary navigation"
-      className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] min-h-[34px] rounded"
+      className="relative w-full bg-white border-b border-[#e7eaec] shadow-[0_1px_4px_rgba(0,0,0,0.05)] p-0 mb-0 text-[13px] lg:text-[14px] leading-[1.42] font-bold box-border font-['Segoe_UI','Helvetica_Neue',sans-serif] min-h-[36px] sm:min-h-[40px] lg:min-h-[36px] rounded"
     >
-      <div className="w-full max-w-none px-0 box-border">
-        <div className="flex h-[34px] w-full items-center justify-start box-border">
-          <Link
-            to="/"
-            className="ml-4 sm:ml-6 md:ml-0 inline-flex items-center gap-2 text-[14px] leading-[1.42] font-bold text-[#4d4d4d] hover:text-[#a71a00] box-border md:hidden"
-          >
-            <span aria-hidden="true" className="inline-flex shrink-0 items-center justify-center text-[14px] leading-none select-none">🏠</span>
-            <span className="sr-only md:not-sr-only">Home</span>
-          </Link>
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 lg:pl-[0.5%] lg:pr-4 box-border">
+        <div className="flex h-[38px] sm:h-[42px] lg:h-[36px] w-full items-center justify-start box-border">
+          <div className="flex items-center justify-between w-full lg:hidden py-1 box-border">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-[13px] sm:text-[14px] leading-[1.42] font-bold text-[#4d4d4d] hover:text-[#a71a00] box-border"
+            >
+              <span aria-hidden="true" className="inline-flex shrink-0 items-center justify-center text-[15px] leading-none select-none">🏠</span>
+              <span className="font-bold text-[#2f2f2f]">Navigation</span>
+            </Link>
 
-          <button
-            type="button"
-            onClick={() => setMobileNavOpen((open) => !open)}
-            aria-expanded={mobileNavOpen}
-            aria-controls="associate-mobile-nav"
-            className="mr-4 sm:mr-6 md:mr-0 inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded border border-[#e7eaec] bg-white text-[#4d4d4d] transition hover:bg-[#faf6f4] hover:text-[#a71a00] box-border md:hidden"
-          >
-            {mobileNavOpen ? <X size={14} /> : <Menu size={14} />}
-            <span className="sr-only">Toggle navigation menu</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((open) => !open)}
+              aria-expanded={mobileNavOpen}
+              aria-controls="associate-mobile-nav"
+              className="inline-flex h-[32px] px-3 shrink-0 items-center gap-1.5 rounded border border-[#e7eaec] bg-white text-[13px] font-bold text-[#4d4d4d] transition hover:bg-[#faf6f4] hover:text-[#a71a00] box-border"
+            >
+              <span className="font-bold">{mobileNavOpen ? "Close" : "Menu"}</span>
+              {mobileNavOpen ? <X size={15} /> : <Menu size={15} />}
+            </button>
+          </div>
 
-          <div className="hidden w-full md:flex md:min-h-[34px] md:items-center md:justify-start md:gap-1 md:overflow-visible md:whitespace-nowrap md:pl-0 md:pr-0 box-border">
+          <div className="hidden w-full lg:flex lg:min-h-[36px] lg:items-center lg:justify-start lg:gap-1 xl:gap-1.5 lg:overflow-visible no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden whitespace-nowrap box-border">
             {menuItems.map((item, index) => {
               const isOpen = activeDropdown === index;
               const isActive = isItemActive(item);
               const buttonClass = isActive ? activeButtonClasses : inactiveButtonClasses;
               const chevronClass = isActive ? "text-white" : "text-[#7a7a7a]";
+              const dropdownAlignClass = index >= 4 ? "right-0 left-auto" : "left-0 right-auto";
 
               if (!item.dropdown) {
                 return (
                   <Link
                     key={item.id}
                     to={item.path}
-                    className={`inline-flex h-[30px] shrink-0 items-center gap-1.5 rounded border px-3 text-[14px] leading-[1.42] transition-colors duration-300 ease-in-out box-border ${buttonClass}`}
+                    className={`inline-flex h-[30px] shrink-0 items-center gap-1.5 rounded border px-2.5 xl:px-3 text-[13px] xl:text-[14px] leading-[1.42] transition-colors duration-300 ease-in-out box-border ${buttonClass}`}
                   >
                     <MenuItemIcon item={item} isActive={isActive} />
                     <span>{item.name}</span>
@@ -211,19 +253,19 @@ export default function AssociateNavbar() {
                 <div
                   key={item.id}
                   className="relative shrink-0 box-border"
-                  onMouseEnter={() => setActiveDropdown(index)}
-                  onMouseLeave={() => setActiveDropdown(null)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  <div className={`flex h-[30px] items-center gap-1.5 rounded border px-3 whitespace-nowrap transition-colors duration-300 ease-in-out box-border cursor-pointer ${buttonClass}`}>
+                  <div className={`flex h-[30px] items-center gap-1.5 rounded border px-2.5 xl:px-3 text-[13px] xl:text-[14px] whitespace-nowrap transition-colors duration-300 ease-in-out box-border cursor-pointer ${buttonClass}`}>
                     <MenuItemIcon item={item} isActive={isActive} />
                     <span className="cursor-pointer">{item.name}</span>
                     <ChevronDown size={14} className={`${chevronClass} shrink-0 transition-transform duration-300 ease-in-out ${isOpen ? "rotate-180" : ""}`} />
                   </div>
 
                   <div
-                    className={`absolute left-0 top-full z-50 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)] sm:w-64 box-border before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-[''] transition-all duration-[350ms] ease-out origin-top ${isOpen
+                    className={`absolute ${dropdownAlignClass} top-full z-50 mt-1 w-[min(16rem,calc(100vw-2rem))] overflow-hidden rounded border border-[#e1dbd4] bg-white py-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)] sm:w-64 box-border before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-[''] transition-all duration-300 ease-out origin-top ${isOpen
                       ? "opacity-100 translate-y-0 scale-100 pointer-events-auto visible"
-                      : "opacity-0 -translate-y-2 scale-[0.97] pointer-events-none invisible"
+                      : "opacity-0 -translate-y-2.5 scale-[0.98] pointer-events-none invisible"
                       }`}
                   >
                     {item.dropdown.map((subItem) => {
@@ -232,7 +274,7 @@ export default function AssociateNavbar() {
                         <Link
                           key={subItem.id}
                           to={subItem.path}
-                          className={`flex items-center gap-2 px-4 py-2 text-[14px] leading-[1.42] transition-all duration-[400ms] ease-out hover:bg-[#faf6f4] hover:text-[#a71a00] box-border ${isSubActive ? "bg-[#faf6f4] font-bold text-[#a71a00]" : "text-[#5f6673]"
+                          className={`flex items-center gap-2 px-4 py-2 text-[13px] xl:text-[14px] leading-[1.42] transition-all duration-[250ms] ease-out hover:bg-[#faf6f4] hover:text-[#a71a00] box-border ${isSubActive ? "bg-[#faf6f4] font-bold text-[#a71a00]" : "text-[#5f6673]"
                             }`}
                         >
                           <MenuItemIcon item={subItem} isActive={isSubActive} />
@@ -250,11 +292,11 @@ export default function AssociateNavbar() {
 
       <div
         id="associate-mobile-nav"
-        className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden box-border ${mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
+        className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out lg:hidden box-border ${mobileNavOpen ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"
           }`}
       >
-        <div className="border-t border-[#e7eaec] bg-white px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)] sm:px-6 box-border">
-          <div className="space-y-1 text-[14px] leading-[1.42] font-bold text-[#4d4d4d] box-border">
+        <div className="border-t border-[#e7eaec] bg-white px-3 sm:px-6 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)] box-border">
+          <div className="space-y-1 text-[13px] sm:text-[14px] leading-[1.42] font-bold text-[#4d4d4d] box-border">
             {menuItems.map((item) => {
               const isActive = isItemActive(item);
               const buttonClass = isActive ? activeButtonClasses : inactiveButtonClasses;
@@ -320,7 +362,7 @@ export default function AssociateNavbar() {
                               setMobileNavOpen(false);
                               setMobileExpandedId(null);
                             }}
-                            className={`flex min-h-[44px] w-full items-center gap-2 rounded px-4 text-left text-[14px] leading-[1.42] transition-all duration-[350ms] ease-out box-border ${isSubActive
+                            className={`flex min-h-[44px] w-full items-center gap-2 rounded px-4 text-left text-[13px] sm:text-[14px] leading-[1.42] transition-all duration-[300ms] ease-out box-border ${isSubActive
                               ? "bg-[#b7370c] font-bold text-white"
                               : "bg-white text-[#5f6673] hover:bg-[#faf6f4] hover:text-[#a71a00]"
                               }`}

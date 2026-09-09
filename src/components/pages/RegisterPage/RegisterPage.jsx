@@ -398,7 +398,7 @@ function RegisterForm() {
       if (!response.ok) throw new Error(data.message || "Registration failed.");
       setStatus(
         data.message ||
-          `Account created successfully. Login with Country: ${data.credentials?.country || form.country} and WhatsApp No.: ${data.credentials?.mobileNumber || form.mobile}.`
+        `Account created successfully. Login with Country: ${data.credentials?.country || form.country} and WhatsApp No.: ${data.credentials?.mobileNumber || form.mobile}.`
       );
       setForm(initialForm);
       loadCaptcha();

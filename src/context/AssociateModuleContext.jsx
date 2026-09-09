@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import apiClient from "../lib/apiClient.js";
 import { getAuthSession, saveAuthSession } from "../utils/auth.js";
 
@@ -12,8 +12,13 @@ export function AssociateModuleProvider({ children }) {
   const [orderLoading, setOrderLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const isBootstrapFetchingRef = useRef(false);
 
   const loadBootstrap = useCallback(async () => {
+    if (isBootstrapFetchingRef.current) {
+      return null;
+    }
+    isBootstrapFetchingRef.current = true;
     setLoading(true);
     setError("");
 
@@ -56,6 +61,7 @@ export function AssociateModuleProvider({ children }) {
       setError(requestError?.response?.data?.message || requestError.message || "Failed to load associate member module.");
       return null;
     } finally {
+      isBootstrapFetchingRef.current = false;
       setLoading(false);
     }
   }, []);

@@ -5,10 +5,14 @@ import {
   Check,
   CheckCircle,
   ChevronDown,
+  ChevronUp,
   Loader2,
+  Lock,
   Mail,
+  Minus,
   Package,
   Palette,
+  Plus,
   Printer,
   Truck,
   Upload,
@@ -301,7 +305,12 @@ export default function AssociateNonWovenBagOrderPage() {
   function handleInputChange(event) {
     const { name, value } = event.target;
     if (name === "quantity") {
-      setStatusMessage((prev) => (prev.text === "Minimum quantity is 1000." ? { type: "", text: "" } : prev));
+      const parsed = Number(value);
+      if (value !== "" && Number.isFinite(parsed) && parsed < MINIMUM_QUANTITY) {
+        setStatusMessage({ type: "error", text: "Minimum quantity is 1000." });
+      } else {
+        setStatusMessage((prev) => (prev.text === "Minimum quantity is 1000." ? { type: "", text: "" } : prev));
+      }
     }
     if (name === "bagColor") {
       setStatusMessage({ type: "", text: "" });
@@ -330,17 +339,39 @@ export default function AssociateNonWovenBagOrderPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
+  function handleIncrementQuantity() {
+    setStatusMessage({ type: "", text: "" });
+    setFormData((prev) => {
+      const currentVal = Number(prev.quantity);
+      if (!Number.isFinite(currentVal) || currentVal < MINIMUM_QUANTITY) {
+        return { ...prev, quantity: String(MINIMUM_QUANTITY) };
+      }
+      return { ...prev, quantity: String(currentVal + 100) };
+    });
+  }
+
+  function handleDecrementQuantity() {
+    setStatusMessage({ type: "", text: "" });
+    setFormData((prev) => {
+      const currentVal = Number(prev.quantity);
+      if (!Number.isFinite(currentVal) || currentVal <= MINIMUM_QUANTITY) {
+        setStatusMessage({ type: "error", text: `Minimum quantity is ${MINIMUM_QUANTITY}.` });
+        return { ...prev, quantity: String(MINIMUM_QUANTITY) };
+      }
+      const nextVal = Math.max(MINIMUM_QUANTITY, currentVal - 100);
+      return { ...prev, quantity: String(nextVal) };
+    });
+  }
+
   function handleQuantityBlur() {
     let nextStatusMessage = null;
     setFormData((prev) => {
       if (prev.quantity === "") {
-        return prev;
+        nextStatusMessage = { type: "error", text: "Minimum quantity is 1000." };
+        return { ...prev, quantity: String(MINIMUM_QUANTITY) };
       }
       const parsedQuantity = Number(prev.quantity);
-      if (!Number.isFinite(parsedQuantity)) {
-        return { ...prev, quantity: "" };
-      }
-      if (parsedQuantity > 0 && parsedQuantity < MINIMUM_QUANTITY) {
+      if (!Number.isFinite(parsedQuantity) || parsedQuantity < MINIMUM_QUANTITY) {
         nextStatusMessage = { type: "error", text: "Minimum quantity is 1000." };
         return { ...prev, quantity: String(MINIMUM_QUANTITY) };
       }
@@ -385,6 +416,7 @@ export default function AssociateNonWovenBagOrderPage() {
 
     setStatusMessage({ type: "", text: "" });
     setFormData((prev) => ({ ...prev, textColorSelection: selected }));
+    setPrintingColorDropdownOpen(false);
   }
 
   function handleFile(file) {
@@ -603,43 +635,50 @@ export default function AssociateNonWovenBagOrderPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#eeeeef] py-6 font-sans text-[#222] px-4 sm:px-6 md:px-0 md:py-8">
-      <div className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-[96px]">
-        <div className="mb-5 grid grid-cols-[auto_1fr_auto] items-center gap-4">
+    <div className="min-h-screen w-full bg-[#f3f4f6] py-6 font-sans text-[#1f2937] px-4 sm:px-6 md:px-0 md:py-8">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-8 lg:px-[72px]">
+        {/* Header Bar */}
+        <div className="mb-6 grid grid-cols-[auto_1fr_auto] items-center gap-4">
           <button
             type="button"
             onClick={() => navigate("/dashboard/associate-member/book-order/non-woven-bag")}
-            className="rounded-[4px] border border-[#d4d7dd] bg-white px-3 py-1.5 text-xs font-bold text-[#2d58a5] transition hover:border-[#aebdce] hover:bg-[#f8fbff]"
+            className="rounded-[4px] border border-[#d4d7dd] bg-white px-3.5 py-1.5 text-xs font-bold text-[#2d58a5] transition hover:border-[#aebdce] hover:bg-[#f8fbff] shadow-xs"
           >
             Back
           </button>
-          <h1 className="text-center text-[22px] font-black uppercase tracking-[0.04em] text-[#111]">Add Order</h1>
+          <h1 className="text-center text-[22px] sm:text-[24px] font-black uppercase tracking-[0.05em] text-[#111111]">Add Order</h1>
           <div className="w-[80px]" />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-8 xl:gap-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-8 xl:gap-10">
+          {/* Left Column - Order Form */}
           <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div className="rounded-[8px] border border-[#d3d7de] bg-white p-[18px] shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-              <div className="space-y-5">
+            {/* Top Section Card: Order Name & Product Select */}
+            <div className="rounded-[8px] border border-[#d3d7de] bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+              <div className="space-y-4">
                 <div>
-                  <div className="mb-3 text-[16px] font-bold uppercase tracking-wide">Order Name</div>
+                  <label className="mb-2 block text-[13px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">
+                    ORDER NAME
+                  </label>
                   <input
                     type="text"
                     name="orderName"
                     placeholder="Type customer name here to check order status easily"
                     value={formData.orderName}
                     onChange={handleInputChange}
-                    className="h-[45px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
+                    className="h-[44px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm font-medium text-[#222222] placeholder:text-[#999999] outline-none transition focus:border-[#1f73ff] focus:bg-white focus:ring-1 focus:ring-[#1f73ff]/20"
                   />
                 </div>
 
                 <div>
-                  <div className="mb-3 text-[16px] font-bold uppercase tracking-wide">Non Woven Sizes</div>
+                  <label className="mb-2 block text-[13px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">
+                    SELECT PRODUCT
+                  </label>
                   <select
                     name="bagSize"
                     value={formData.bagSize}
                     onChange={handleInputChange}
-                    className="h-[45px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
+                    className="h-[44px] w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm font-medium text-[#222222] outline-none transition focus:border-[#1f73ff] focus:bg-white"
                   >
                     <option value="">--- Select ---</option>
                     {sizeOptions.map((option) => (
@@ -654,66 +693,100 @@ export default function AssociateNonWovenBagOrderPage() {
 
             {hasBagSize ? (
               <>
-                <div className="overflow-hidden rounded-[8px] border border-[#d3d7de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                  <div className="border-b border-[#e3e6eb] bg-[#fbfbfc] p-4 text-[17px] font-bold uppercase text-[#111]">Select Detail</div>
+                {/* SELECT DETAIL Container */}
+                <div className="relative rounded-[8px] border border-[#d3d7de] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)] z-20">
+                  <div className="rounded-t-[8px] border-b border-[#e3e6eb] bg-[#fbfbfc] px-5 py-3.5 text-[15px] sm:text-[16px] font-bold uppercase tracking-wide text-[#111111]">
+                    SELECT DETAIL
+                  </div>
 
-                  <div className="space-y-5 p-4">
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
+                  <div className="space-y-4 p-5">
+                    {/* Quantity */}
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 border-b border-[#f0f2f5] pb-4">
+                      <div className="w-full shrink-0 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333333] md:w-[170px]">
                         <span className="inline-flex items-center gap-2">
-                          <Printer size={15} className="shrink-0 text-[#1f73ff]" />
-                          <span className="box-border">Printing Side</span>
+                          <Package size={16} className="shrink-0 text-[#1f73ff]" />
+                          <span>Quantity</span>
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex h-[38px] items-center rounded-[6px] border border-[#d1d5db] bg-[#f0f2f5] focus-within:border-[#1f73ff] focus-within:bg-white focus-within:ring-1 focus-within:ring-[#1f73ff]/20 overflow-hidden">
+                          <input
+                            type="number"
+                            name="quantity"
+                            min={MINIMUM_QUANTITY}
+                            step="100"
+                            value={formData.quantity}
+                            onChange={handleInputChange}
+                            onBlur={handleQuantityBlur}
+                            placeholder="1000"
+                            className="h-full w-[80px] bg-transparent px-2 text-center text-sm font-semibold text-[#1e293b] outline-none sm:w-[90px] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          />
+                          <div className="flex h-full flex-col border-l border-[#e2e8f0] bg-white">
+                            <button
+                              type="button"
+                              onClick={handleIncrementQuantity}
+                              className="flex flex-1 w-7 items-center justify-center text-slate-600 transition hover:bg-slate-200 hover:text-slate-900 active:bg-slate-300 border-b border-[#e2e8f0]"
+                              aria-label="Increase quantity by 100"
+                              title="Increase quantity by 100"
+                            >
+                              <ChevronUp size={12} className="stroke-[3]" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleDecrementQuantity}
+                              disabled={Number(formData.quantity) <= MINIMUM_QUANTITY}
+                              className="flex flex-1 w-7 items-center justify-center text-slate-600 transition hover:bg-slate-200 hover:text-slate-900 active:bg-slate-300 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
+                              aria-label="Decrease quantity by 100"
+                              title="Decrease quantity by 100"
+                            >
+                              <ChevronDown size={12} className="stroke-[3]" />
+                            </button>
+                          </div>
+                        </div>
+                        <span className="text-xs sm:text-[13px] font-bold text-[#1f73ff] tracking-wide">
+                          (Min Qty. : {MINIMUM_QUANTITY})
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Printing Side */}
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 border-b border-[#f0f2f5] pb-4">
+                      <div className="w-full shrink-0 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333333] md:w-[170px]">
+                        <span className="inline-flex items-center gap-2">
+                          <Printer size={16} className="shrink-0 text-[#1f73ff]" />
+                          <span>Printing</span>
                         </span>
                       </div>
                       <select
                         name="bagType"
                         value={formData.bagType}
                         onChange={handleInputChange}
-                        className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
+                        className="h-[38px] w-full flex-1 rounded-[6px] border border-[#d1d5db] bg-[#f0f2f5] px-3.5 text-sm font-medium text-[#1e293b] outline-none transition focus:border-[#1f73ff] focus:bg-white cursor-pointer"
                       >
-                        <option value="">--- Select ---</option>
-                        {bagTypeOptions.map((option) => (
+                        <option value="">--Select--</option>
+                        {bagTypeOptions.filter((option) => option.value !== "One side").map((option) => (
                           <option key={option.value} value={option.value}>
-                            {option.value === "Both sides" ? "Both Side" : "Single Side"}
+                            {option.value === "Both sides" ? "Both Side" : option.label}
                           </option>
                         ))}
                       </select>
                     </div>
 
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
+                    {/* Bag Color */}
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 border-b border-[#f0f2f5] pb-4">
+                      <div className="w-full shrink-0 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333333] md:w-[170px]">
                         <span className="inline-flex items-center gap-2">
-                          <Package size={15} className="shrink-0 text-[#1f73ff]" />
-                          <span className="box-border">Quantity</span>
-                        </span>
-                      </div>
-                      <input
-                        type="number"
-                        name="quantity"
-                        min={MINIMUM_QUANTITY}
-                        step="1"
-                        value={formData.quantity}
-                        onChange={handleInputChange}
-                        onBlur={handleQuantityBlur}
-                        placeholder="--- Select ---"
-                        className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                      <div className="w-full shrink-0 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333] md:w-[170px]">
-                        <span className="inline-flex items-center gap-2">
-                          <Palette size={15} className="shrink-0 text-[#1f73ff]" />
-                          <span className="box-border">Bag Color</span>
+                          <Palette size={16} className="shrink-0 text-[#1f73ff]" />
+                          <span>Bag Color</span>
                         </span>
                       </div>
                       <select
                         name="bagColor"
                         value={formData.bagColor}
                         onChange={handleInputChange}
-                        className="h-[45px] w-full flex-1 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-4 text-sm outline-none focus:border-[#1f73ff] focus:bg-white"
+                        className="h-[38px] w-full flex-1 rounded-[6px] border border-[#d1d5db] bg-[#f0f2f5] px-3.5 text-sm font-medium text-[#1e293b] outline-none transition focus:border-[#1f73ff] focus:bg-white cursor-pointer"
                       >
-                        <option value="">--- Select ---</option>
+                        <option value="">--Select--</option>
                         {availableBagColors.map((color) => (
                           <option key={color.value} value={color.value}>
                             {color.value}
@@ -722,11 +795,12 @@ export default function AssociateNonWovenBagOrderPage() {
                       </select>
                     </div>
 
-                    <div>
-                      <div className="mb-2.5 text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333]">
-                        Printing Color Type: <span className="font-semibold normal-case text-slate-500">{formData.textColorType}</span>
+                    {/* Printing Color Type - INLINE */}
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 border-b border-[#f0f2f5] pb-4">
+                      <div className="w-full shrink-0 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333333] md:w-[170px]">
+                        Printing Color Type :
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-1 flex-wrap items-center gap-2">
                         {availableTextColorTypes.map((type) => {
                           const selected = formData.textColorType === type;
 
@@ -743,9 +817,9 @@ export default function AssociateNonWovenBagOrderPage() {
                                 }));
                               }}
                               disabled={isLockedPrintingType && !selected}
-                              className={`${selectableCardClassName} h-[36px] min-w-[102px] px-4 py-2 text-center ${selected
-                                  ? "border-2 border-[#222] text-[#222] shadow-sm"
-                                  : "border border-[#cfcfcf] text-slate-700 hover:border-[#999]"
+                              className={`${selectableCardClassName} h-[34px] rounded-[6px] min-w-[96px] px-3.5 py-1 text-center text-xs sm:text-sm font-semibold text-[#111111] transition ${selected
+                                ? "border-2 border-[#6b7280] bg-[#f1f5f9] text-[#111111] font-bold"
+                                : "border border-[#d1d5db] bg-[#f0f2f5] text-[#111111] hover:border-[#9ca3af]"
                                 } ${isLockedPrintingType && !selected ? "cursor-not-allowed opacity-60" : ""}`}
                               aria-pressed={selected}
                             >
@@ -756,18 +830,19 @@ export default function AssociateNonWovenBagOrderPage() {
                       </div>
                     </div>
 
-                    <div>
-                      <div className="mb-2.5 text-[14px] font-bold text-slate-600">
+                    {/* Printing Color Dropdown - INLINE */}
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+                      <div className="w-full shrink-0 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-[0.02em] text-[#333333] md:w-[170px]">
                         <span className="inline-flex items-center gap-2">
-                          <Palette size={15} className="shrink-0 text-[#1f73ff]" />
-                          <span className="box-border">Printing Color :</span>
+                          <Palette size={16} className="shrink-0 text-[#1f73ff]" />
+                          <span>Printing Color :</span>
                         </span>
                       </div>
-                      <div className="flex-1" ref={printingColorDropdownRef}>
+                      <div className="flex-1 relative" ref={printingColorDropdownRef}>
                         <button
                           type="button"
                           onClick={() => setPrintingColorDropdownOpen((o) => !o)}
-                          className="flex h-[45px] w-full items-center justify-between gap-3 rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-3.5 text-left text-sm outline-none transition focus:border-[#1f73ff] focus:bg-white"
+                          className="flex h-[38px] w-full items-center justify-between gap-2.5 rounded-[6px] border border-[#d1d5db] bg-[#f0f2f5] px-3 sm:px-3.5 text-left text-xs sm:text-sm font-medium text-[#1e293b] outline-none transition focus:border-[#1f73ff] focus:bg-white cursor-pointer"
                           aria-haspopup="listbox"
                           aria-expanded={printingColorDropdownOpen}
                         >
@@ -778,14 +853,14 @@ export default function AssociateNonWovenBagOrderPage() {
                               selectedPrintingColorObjects.map((color) => (
                                 <span
                                   key={color.value}
-                                  className="inline-flex h-[26px] shrink-0 items-center gap-2 rounded-[4px] border px-2 shadow-[0_1px_2px_rgba(15,23,42,0.05)]"
+                                  className="inline-flex h-[24px] sm:h-[26px] shrink-0 items-center gap-1.5 sm:gap-2 rounded-[4px] border px-1.5 sm:px-2 shadow-[0_1px_2px_rgba(15,23,42,0.05)]"
                                   style={{ borderColor: color.hex }}
                                 >
                                   <span
-                                    className="inline-block h-4 w-10 shrink-0 rounded-[2px]"
+                                    className="inline-block h-3.5 sm:h-4 w-7 sm:w-10 shrink-0 rounded-[2px]"
                                     style={{ background: color.swatchBackground }}
                                   />
-                                  <span className="text-[12px] font-semibold text-slate-700">{color.value}</span>
+                                  <span className="text-[11px] sm:text-[12px] font-semibold text-slate-700">{color.value}</span>
                                 </span>
                               ))
                             )}
@@ -799,7 +874,7 @@ export default function AssociateNonWovenBagOrderPage() {
                         {printingColorDropdownOpen ? (
                           <ul
                             role="listbox"
-                            className="mt-1 max-h-[300px] overflow-auto rounded-[6px] border border-[#d8d8d8] bg-white py-1 shadow-[0_8px_24px_rgba(15,23,42,0.12)] ring-1 ring-black/5 z-50"
+                            className="absolute left-0 right-0 top-full mt-1 w-full max-h-[220px] sm:max-h-[280px] overflow-y-auto rounded-[6px] border border-[#d1d5db] bg-white py-1 shadow-[0_14px_36px_rgba(15,23,42,0.22)] ring-1 ring-black/5 z-[100]"
                           >
                             {availableTextColorOptions.map((color) => {
                               const isSelected = formData.textColorSelection.includes(color.value);
@@ -808,16 +883,16 @@ export default function AssociateNonWovenBagOrderPage() {
                                   <button
                                     type="button"
                                     onClick={() => handleColorSelect(color.value)}
-                                    className={`flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors ${isSelected ? "bg-[#eef5ff]" : "hover:bg-slate-50"
+                                    className={`flex w-full items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-2 sm:py-2.5 text-left transition-colors cursor-pointer min-h-[38px] ${isSelected ? "bg-[#eef5ff]" : "hover:bg-slate-50"
                                       }`}
                                     role="option"
                                     aria-selected={isSelected}
                                   >
                                     <span
-                                      className="inline-block h-5 w-20 shrink-0 rounded-[3px] border border-black/10"
+                                      className="inline-block h-4 sm:h-5 w-14 sm:w-20 shrink-0 rounded-[3px] border border-black/10"
                                       style={{ background: color.swatchBackground }}
                                     />
-                                    <span className="flex-1 text-sm font-semibold text-slate-700">{color.value}</span>
+                                    <span className="flex-1 text-xs sm:text-sm font-semibold text-slate-700 truncate">{color.value}</span>
                                     {isSelected ? (
                                       <span className="shrink-0 rounded-full bg-[#1f73ff] p-0.5 text-white">
                                         <Check size={12} strokeWidth={3} />
@@ -839,73 +914,76 @@ export default function AssociateNonWovenBagOrderPage() {
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="border-b border-[#ededed] p-4">
-                    <div className="mb-4 text-[15px] font-bold text-[#12286e]">Privacy Packaging</div>
-                    <div className="grid gap-3 md:grid-cols-2">
-                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
-                        <input type="radio" name="privacy" value="Required" checked={formData.privacy === "Required"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
-                        Required
-                      </label>
-                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
-                        <input type="radio" name="privacy" value="Not Required" checked={formData.privacy === "Not Required"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
-                        Not Required
-                      </label>
-                    </div>
+                {/* PRIVACY PACKING */}
+                <div className="rounded-[8px] border border-[#d3d7de] bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <div className="mb-3 text-[13px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">
+                    PRIVACY PACKING
                   </div>
-
-                  <div className="border-b border-[#ededed] p-4">
-                    <div className="mb-3 text-[15px] font-bold text-[#12286e]">Select Delivery Option</div>
-                    <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
+                  <div className="flex flex-wrap items-center gap-10 sm:gap-16 py-1">
+                    <label className="inline-flex cursor-pointer items-center gap-2 text-[14px] font-semibold text-[#0066cc]">
+                      <Lock size={15} className="text-[#0075ff] fill-[#0075ff] shrink-0" />
                       <input
                         type="radio"
-                        name="deliveryOption"
-                        value="Dispatch By Transport"
-                        checked={formData.deliveryOption === "Dispatch By Transport"}
+                        name="privacy"
+                        value="Required"
+                        checked={formData.privacy === "Required"}
                         onChange={handleInputChange}
-                        className="h-4 w-4 text-[#1f73ff]"
+                        className="h-4 w-4 text-[#0075ff] border-gray-400 focus:ring-[#0075ff] cursor-pointer"
                       />
-                      <Truck size={14} className="text-[#1f73ff]" />
-                      Dispatch By Transport
+                      <span>Required</span>
                     </label>
-                    <div className="mt-1 text-[12px] text-gray-500">Transport Charges extra as per bilty amount</div>
+                    <label className="inline-flex cursor-pointer items-center gap-2 text-[14px] font-semibold text-[#0066cc]">
+                      <Lock size={15} className="text-[#0075ff] fill-[#0075ff] shrink-0" />
+                      <input
+                        type="radio"
+                        name="privacy"
+                        value="Not Required"
+                        checked={formData.privacy === "Not Required"}
+                        onChange={handleInputChange}
+                        className="h-4 w-4 text-[#0075ff] border-gray-400 focus:ring-[#0075ff] cursor-pointer"
+                      />
+                      <span>Not Required</span>
+                    </label>
                   </div>
+                </div>
 
-                  <div className="mb-2 rounded-[8px] bg-[#eaf1ff] px-4 py-2.5 text-center text-[12px] font-bold uppercase tracking-[0.06em] text-[#12286e] shadow-[0_1px_2px_rgba(18,40,110,0.08)] ring-1 ring-[#c9d9ff]">CONGRATULATIONS! ORDER'S ELIGIBLE FOR FREE DELIVERY</div>
+                {/* DELIVERY OPTION */}
+                <div className="rounded-[8px] border border-[#d3d7de] bg-white p-5 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+                  <div className="mb-3 text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">Select Delivery Option</div>
+                  <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#1f2937]">
+                    <input type="radio" name="deliveryOption" value="Dispatch By Transport" checked={formData.deliveryOption === "Dispatch By Transport"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
+                    <Truck size={15} className="text-[#1f73ff]" />
+                    Dispatch By Transport
+                  </label>
+                  <div className="mt-1 text-[12px] text-gray-500">Transport Charges extra as per bilty amount</div>
+                </div>
 
-                  <div className="border-b border-[#ededed] p-4">
-                    <div className="mb-3 text-[15px] font-bold text-[#12286e]">Select File Option</div>
+                {/* FREE DELIVERY BANNER */}
+                <div className="rounded-[6px] bg-[#eaf1ff] border border-[#c9d9ff] px-4 py-2.5 text-center text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.05em] text-[#12286e] shadow-[0_1px_2px_rgba(18,40,110,0.06)]">
+                  CONGRATULATIONS! ORDER'S ELIGIBLE FOR FREE DELIVERY
+                </div>
+
+                {/* FILE OPTION & FINANCIAL TABLE CONTAINER */}
+                <div className="rounded-[8px] border border-[#d3d7de] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)] overflow-hidden">
+                  <div className="p-5 border-b border-[#e3e6eb]">
+                    <div className="mb-3 text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">SELECT FILE OPTION</div>
                     <div className="grid gap-4 md:grid-cols-2">
-                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
-                        <input
-                          type="radio"
-                          name="fileOption"
-                          value="Attach File Online"
-                          checked={formData.fileOption === "Attach File Online"}
-                          onChange={handleInputChange}
-                          className="h-4 w-4 text-[#1f73ff]"
-                        />
-                        <Upload size={14} className="text-[#1f73ff]" />
+                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#1f2937]">
+                        <input type="radio" name="fileOption" value="Attach File Online" checked={formData.fileOption === "Attach File Online"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
+                        <Upload size={15} className="text-[#1f73ff]" />
                         Attach File Online
                       </label>
-                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
-                        <input
-                          type="radio"
-                          name="fileOption"
-                          value="Send via Email"
-                          checked={formData.fileOption === "Send via Email"}
-                          onChange={handleInputChange}
-                          className="h-4 w-4 text-[#1f73ff]"
-                        />
-                        <Mail size={14} className="text-[#1f73ff]" />
+                      <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#1f2937]">
+                        <input type="radio" name="fileOption" value="Send via Email" checked={formData.fileOption === "Send via Email"} onChange={handleInputChange} className="h-4 w-4 text-[#1f73ff]" />
+                        <Mail size={15} className="text-[#1f73ff]" />
                         Send via Email
                       </label>
                     </div>
-
                     {formData.fileOption === "Attach File Online" ? (
                       <div
-                        className={`mt-4 rounded-[8px] border-2 border-dashed p-4 text-center transition ${dragActive ? "border-[#1f73ff] bg-blue-50" : "border-[#d8d8d8] bg-[#fafafa]"
-                          }`}
+                        className={`mt-4 rounded-[8px] border-2 border-dashed p-4 text-center transition ${dragActive ? "border-[#1f73ff] bg-blue-50" : "border-[#d8d8d8] bg-[#fafafa]"}`}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}
@@ -913,80 +991,56 @@ export default function AssociateNonWovenBagOrderPage() {
                       >
                         <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
                         <Upload className="mx-auto mb-3 text-[#1f73ff]" size={24} />
-                        <div className="text-sm font-semibold">Drag & drop your file here</div>
+                        <div className="text-sm font-semibold text-[#1f2937]">Drag & drop your file here</div>
                         <div className="mt-1 text-xs text-gray-500">PDF, CDR, PSD, JPEG, JPG, PNG up to 100MB</div>
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="mt-3 rounded bg-[#1f73ff] px-4 py-2 text-xs font-bold text-white hover:bg-[#0d62f1]"
-                        >
+                        <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-3 rounded bg-[#1f73ff] px-4 py-2 text-xs font-bold text-white hover:bg-[#0d62f1] shadow-xs">
                           Browse File
                         </button>
                         {formData.fileName ? (
                           <div className="mt-3 flex items-center justify-center gap-2 text-sm font-semibold text-green-700">
                             <CheckCircle size={16} />
                             {formData.fileName}
-                            <button
-                              type="button"
-                              onClick={() => setFormData((prev) => ({ ...prev, fileName: "", fileUrl: "" }))}
-                              className="rounded-full p-1 text-red-500 hover:bg-red-50"
-                            >
+                            <button type="button" onClick={() => setFormData((prev) => ({ ...prev, fileName: "", fileUrl: "" }))} className="rounded-full p-1 text-red-500 hover:bg-red-50">
                               <X size={14} />
                             </button>
                           </div>
                         ) : null}
                       </div>
-                    ) : null}
-
-                    {formData.fileOption === "Send via Email" ? (
-                      <div className="mt-4 rounded-[8px] bg-[#fff9ef] p-4 text-sm text-[#9a5b00]">
+                    ) : formData.fileOption === "Send via Email" ? (
+                      <div className="mt-4 rounded-[8px] bg-[#fff9ef] border border-[#ffe4ba] p-4 text-sm text-[#9a5b00]">
                         Send file to <span className="font-bold">direct@printersclub.in</span> (Extra Charges - Rs.10.00 is applicable)
                       </div>
                     ) : null}
                   </div>
 
-                  <div className="divide-y divide-[#ededed]">
-                    <div className="flex items-center justify-between px-4 py-4 text-[15px]">
-                      <span>Bag Cost</span>
-                      <span className="font-bold">Rs. {displayedBagCost.toFixed(2)}/-</span>
+                  {/* FINANCIAL SUMMARY TABLE */}
+                  <div className="divide-y divide-[#e3e6eb]">
+                    <div className="flex items-center gap-4 sm:gap-6 px-5 py-2 text-[14px] text-[#374151]">
+                      <span className="w-[170px] shrink-0">Applicable Cost</span>
+                      <span className="font-bold text-[#111827]">Rs. {displayedBagCost.toFixed(2)}/-</span>
                     </div>
-                    <div className="flex items-center justify-between px-4 py-4 text-[15px]">
-                      <span>GST ({GST_PERCENT_LABEL})</span>
-                      <span className="font-bold">Rs. {displayedGst.toFixed(2)}/-</span>
+                    <div className="flex items-center gap-4 sm:gap-6 px-5 py-2 text-[14px] text-[#374151]">
+                      <span className="w-[170px] shrink-0">GST ({GST_PERCENT_LABEL})</span>
+                      <span className="font-bold text-[#111827]">Rs. {displayedGst.toFixed(2)}/-</span>
                     </div>
-                    <div className="flex items-center justify-between px-4 py-4 text-[16px]">
-                      <span>Payable Amount</span>
-                      <span className="font-bold text-[#1f73ff]">Rs. {displayedPayableAmount.toFixed(2)}/-</span>
+                    <div className="flex items-center gap-4 sm:gap-6 px-5 py-2 text-[15px] sm:text-[16px] font-bold text-[#111827]">
+                      <span className="w-[170px] shrink-0">Amount Payable</span>
+                      <span className="font-extrabold text-[#1f73ff]">Rs. {displayedPayableAmount.toFixed(2)}/-</span>
                     </div>
                     <input type="hidden" name="sellingPrice" value={formData.sellingPrice} />
-                    <div className="px-4 py-4">
-                      <div className="mb-2 text-[15px] font-semibold">Special Remark (Optional)</div>
-                      <textarea
-                        name="remark"
-                        value={formData.remark}
-                        onChange={handleInputChange}
-                        rows={3}
-                        placeholder="remarks for order processing team..."
-                        className="w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] px-3 py-2 outline-none focus:border-[#1f73ff] focus:bg-white"
-                      />
+
+                    {/* Special Remark */}
+                    <div className="px-5 py-4">
+                      <label className="mb-2 block text-[13px] sm:text-[14px] font-extrabold uppercase tracking-wide text-[#111111]">Special Remark (Optional)</label>
+                      <textarea name="remark" value={formData.remark} onChange={handleInputChange} rows={3} placeholder="remarks for order processing team..." className="w-full rounded-[4px] border border-[#d8d8d8] bg-[#f7f7f7] p-3 text-sm text-[#222222] placeholder:text-[#999999] outline-none transition focus:border-[#1f73ff] focus:bg-white" />
                     </div>
                   </div>
 
-                  <div className="p-4">
-                    {statusMessage.text ? (
-                      <div
-                        className={`mb-4 rounded-[8px] px-4 py-3 text-sm ${statusMessage.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
-                          }`}
-                      >
-                        {statusMessage.text}
-                      </div>
-                    ) : null}
+                  {/* SUBMIT BUTTON CONTAINER */}
+                  <div className="p-5">
+                    {statusMessage.text ? <div className={`mb-4 rounded-[6px] px-4 py-3 text-sm font-medium ${statusMessage.type === "error" ? "bg-red-50 text-red-700 border border-red-200" : "bg-green-50 text-green-700 border border-green-200"}`}>{statusMessage.text}</div> : null}
 
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[6px] bg-[#1677f2] text-[15px] font-bold text-white transition hover:bg-[#0d62f1] disabled:cursor-not-allowed disabled:opacity-70"
-                    >
+                    <button type="submit" disabled={loading} className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[6px] bg-[#0075ff] text-[15px] font-bold uppercase tracking-wide text-white transition hover:bg-[#0060df] active:bg-[#0052c2] shadow-sm disabled:cursor-not-allowed disabled:opacity-70">
                       {loading ? <Loader2 size={18} className="animate-spin" /> : null}
                       Add Order (Pay From Wallet)
                     </button>
@@ -999,7 +1053,7 @@ export default function AssociateNonWovenBagOrderPage() {
           {hasBagSize ? (
             <div className="space-y-6">
               {!usesDeferredDescriptionImage && shouldShowDescriptionImage ? (
-                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
                   <div
                     className={[
                       "flex items-center justify-center bg-white p-5",
@@ -1012,7 +1066,7 @@ export default function AssociateNonWovenBagOrderPage() {
               ) : null}
 
               {usesDeferredDescriptionImage && shouldShowDescriptionImage ? (
-                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                <div className="overflow-hidden rounded-[8px] border border-[#d6d8de] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
                   <div
                     className={[
                       "flex items-center justify-center bg-white p-5",
@@ -1024,90 +1078,93 @@ export default function AssociateNonWovenBagOrderPage() {
                 </div>
               ) : null}
 
-              <section className="border-l-[3px] border-[#2d58a5] pl-3">
-                <h2 className="mb-3 text-[18px] font-bold text-[#183b8f] underline">Product Description</h2>
-                {hasDetailedProductDescription ? (
-                  <ul className="space-y-1.5 text-[13px] leading-6 text-[#5b5f79]">
-                    {product.descriptionRows.map((item) => (
-                      <li key={item.label}>
-                        <strong>{item.label}:</strong> {item.value}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <ul className="space-y-1.5 text-[13px] leading-6 text-[#5b5f79]">
-                    <li><strong>Product Ref. :</strong> {product.productRef}</li>
-                    <li><strong>Product Code :</strong> {product.productCode}</li>
-                    <li><strong>Product Class :</strong> {product.productClass}</li>
-                    <li><strong>Product Core :</strong> {product.core}</li>
-                    <li><strong>Paper Quality :</strong> {product.material}</li>
-                    <li><strong>Production Time :</strong> {product.productionTime}</li>
-                  </ul>
-                )}
-              </section>
+              {/* Info Sections Container with Vertical Blue Left Accent */}
+              <div className="space-y-6 border-l-[4px] border-[#2d58a5] pl-4 sm:pl-5">
+                <section>
+                  <h2 className="mb-3 text-[17px] sm:text-[18px] font-bold text-[#183b8f] underline decoration-[#183b8f]/40 underline-offset-4">Product Description</h2>
+                  {hasDetailedProductDescription ? (
+                    <ul className="space-y-1.5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      {product.descriptionRows.map((item) => (
+                        <li key={item.label}>
+                          <strong className="text-[#1e293b]">{item.label} :</strong> {item.value}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <ul className="space-y-1.5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      <li><strong className="text-[#1e293b]">Product Ref. :</strong> {product.productRef}</li>
+                      <li><strong className="text-[#1e293b]">Product Code :</strong> {product.productCode}</li>
+                      <li><strong className="text-[#1e293b]">Product Class :</strong> {product.productClass}</li>
+                      <li><strong className="text-[#1e293b]">Product Core :</strong> {product.core}</li>
+                      <li><strong className="text-[#1e293b]">Paper Quality :</strong> {product.material}</li>
+                      <li><strong className="text-[#1e293b]">Production Time :</strong> {product.productionTime}</li>
+                    </ul>
+                  )}
+                </section>
 
-              <section className="border-l-[3px] border-[#2d58a5] pl-3">
-                <h2 className="mb-3 text-[18px] font-bold text-[#183b8f] underline">Our Specialization</h2>
-                {hasDetailedProductDescription ? (
-                  <ul className="list-disc space-y-1.5 pl-5 text-[13px] leading-6 text-[#5b5f79]">
-                    {product.specializationPoints.map((item) => (
+                <section>
+                  <h2 className="mb-3 text-[17px] sm:text-[18px] font-bold text-[#183b8f] underline decoration-[#183b8f]/40 underline-offset-4">Our Specialization</h2>
+                  {hasDetailedProductDescription ? (
+                    <ul className="list-disc space-y-1.5 pl-5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      {product.specializationPoints.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <ul className="list-disc space-y-1.5 pl-5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      <li>We are India's trusted bag printing manufacturing partner.</li>
+                      <li>Printing with latest machines and quality finishing unit.</li>
+                      <li>Innovative, advanced and equipped post-printing process.</li>
+                      <li>Constant quality with reasonable price and reliable delivery.</li>
+                    </ul>
+                  )}
+                </section>
+
+                <section>
+                  <h2 className="mb-3 text-[17px] sm:text-[18px] font-bold text-[#183b8f] underline decoration-[#183b8f]/40 underline-offset-4">{hasDetailedProductDescription ? "Product Features" : "Product Specialization"}</h2>
+                  <ul className="list-disc space-y-1.5 pl-5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                    {(hasDetailedProductDescription ? product.featurePoints : product.highlights).map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
-                ) : (
-                  <ul className="list-disc space-y-1.5 pl-5 text-[13px] leading-6 text-[#5b5f79]">
-                    <li>We are India's trusted bag printing manufacturing partner.</li>
-                    <li>Printing with latest machines and quality finishing unit.</li>
-                    <li>Innovative, advanced and equipped post-printing process.</li>
-                    <li>Constant quality with reasonable price and reliable delivery.</li>
-                  </ul>
-                )}
-              </section>
+                </section>
 
-              <section className="border-l-[3px] border-[#2d58a5] pl-3">
-                <h2 className="mb-3 text-[18px] font-bold text-[#183b8f] underline">{hasDetailedProductDescription ? "Product Features" : "Product Specialization"}</h2>
-                <ul className="list-disc space-y-1.5 pl-5 text-[13px] leading-6 text-[#5b5f79]">
-                  {(hasDetailedProductDescription ? product.featurePoints : product.highlights).map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="border-l-[3px] border-[#2d58a5] pl-3">
-                <h2 className="mb-3 text-[18px] font-bold text-[#183b8f] underline">{hasDetailedProductDescription ? "Important Notes" : "Points to be Noted"}</h2>
-                {hasDetailedProductDescription ? (
-                  <div className="space-y-3 text-[13px] leading-6 text-[#5b5f79]">
-                    <div>
-                      <p><strong>Size Specifications</strong></p>
-                      {product.importantNotes.sizeSpecifications.map((item) => (
-                        <p key={item.label}>
-                          {item.label}: <span className="font-bold text-red-500">{item.value}</span>
-                        </p>
-                      ))}
-                    </div>
-                    <div>
-                      <p><strong>Printing Guidelines</strong></p>
-                      <ul className="list-disc space-y-2 pl-5">
-                        {product.importantNotes.printingGuidelines.map((item) => (
-                          <li key={item}>{item}</li>
+                <section>
+                  <h2 className="mb-3 text-[17px] sm:text-[18px] font-bold text-[#183b8f] underline decoration-[#183b8f]/40 underline-offset-4">{hasDetailedProductDescription ? "Important Notes" : "Points to be Noted"}</h2>
+                  {hasDetailedProductDescription ? (
+                    <div className="space-y-3 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      <div>
+                        <p className="font-bold text-[#1e293b]">Size Specifications</p>
+                        {product.importantNotes.sizeSpecifications.map((item) => (
+                          <p key={item.label}>
+                            {item.label}: <span className="font-bold text-[#ef4444]">{item.value}</span>
+                          </p>
                         ))}
+                      </div>
+                      <div>
+                        <p className="font-bold text-[#1e293b]">Printing Guidelines</p>
+                        <ul className="list-disc space-y-1.5 pl-5">
+                          {product.importantNotes.printingGuidelines.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 text-[13px] sm:text-[14px] leading-6 text-[#475569]">
+                      <p className="font-bold text-[#1e293b]">Size Must be as below:</p>
+                      <p>Full Design Size: <span className="font-bold text-[#ef4444]">W: 93.00 mm X H: 56.00 mm</span></p>
+                      <p>Maximum Text Area: <span className="font-bold text-[#ef4444]">W: 82.00 mm X H: 45.00 mm</span></p>
+                      <p>Final Size After Cutting: <span className="font-bold text-[#ef4444]">W: 90.00 mm x H: 53.00 mm</span></p>
+                      <ul className="list-disc space-y-1.5 pl-5 mt-2">
+                        <li>Use high-resolution artwork for the clearest and sharpest results.</li>
+                        <li>Color saturation may vary slightly depending on bag color and print combination.</li>
+                        <li>Delivery and transport charges are extra and based on dispatch mode.</li>
                       </ul>
                     </div>
-                  </div>
-                ) : (
-                  <div className="space-y-1.5 text-[13px] leading-6 text-[#5b5f79]">
-                    <p><strong>Size Must be as below:</strong></p>
-                    <p>Full Design Size: <span className="font-bold text-red-500">W: 93.00 mm X H: 56.00 mm</span></p>
-                    <p>Maximum Text Area: <span className="font-bold text-red-500">W: 82.00 mm X H: 45.00 mm</span></p>
-                    <p>Final Size After Cutting: <span className="font-bold text-red-500">W: 90.00 mm x H: 53.00 mm</span></p>
-                    <ul className="list-disc space-y-2 pl-5">
-                      <li>Use high-resolution artwork for the clearest and sharpest results.</li>
-                      <li>Color saturation may vary slightly depending on bag color and print combination.</li>
-                      <li>Delivery and transport charges are extra and based on dispatch mode.</li>
-                    </ul>
-                  </div>
-                )}
-              </section>
+                  )}
+                </section>
+              </div>
             </div>
           ) : null}
         </div>

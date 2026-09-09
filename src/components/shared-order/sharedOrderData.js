@@ -6,7 +6,7 @@ import loopBagImage from "../../assets/images/Loop-Bag-Card.jpeg";
 import nonWovenBag from "../../assets/images/Non_Woven_Bag.png";
 import paperBag from "../../assets/images/Paper_Bag.png";
 import plasticBag from "../../assets/images/Plastic_Bag.png";
-import sampleImage from "../../assets/images/8.jpg";
+import sampleImage from "../../assets/images/sample_file_card.png";
 
 export const printingServiceCards = [
   { id: 1, title: "NON-WOVEN BAG", image: nonWovenBag },
@@ -106,7 +106,6 @@ export const bagCatalog = {
 };
 
 export const bagTypeOptions = [
-  { value: "One side", label: "One Side Printing" },
   { value: "Both sides", label: "Two Side Printing" }
 ];
 

@@ -53,7 +53,7 @@ export default function SharedAddMoneyPage({ basePath }) {
               </ol>
 
               {option.badge ? (
-                <div className="mt-3.5 rounded-[6px] bg-[#f29b9b] px-4 py-1 text-center text-[11px] font-normal uppercase tracking-normal text-white md:text-[12px]">
+                <div className="animate-newly-launched mt-3.5 rounded-[6px] bg-[#c2185b] px-4 py-1 text-center text-[11px] font-bold uppercase tracking-wide text-white md:text-[12px]">
                   {option.badge}
                 </div>
               ) : null}

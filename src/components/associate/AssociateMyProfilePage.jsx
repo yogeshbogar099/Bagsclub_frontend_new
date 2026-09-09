@@ -88,11 +88,10 @@ export default function AssociateMyProfilePage() {
                 </div>
                 <div className="bg-white px-3 py-2.5 md:px-4">
                   <div
-                    className={`min-h-[42px] w-full text-[15px] leading-7 text-[#303030] ${
-                      row.inputLike
+                    className={`min-h-[42px] w-full text-[15px] leading-7 text-[#303030] ${row.inputLike
                         ? "rounded-[4px] border border-[#d4d4d4] bg-[#fcfcfc] px-3 py-2"
                         : "py-1"
-                    }`}
+                      }`}
                   >
                     {row.value}
                   </div>

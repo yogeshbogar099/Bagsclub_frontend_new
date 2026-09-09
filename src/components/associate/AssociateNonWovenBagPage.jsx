@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import bg02 from "../../assets/images/bg_02.jpg";
-import sampleImage from "../../assets/images/8.jpg";
+import sampleImage from "../../assets/images/sample_file_card.png";
 import printingServicesImage from "../../assets/images/login_Printing_Services.png";
 import D_Cut from "../../assets/images/D-Cut-bag-card.jpg"
 import LoopBag from "../../assets/images/Loop-Bag-Card.jpeg"
@@ -52,21 +52,21 @@ export default function AssociateNonWovenBagPage() {
                     card.isSample
                       ? undefined
                       : () => {
-                          if (card.slug === "d-cut-bag") {
-                            navigate("/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag/design-options");
-                            return;
-                          }
-                          if (card.slug === "loop-bag") {
-                            navigate("/dashboard/associate-member/book-order/non-woven-bag/loop-bag/design-options");
-                            return;
-                          }
-                          if (card.slug === "box-bag") {
-                            navigate("/dashboard/associate-member/book-order/non-woven-bag/box-bag/design-options");
-                            return;
-                          }
-
-                          navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`);
+                        if (card.slug === "d-cut-bag") {
+                          navigate("/dashboard/associate-member/book-order/non-woven-bag/d-cut-bag/design-options");
+                          return;
                         }
+                        if (card.slug === "loop-bag") {
+                          navigate("/dashboard/associate-member/book-order/non-woven-bag/loop-bag/design-options");
+                          return;
+                        }
+                        if (card.slug === "box-bag") {
+                          navigate("/dashboard/associate-member/book-order/non-woven-bag/box-bag/design-options");
+                          return;
+                        }
+
+                        navigate(`/dashboard/associate-member/book-order/non-woven-bag/${card.slug}`);
+                      }
                   }
                 >
                   <div className="overflow-hidden bg-white shadow-sm transition-transform duration-200 group-hover:-translate-y-1">
